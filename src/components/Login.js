@@ -19,7 +19,7 @@ function Login() {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://13.60.96.144/login', { email, password });
+      const response = await axios.post('https://13.60.96.144/login', { email, password });
       const authToken = response.data.token;
       setToken(authToken);
       localStorage.setItem('token', authToken);
