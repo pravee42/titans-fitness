@@ -1,3 +1,4 @@
+
 .content {
     width: 290px;
     padding: 10px;
@@ -9,7 +10,7 @@
   .container {
     display: flex;
     background-color: transparent;
-    height: 100%; /* Adjusted height value */
+    height: 100%;
   }
   
   .icon {
@@ -38,6 +39,6 @@
   }
   
   .form {
-    min-height: 150px; /* Changed to min-height for flexibility */
+    min-height: 150px; 
   }
   
