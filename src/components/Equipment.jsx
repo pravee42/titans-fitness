@@ -7,8 +7,8 @@ const equipmentList = [
   { title: "Treadmill", description: "A machine for running or walking in place, adjustable for speed and incline." },
   { title: "Elliptical", description: "Low-impact cardio machine simulating stair climbing, walking, or running." },
   { title: "Spinning Bike", description: "Stationary bike designed for high-intensity indoor cycling workouts." },
-  { title: "Air Rower", description: "Rowing machine using air resistance to simulate rowing on water." },
-  { title: "Air Bike", description: "Cardio equipment combining arms and legs movement with air resistance." },
+  { title: "AirRower", description: "Rowing machine using air resistance to simulate rowing on water." },
+  { title: "AirBike", description: "Cardio equipment combining arms and legs movement with air resistance." },
   { title: "Vertical Chest Press", description: "Machine targeting the chest muscles with a vertical pressing motion." },
   { title: "Pec Fly/Rear Delt", description: "Dual-function machine for chest flyes and rear delt exercises." },
   { title: "Multi Functional Station", description: "Versatile unit offering various strength training exercises." },
@@ -29,15 +29,15 @@ const equipmentList = [
   { title: "Isolateral Row", description: "Machine allowing independent rowing motion for each arm, targeting back muscles." },
   { title: "Multi Angled T-Bar", description: "Rowing equipment with multiple grip options for back workouts." },
   { title: "Wrist Curl", description: "Bench or machine for isolating and strengthening the forearm muscles." },
-  { title: "Lat Pull Down with Rowing", description: "Dual-function machine for lat pulldowns and seated rows." },
+  { title: "Lat Rowing", description: "Dual-function machine for lat pulldowns and seated rows." },
   { title: "Assisted Dip Chin", description: "Machine providing assistance for performing dips and chin-ups." },
   { title: "Dumbbells (2.5 kg to 35 kg)", description: "Free weights available in various increments for strength training." },
 ];
 
 const Equipment = ({ title, description }) => (
-  <div className="w-full md:w-1/2 lg:w-1/4 p-4 flex flex-col">
-    <div className="flex items-center mb-4">
-      <div className="bg-70AB0E-800 p-3 rounded-full mr-4 border-2 border-black">
+  <div className="w-full md:w-1/2 lg:w-1/4 p-2 flex flex-col">
+    <div className="flex items-center mb-2">
+      <div className="bg-70AB0E-800 p-2 rounded-full mr-3 border-2 border-black">
         <FontAwesomeIcon
           icon={faDumbbell}
           className="text-black text-lg"
@@ -45,21 +45,21 @@ const Equipment = ({ title, description }) => (
         />
       </div>
       <div
-        className="text-black text-2xl"
-        style={{ fontFamily: "Norwester", letterSpacing: "1px" }}
+        className="text-black text-xl font-norwester"
+        style={{ letterSpacing: "1px" }}
       >
         {title}
       </div>
     </div>
-    <p className="text-black text-xl text-justify flex">
+    <p className="text-black text-lg text-justify flex w-64 h-24">
       {description}
     </p>
   </div>
 );
 
 const EquipmentGrid = () => (
-  <div className="container mx-auto px-4 py-10">
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+  <div className="container mx-auto px-4 py-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
       {equipmentList.map((item, index) => (
         <Equipment
           key={index}
