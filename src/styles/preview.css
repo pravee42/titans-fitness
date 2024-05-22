@@ -1,0 +1,67 @@
+.flex-container {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    margin-left: 1.25rem;
+  }
+  
+  @media (min-width: 1024px) {
+    .flex-container {
+      flex-direction: row;
+      margin-left: 1.25rem;
+    }
+  }
+  
+  .main-content {
+    flex-grow: 1;
+    padding: 1.25rem;
+    margin-left: 1.25rem;
+  }
+  
+  .preview-section {
+    position: fixed; /* Changed to fixed for top-right positioning */
+    top: 10rem; /* Adjust top positioning as needed */
+    right: 10rem; /* Adjust right positioning as needed */
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1); /* Equivalent to shadow-md */
+    padding: 1.25rem; /* Equivalent to p-5 */
+    margin-top: 1.25rem;
+    margin-left: 1.25rem;
+    z-index: 1000; /* Ensures it stays on top */
+  }
+  
+  @media (min-width: 1024px) {
+    .preview-section {
+      width: 300px; /* Adjusted for better responsiveness */
+      margin-top: 0;
+      margin-left: 1.25rem;
+    }
+  }
+  
+  .container {
+    background-color: #f7fafc; /* Equivalent to bg-gray-200 */
+    margin-bottom: 1.25rem; /* Equivalent to mb-5 */
+    padding: 0.75rem; /* Equivalent to p-3 */
+    border-radius: 0.375rem; /* Equivalent to rounded */
+  }
+  
+  .icon {
+    height: 1.5rem; /* Equivalent to h-6 */
+    border: 1px solid #cbd5e0; /* Equivalent to border-gray-400 */
+    border-radius: 9999px; /* Equivalent to rounded-full */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .icon .fa-fw {
+    color: #718096; /* Equivalent to text-gray-600 */
+    font-size: 1.25rem; /* Equivalent to text-xl */
+  }
+  
+  .inside {
+    text-align: center;
+    margin-top: 0.5rem; /* Equivalent to mt-2 */
+  }
+  

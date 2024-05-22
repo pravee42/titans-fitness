@@ -1,0 +1,45 @@
+/* userInformationStyles.css */
+
+.content {
+    width: 290px;
+    padding: 10px;
+    background: #dde1e7;
+    border-radius: 10px;
+    box-shadow: -3px -3px 7px #ffffff73, 2px 2px 5px rgba(94,104,121,0.288);
+  }
+  
+  .container {
+    display: flex;
+    background-color: transparent;
+    height: 100%; /* Adjusted height value */
+  }
+  
+  .icon {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+    background: #dde1e7;
+    border-radius: 25px;
+    cursor: pointer;
+    color: #595959;
+    box-shadow: 2px 2px 5px #BABECC, -5px -5px 10px #ffffff73;
+  }
+  
+  .inside {
+    flex: 1;
+    font-weight: 600;
+    background: #dde1e7;
+    border-radius: 25px;
+    cursor: pointer;
+    color: #595959;
+    box-shadow: 2px 2px 5px #BABECC, -5px -5px 10px #ffffff73;
+  }
+  
+  .address {
+    height: 7rem;
+  }
+  
+  .form {
+    min-height: 150px; /* Changed to min-height for flexibility */
+  }
+  

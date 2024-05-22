@@ -1,0 +1,132 @@
+.tablet
+{
+    border-radius: 2%;
+    border:10px;
+    border-color: red;
+}
+thead
+{
+    /* border-radius: 100px; */
+    border-color:red;
+}
+
+.table-container {
+    max-height: 400px; /* Adjust the max-height as needed */
+    overflow-y: auto;
+  }
+  
+  .table-row:hover {
+    background-color: #ff0000; /* Change the background color on hover */
+    color: #fff; /* Change the text color on hover */
+  }
+  
+
+  .btn {
+    background-color: white;
+    color: #70AB0E;
+    border-radius: 10%;
+    padding: 10px 20px 10px 20px;
+    margin: 0 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .btn:hover {
+    background-color: #70AB0E;
+    color:white
+    
+  }
+  /* Checkbox container */
+.checkbox-container {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Hide default checkbox */
+.checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  margin-top: 5px;
+  margin-right: 50px;
+}
+
+/* Custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 16px; /* Adjust height */
+  width: 16px; /* Adjust width */
+  background-color: #fff;
+  border: 1px solid #ccc; /* Add border for better visibility */
+  border-radius: 3px;
+  
+}
+
+/* On mouse-over, add a grey background color */
+.checkbox-container:hover .checkmark {
+  background-color: #f0f0f0; /* Light grey background */
+  margin-top: 5px;
+  margin-right: 50px;
+}
+
+/* When checked, add blue background color */
+.checkbox-container input:checked ~ .checkmark {
+  background-color: #000000; /* Blue background */
+  border-color: #000000; /* Blue border color */
+  margin-top: 5px;
+  margin-right: 50px;
+}
+
+/* Show checkmark */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show checkmark when checkbox is checked */
+.checkbox-container input:checked ~ .checkmark:after {
+  display: block;
+  margin-top: 5px;
+  margin-right: 50px;
+}
+
+/* Style checkmark */
+.checkbox-container .checkmark:after {
+  content: "";
+  left: 5px; /* Adjust position */
+  top: 1px; /* Adjust position */
+  width: 5px;
+  height: 10px;
+  margin-top: 5px;
+  margin-right: 50px;
+  
+ 
+}
+
+.btnb {
+  background-color: white;
+  margin-left: 50px;
+  border-radius: 10%;
+  padding: 5px 10px 5px 10px;
+  margin: 0 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.back-home
+{
+  margin-top: 200px;
+}
+
+
+@font-face {
+  font-family: 'Norwester';
+  src: url('../components/fonts/norwester.regular.otf') format('opentype');
+}
+
+.t {
+  
+}

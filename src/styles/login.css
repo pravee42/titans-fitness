@@ -1,0 +1,361 @@
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* login.css */
+
+/* Container styles */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: url('../img/bg.png'); /* Set background image */
+  background-size: cover;
+  background-position: center;
+}
+
+/* Form styles */
+.login-form {
+  background-color: rgba(77, 77, 77, 0.4); 
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  width: 400px; 
+}
+
+/* Form heading styles */
+.login-form h2 {
+  margin-bottom: 20px;
+  font-size: 2rem;
+  color: white;
+}
+
+/* Form group styles */
+.form-group {
+  margin-bottom: 20px;
+}
+
+/* Label styles */
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #ffffff;
+}
+
+/* Input styles */
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #4fb439;
+  border-radius: 5px;
+  outline: none;
+}
+
+/* Password input container styles */
+.password-input {
+  position: relative;
+}
+
+/* Eye icon styles */
+.eye-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+/* Login button styles */
+.login-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #79BA0F; 
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* Login button hover effect */
+.login-button:hover {
+  background-color: #79BA0F; 
+}
+
+.forgot-password {
+  color: #aaa; /* Adjust color as needed */
+  font-size: 14px;
+  text-decoration: none;
+  margin-top: 5px;
+  display: block; 
+
+}
+
+.forgot-password:hover {
+  text-decoration: underline; /* Add underline on hover */
+}
+.signup-link {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 15px; 
+  color: white;
+}
+
+.signup-link span {
+  color: #79BA0F; 
+  cursor: pointer; 
+}
+.footer-container {
+  width: 100%;
+  display: flex;
+  overflow: auto;
+  min-height: 50vh;
+  align-items: center;
+  flex-direction: column;
+}
+
+.footer-footer {
+  gap: 24px;
+  width: 100%;
+  height: 435px;
+  display: flex;
+  padding: 64px 0 0;
+  overflow: hidden;
+  align-items: flex-start;
+  flex-shrink: 0;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.footer-col {
+  gap: 32px;
+  width: 744px;
+  display: flex;
+  padding: 0 64px 0 108px;
+  flex-grow: 1;
+  align-items: flex-start;
+  flex-shrink: 0;
+  flex-direction: column;
+}
+
+.footer-tshirt12 {
+  width: 325px;
+  height: 58px;
+}
+
+.footer-text {
+  color: rgba(54, 56, 45, 1);
+  width: 496px;
+  height: auto;
+  font-size: 28px;
+  font-style: normal;
+  text-align: left;
+  font-family: Satoshi Variable;
+  font-weight: 500;
+  line-height: 120%;
+  font-stretch: normal;
+  text-decoration: none;
+}
+
+.footer-btn {
+  gap: 20px;
+  display: flex;
+  padding: 13px 40px;
+  align-items: center;
+  border-radius: 40px;
+  background-color: rgba(120, 185, 14, 1);
+}
+
+.footer-text07 {
+  color: rgba(255, 255, 255, 1);
+  height: auto;
+  font-size: 16px;
+  font-style: normal;
+  text-align: left;
+  font-family: Inter;
+  font-weight: 500;
+  line-height: 140%;
+  font-stretch: normal;
+  text-decoration: none;
+}
+
+.footer-col1 {
+  gap: 192px;
+  width: 744px;
+  display: flex;
+  padding: 64px 108px 64px 64px;
+  flex-grow: 1;
+  align-items: flex-start;
+  flex-shrink: 0;
+  border-color: rgba(120, 185, 14, 1);
+  border-style: solid;
+  border-width: 1px 0 0 1px;
+  border-radius: 128px 0 0;
+  flex-direction: column;
+}
+
+.footer-row {
+  gap: 146px;
+  width: 496px;
+  display: flex;
+  align-items: flex-start;
+  flex-shrink: 0;
+  justify-content: space-between;
+}
+
+.footer-col2 {
+  gap: 16px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.footer-text09 {
+  color: rgba(120, 185, 14, 1);
+  height: auto;
+  font-size: 12px;
+  font-style: normal;
+  text-align: left;
+  font-family: Inter;
+  font-weight: 500;
+  line-height: 150%;
+  font-stretch: normal;
+  text-decoration: none;
+}
+
+.footer-list {
+  gap: 4px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.footer-text11,
+.footer-text13 {
+  color: rgba(54, 56, 45, 1);
+  height: auto;
+  font-size: 18px;
+  font-style: normal;
+  text-align: left;
+  font-family: Inter;
+  font-weight: 500;
+  line-height: 130%;
+  font-stretch: normal;
+  text-decoration: none;
+}
+
+.footer-col3 {
+  gap: 16px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.footer-text15 {
+  color: rgba(120, 185, 14, 1);
+  height: auto;
+  font-size: 12px;
+  font-style: normal;
+  text-align: left;
+  font-family: Inter;
+  font-weight: 500;
+  line-height: 150%;
+  font-stretch: normal;
+  text-decoration: none;
+}
+
+.footer-list1 {
+  gap: 5px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.footer-item {
+  width: 50px;
+  height: 50px;
+}
+
+.footer-text17 {
+  color: rgba(54, 56, 45, 1);
+  height: auto;
+  opacity: 0.5;
+  font-size: 12px;
+  font-style: normal;
+  text-align: left;
+  font-family: Inter;
+  font-weight: 400;
+  line-height: 150%;
+  font-stretch: normal;
+  text-decoration: none;
+}/* Media query for screens smaller than 768px (typical mobile devices) */
+@media (max-width: 768px) {
+  .footer-footer {
+    height: auto;
+    padding: 40px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .footer-col,
+  .footer-col1 {
+    width: 100%;
+    display: flex;
+    padding: 0 20px;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: wrap;
+    text-align: center;
+  }
+
+  .footer-tshirt12 {
+    width: 200px;
+    height: auto;
+  }
+
+  .footer-text {
+    width: auto;
+    font-size: 18px;
+    line-height: 150%;
+  }
+
+  .footer-btn {
+    padding: 10px 30px;
+  }
+
+  .footer-text07 {
+    font-size: 14px;
+  }
+
+  .footer-text09,
+  .footer-text15 {
+    font-size: 14px;
+  }
+
+  .footer-text17 {
+    font-size: 10px;
+  }
+
+  .footer-row {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .footer-item {
+    width: 40px;
+    height: 40px;
+  }
+
+  .footer-list1 {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+}
+
