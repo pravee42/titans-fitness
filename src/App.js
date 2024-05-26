@@ -5,7 +5,7 @@ import UserInformation from "./components/user";
 import React from "react";
 import SearchExistingCoustomer from "./components/SearchExistingCustomer";
 import CoustomerPayment from "./components/CoustPay";
-
+import { Navigate } from 'react-router-dom';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -13,9 +13,9 @@ import SearchForm from "./components/SearchForm";
 import Login from './components/Login';
 import GymAt from './components/GymAt';
 import HomePage from './components/Home/Home';
-import UserDashboard from './components/UserDashboard';
+import UserDashboard from './components/Client/UserDashboard';
 import ProtectedRoute from './components/ProtectedRoute'; 
-import Tablegym from './components/Table'; 
+import Tablegym from './components/tables/Table'; 
 import UserDetails from './components/Userdetails';
 import Punchin from './components/punchin';
 
@@ -36,7 +36,7 @@ function App() {
           <Route path="/Gym-Attendance" element={<ProtectedRoute element={GymAt} adminOnly />} />
           <Route path="/user/:id" element={<ProtectedRoute element={UserDetails} adminOnly />} />
           <Route path="/tablegym" element={<ProtectedRoute element={Tablegym} adminOnly />} />
-        </Routes>
+          <Route path="*" element={<Navigate to="/" />} />        </Routes>
       </Router>
     </div>
   );

@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faUserCircle, faPhone, faCalendarAlt, faCheckCircle, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faUserCircle, faPhone, faCalendarAlt, faCheckCircle, faEdit, faHourglassStart,faTimeline,faHourglassEnd,faMoneyBill } from "@fortawesome/free-solid-svg-icons";
 import { Chip } from "@material-tailwind/react";
 import Axios from "axios";
-import "../styles/sty.css";
-
-const Tablegym = () => {
+import "../../styles/sty.css";
+const Attendance = () => {
   const [tableData, setTableData] = useState([]);
+  const navigate = useNavigate();
+
   const TABLE_HEAD = [
     { label: "SI.no", icon: faUser },
     { label: "Customer ID", icon: faUserCircle },
     { label: "Name", icon: faUserCircle },
     { label: "Mobile No", icon: faPhone },
-    { label: "Date of Birth", icon: faCalendarAlt },
-    { label: "Status", icon: faCheckCircle },
-    { label: "Action", icon: faEdit },
+    { label: "In Time", icon: faHourglassStart },
+    { label: "Out Time", icon:faHourglassEnd },
+    { label: "Duration", icon: faTimeline },
   ];
 
   useEffect(() => {
@@ -45,12 +46,11 @@ const Tablegym = () => {
   
       // Construct the URL for the new page
       const newPageUrl = `/user/${customerId}`;
-      window.location.href = newPageUrl;
+      navigate(newPageUrl); // Use navigate to redirect to the new page
     } catch (error) {
       console.error("Error fetching user details:", error);
     }
   };
-  
 
   return (
     <div className="overflow-y-auto px-15 border border-black-1000 h-96">
@@ -106,4 +106,4 @@ const Tablegym = () => {
   );
 };
 
-export default Tablegym;
+export default Attendance;

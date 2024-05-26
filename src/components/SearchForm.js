@@ -7,12 +7,12 @@ import axios from 'axios';
 const SearchForm = ({ onSubmit }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [memberID, setMemberID] = useState("");
+  const [matchingUser, setMatchingUser] = useState(null);
   const [name, setName] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
   const [dob, setDob] = useState("");
   const [address, setAddress] = useState("");
   
-
   const handleMemberIDChange = (event) => {
     setMemberID(event.target.value);
   };
@@ -36,14 +36,14 @@ const SearchForm = ({ onSubmit }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const searchParams = new URLSearchParams({
-      ID:memberID,
+      ID: memberID,
       name: name.toLowerCase(),
       dob,
       mobile: mobileNumber,
     });
-
+  
     const url = `http://13.60.96.144/admin/user/searching?${searchParams.toString()}`;
-
+  
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get(url, {
@@ -51,15 +51,26 @@ const SearchForm = ({ onSubmit }) => {
           'Authorization': `Bearer ${token}`,
         },
       });
-
+  
       if (response.status === 200) {
         const data = response.data.user;
-        const firstThreeResults = data;
-
+        const firstThreeResults = data; // Get only the first three results
+  
         setSearchResults(firstThreeResults); 
         onSubmit(firstThreeResults); 
+  
         console.log('First three search results:', firstThreeResults);
-        
+  
+        // Find the user with the specified memberID
+        const matchingUser = firstThreeResults.find(user => user.ID === parseInt(memberID, 10));
+  
+        if (matchingUser) {
+          console.log('Matching user:', matchingUser);
+          setMatchingUser(matchingUser); // Update the state with the matching user
+        } else {
+          console.log('No matching user found with ID:', memberID);
+          setMatchingUser(null); // Reset the matching user if not found
+        }
       } else {
         console.error('Error fetching search results:', response.statusText);
       }
@@ -67,6 +78,7 @@ const SearchForm = ({ onSubmit }) => {
       console.error('Error fetching search results:', error);
     }    
   };
+  
   const handleOpenClick = async (_id) => {
     try {
       const response = await axios.get(`http://13.60.96.144/admin/user/${_id}`, {
@@ -86,7 +98,6 @@ const SearchForm = ({ onSubmit }) => {
     }
   };
   
-
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -137,6 +148,22 @@ const SearchForm = ({ onSubmit }) => {
         </div>
       </form>
 
+      {/* Display matching user details */}
+      {matchingUser && (
+  <div className="mt-8">
+    <h3 className="text-lg font-medium">Matching User Details</h3>
+    <div className="bg-gray-100 p-4 rounded-md">
+      <p><strong>ID:</strong> {matchingUser.ID}</p>
+      <p><strong>Name:</strong> {matchingUser.NAME}</p>
+      <p><strong>Mobile Number:</strong> {matchingUser.PHONE}</p>
+      <p><strong>Date of Birth:</strong> {matchingUser.DOB ? matchingUser.DOB.substring(0, 10) : ''}</p>
+      <p><strong>Status:</strong> {matchingUser.STATUS === 1 ? "ACTIVE" : "NON-ACTIVE"}</p>
+      <button onClick={() => handleOpenClick(matchingUser._id)} className="text-indigo-600 hover:text-indigo-900">View</button>
+    </div>
+  </div>
+)}
+
+
       {/* Display search results */}
       <div className="mt-8">
         <table className="min-w-full divide-y divide-gray-200">
@@ -152,26 +179,26 @@ const SearchForm = ({ onSubmit }) => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-  {searchResults && searchResults.length > 0 ? (
-    searchResults.map((result, index) => (
-      <tr key={index} className="hover:bg-gray-100">
-        <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
-        <td className="px-6 py-4 whitespace-nowrap">{result.ID}</td>
-        <td className="px-6 py-4 whitespace-nowrap">{result.NAME}</td>
-        <td className="px-6 py-4 whitespace-nowrap">{result.PHONE}</td>
-        <td className="px-6 py-4 whitespace-nowrap">{result.DOB ? result.DOB.substring(0, 10) : ''}</td>
-        <td className="px-6 py-4 whitespace-nowrap">{result.STATUS === 1 ? "ACTIVE" : "NON-ACTIVE"}</td>
-        <td className="px-6 py-4 whitespace-nowrap">
-        <button onClick={() => handleOpenClick(result._id)} className="text-indigo-600 hover:text-indigo-900">View</button>        </td>
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan="7" className="px-6 py-4 text-center">No results found</td>
-    </tr>
-  )}
-</tbody>
-
+            {searchResults && searchResults.length > 0 ? (
+              searchResults.map((result, index) => (
+                <tr key={index} className="hover:bg-gray-100">
+                  <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{result.ID}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{result.NAME}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{result.PHONE}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{result.DOB ? result.DOB.substring(0, 10) : ''}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{result.STATUS === 1 ? "ACTIVE" : "NON-ACTIVE"}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <button onClick={() => handleOpenClick(result._id)} className="text-indigo-600 hover:text-indigo-900">View</button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="7" className="px-6 py-4 text-center">No results found</td>
+              </tr>
+            )}
+          </tbody>
         </table>
       </div>
     </div>

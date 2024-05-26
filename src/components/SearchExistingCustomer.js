@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Axios from "axios";
 import Sidebar from "./side";
 import SearchForm from "./SearchForm";
-import Tableg from "./Table";
+import Tableg from "./tables/Table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faUndo, faFileExcel, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import logo from "../img/logo-1.png";

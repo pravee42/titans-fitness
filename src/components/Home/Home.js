@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import logo from "./img/logo-1.png"; 
-import brand from "./img/logo2.jpg"
+import brand from "./img/logo2.jpg";
 import girl from "./img/girlexe.jpg"; 
 import Boy from "./img/trainer.jpg"; 
 import Boy_2 from "./img/trainer2.jpg"; 
@@ -83,11 +83,6 @@ const HomePage = () => {
     Login
   </button>
 </div>
-
-
-
-
-
 <div className="font-nerwester">
       <div className="absolute left-1 md:right-1/4 lg:right-1/2 top-1/2 transform -translate-y-1/2 p-5 rounded-lg text-center font-norwester">
   <h1 className="text-white text-4xl md:text-6xl lg:text-8xl mb-4" style={{ letterSpacing: '2px', textShadow: '5px 2px 11px rgba(0,0,0,0.3)' }}>
@@ -101,9 +96,6 @@ const HomePage = () => {
   </p>
 </div>
 </div>
-
-
-
     </div>
       {/* Card 1 */}
       <div className="w-full max-w-sm lg:max-w-full lg:flex justify-center mt-10">
@@ -145,7 +137,6 @@ const HomePage = () => {
           </div>
         </div>
       </div>
-
       {/* Card 3 */}
       <div className="text-center content-center justify-center">
         <p

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Sidebar from "./side";
 import UserInformation from "./user";
 import SearchForm from "./SearchForm";
-import Gymtable from "./attendancetable";
+import Gymtable from "./tables/attendancetable";
 import "../styles/sty.css";
 import logo from "../img/logo-1.png";
 import { useLocation } from "react-router-dom";
@@ -180,11 +180,6 @@ const GymAt = () => {
           </div>
           </div>
           <div className="flex justify-end px-20">
-  <label className="checkbox-container  btnb  mr-10">
-    <input className="py-3" type="checkbox" />
-    <span className="checkmark align-middle"></span>
-    Current Log
-  </label>
   <label className="checkbox-container btnb ">
     <input type="checkbox" />
     <span className="checkmark"></span>

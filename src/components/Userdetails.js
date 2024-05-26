@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import { useParams } from 'react-router-dom';
 import * as XLSX from 'xlsx';
-import logo from '../img/gymlogo.jpg'; 
+import logo from '../img/gymlogo.jpg';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const UserProfile = () => {
@@ -16,6 +18,19 @@ const UserProfile = () => {
   const [type, setType] = useState('');
   const [error, setError] = useState(null);
   const [isActivated, setIsActivated] = useState(false);
+  const notify = () => {
+    toast.success('Payment Added', {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+      transition: 'bounce',
+    });
+  };
   const [isEditing, setIsEditing] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState('Unpaid');
   const [editedInfo, setEditedInfo] = useState({
@@ -129,21 +144,32 @@ const UserProfile = () => {
     setIsEditingPayment(false);
     setPaymentToEdit(null);
   };
-
-  const handleDeletePayment = async (paymentId) => {
+  useEffect(()=>{
+  const fetchPaymentHistory = async () => {
     try {
       const token = localStorage.getItem('token');
-      await Axios.delete(`http://13.60.96.144/admin/payment/${paymentId}`, {
+      const response = await Axios.get(`http://13.60.96.144/admin/payment/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      setRecentPayments(recentPayments.filter(payment => payment.id !== paymentId));
+
+      if (response.status === 200) {
+        setPayments(response.data.payments);
+        console.log('Response from the server:', response.data);
+      } else {
+        console.error('Error fetching payment history:', response.statusText);
+      }
     } catch (error) {
-      console.error('Error deleting payment:', error);
-      setError('Error deleting payment');
+      console.error('Error fetching payment history:', error);
+      setError('Error fetching payment history');
     }
   };
+
+  if (userId) {
+    fetchPaymentHistory();
+  }
+}, [userId]);
 
   const handleAddPayment = async () => {
     try {
@@ -153,10 +179,10 @@ const UserProfile = () => {
         {
           id: user.ID,
           type: type,
-          amount: parseFloat(newPayment), // Ensure amount is parsed as a float
+          amount: newPayment, 
           effective: effectiveDate,
           end: endDate,
-          balance: parseFloat(balance), // Ensure balance is parsed as a float
+          balance: balance, 
         },
         {
           headers: {
@@ -164,6 +190,8 @@ const UserProfile = () => {
           },
         }
       );
+  
+      console.log('Server response:', response);
       setPaymentStatus(response.data.paymentStatus);
       setNextDue(response.data.nextDue);
       setRecentPayments([...recentPayments, response.data.payment]);
@@ -172,13 +200,18 @@ const UserProfile = () => {
       setEndDate('');
       setBalance('');
       setType('');
+      notify();
     } catch (error) {
       console.error('Error adding payment:', error);
+  
+      if (error.response && error.response.headers) {
+        console.log('Redirect Location:', error.response.headers.location);
+      }
+  
       setError('Error adding payment');
     }
   };
   
-
   const handleEditPayment = (payment) => {
     setIsEditingPayment(true);
     setPaymentToEdit(payment);
@@ -187,24 +220,26 @@ const UserProfile = () => {
   const handleSavePaymentEdit = async () => {
     try {
       const token = localStorage.getItem('token');
+      const { id, amount, end, balance } = paymentToEdit;
       const response = await Axios.patch(
         `http://13.60.96.144/admin/payment/edit`,
-        paymentToEdit,
+        { id, amount, end, balance },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      setPaymentStatus(response.data.paymentStatus);
-      setNextDue(response.data.nextDue);
-      setRecentPayments(
-        recentPayments.map((payment) =>
-          payment.id === paymentToEdit.id ? response.data.payment : payment
-        )
-      );
-      setIsEditingPayment(false);
-      setPaymentToEdit(null);
+
+      if (response.status === 200) {
+        setPayments(payments.map(payment =>
+          payment.id === id ? response.data.payment : payment
+        ));
+        setIsEditingPayment(false);
+        setPaymentToEdit(null);
+      } else {
+        console.error('Error updating payment:', response.statusText);
+      }
     } catch (error) {
       console.error('Error updating payment:', error);
       setError('Error updating payment');
@@ -227,7 +262,7 @@ const UserProfile = () => {
     try {
       const token = localStorage.getItem('token');
       await Axios.patch(
-        `http://13.60.96.144/admin/user/${id}`,
+        `http://13.60.96.144/admin/payment/edit`,
         {
           paymentStatus: paymentStatus === 'Paid' ? 'Unpaid' : 'Paid',
         },
@@ -247,7 +282,7 @@ const UserProfile = () => {
   return (
     <div className="container mx-auto p-4 bg-green-100">
       <div className="flex justify-center mb-4">
-        <img src={logo} alt="Logo" className="w-32 h-32 rounded-full" />
+        <img src={logo} alt="Logo" className="w-22 h-32 rounded-full" />
       </div>
       {error && <div className="bg-red-100 text-red-700 p-4 rounded mb-4">{error}</div>}
       {user ? (
@@ -258,7 +293,7 @@ const UserProfile = () => {
               <p className="text-xl font-semibold">Name: {user.NAME}</p>
               <p className="text-xl font-semibold">Email: {user.EMAIL}</p>
               <p className="text-xl font-semibold">Phone: {user.PHONE}</p>
-              <p className="text-xl font-semibold">DOB: {user.DOB}</p>
+              <p className="text-xl font-semibold">DOB: {user.DOB && user.DOB.slice(0, 10)}</p>
               <p className="text-xl font-semibold">Address: {user.ADDRESS}</p>
               <p className="text-xl font-semibold">Reference Number: {user.REFERENCE_NUMBER}</p>
               <p className="text-xl font-semibold">Next Due: {nextDue}</p>
@@ -429,6 +464,7 @@ const UserProfile = () => {
             >
               Add Payment
             </button>
+            <ToastContainer />
           </div>
           {isEditingPayment && (
             <div className="bg-gray-100 p-4 rounded shadow-md mb-4">
@@ -522,17 +558,10 @@ const UserProfile = () => {
         >
           Edit
         </button>
-        <button
-          onClick={() => handleDeletePayment(payment.id)}
-          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Delete
-        </button>
       </td>
     </tr>
   ))}
 </tbody>
-
             </table>
           </div>
         </div>

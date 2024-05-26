@@ -45,7 +45,7 @@ const CustomerPayment = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    
     console.log("Submitted: ", user);
   };
 
@@ -200,16 +200,11 @@ const CustomerPayment = () => {
   {/* Table centered */}
   <div className="flex justify-center mt-5">
     <Customertable />
-    
   </div>
-
   {/* Buttons aligned to the right */}
-
 </div>
-
     </div>
   </div>
-  
   
   );
 };

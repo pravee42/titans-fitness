@@ -1,3 +1,4 @@
+/* userInformationStyles.css */
 
 .content {
     width: 290px;
@@ -10,7 +11,7 @@
   .container {
     display: flex;
     background-color: transparent;
-    height: 100%;
+    height: 100%; /* Adjusted height value */
   }
   
   .icon {
@@ -39,6 +40,6 @@
   }
   
   .form {
-    min-height: 150px; 
+    min-height: 150px; /* Changed to min-height for flexibility */
   }
   

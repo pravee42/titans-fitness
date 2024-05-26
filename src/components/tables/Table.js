@@ -1,23 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faUserCircle, faPhone, faCalendarAlt, faCheckCircle, faEdit, faHourglassStart,faTimeline,faHourglassEnd,faMoneyBill } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faUserCircle, faPhone, faCalendarAlt, faCheckCircle, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { Chip } from "@material-tailwind/react";
 import Axios from "axios";
-import "../styles/sty.css";
+import "../../styles/sty.css";
 
-const Attendance = () => {
+const Tablegym = () => {
   const [tableData, setTableData] = useState([]);
-  const navigate = useNavigate();
-
   const TABLE_HEAD = [
-    { label: "SI.no", icon: faUser },
     { label: "Customer ID", icon: faUserCircle },
     { label: "Name", icon: faUserCircle },
     { label: "Mobile No", icon: faPhone },
-    { label: "In Time", icon: faHourglassStart },
-    { label: "Out Time", icon:faHourglassEnd },
-    { label: "Duration", icon: faTimeline },
+    { label: "Date of Birth", icon: faCalendarAlt },
+    { label: "Status", icon: faCheckCircle },
+    { label: "Action", icon: faEdit },
   ];
 
   useEffect(() => {
@@ -47,11 +44,12 @@ const Attendance = () => {
   
       // Construct the URL for the new page
       const newPageUrl = `/user/${customerId}`;
-      navigate(newPageUrl); // Use navigate to redirect to the new page
+      window.location.href = newPageUrl;
     } catch (error) {
       console.error("Error fetching user details:", error);
     }
   };
+  
 
   return (
     <div className="overflow-y-auto px-15 border border-black-1000 h-96">
@@ -73,7 +71,6 @@ const Attendance = () => {
             tableData.map((rowData, index) => (
               <tr key={index} className={`${index % 2 === 0 ? "bg-gray-100" : ""} border-b border-blue-gray-800`}>
                 <td className="p-4 border-l border-r border-blue-gray-800">{rowData.ID}</td>
-                <td className="p-4 border-l border-r border-blue-gray-800">{rowData._id}</td>
                 <td className="p-4 border-l border-r border-blue-gray-800">{rowData.NAME}</td>
                 <td className="p-4 border-l border-r border-blue-gray-800">{rowData.PHONE}</td>
                 <td className="p-4 border-l border-r border-blue-gray-800">{new Date(rowData.DOB).toLocaleDateString()}</td>
@@ -107,4 +104,4 @@ const Attendance = () => {
   );
 };
 
-export default Attendance;
+export default Tablegym;
