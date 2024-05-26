@@ -98,10 +98,10 @@ const DashboardLayout = () => {
       />
       <div>
         <h6 className="bg-transparent block font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-inherit">
-          Tania Andrew
+          Admin
         </h6>
         <p className="bg-transparent block font-sans text-sm antialiased font-normal leading-normal text-gray-700">
-          Test
+          Titans-fitness
         </p>
       </div>
     </div>
