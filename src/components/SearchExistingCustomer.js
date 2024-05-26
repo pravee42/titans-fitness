@@ -14,7 +14,7 @@ const SearchExistingCoustomer = () => {
   const handleSubmit = async (searchResults) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await Axios.get("https://13.60.96.144/admin/user", {
+      const response = await Axios.get("https://gym-backend-apis.onrender.com/admin/user", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

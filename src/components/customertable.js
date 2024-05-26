@@ -23,7 +23,7 @@ const TableCustomer = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await Axios.get("http://13.60.96.144/admin/user", {
+        const response = await Axios.get("https://gym-backend-apis.onrender.com/admin/user", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -39,7 +39,7 @@ const TableCustomer = () => {
 
   const handleOpenClick = async (customerId) => {
     try {
-      const response = await Axios.get(`http://13.60.96.144/admin/user/${customerId}`, {
+      const response = await Axios.get(`https://gym-backend-apis.onrender.com/admin/user/${customerId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

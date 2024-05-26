@@ -23,7 +23,7 @@ const UserSearchForm = ({ onSubmit }) => {
       name: name.toLowerCase(),
     });
 
-    const url = `http://13.60.96.144/admin/user/searching?${searchParams.toString()}`;
+    const url = `https://gym-backend-apis.onrender.com/admin/user/searching?${searchParams.toString()}`;
 
     try {
       const token = localStorage.getItem('token');
@@ -49,7 +49,7 @@ const UserSearchForm = ({ onSubmit }) => {
   };
   const handleOpenClick = async (_id) => {
     try {
-      const response = await axios.get(`http://13.60.96.144/admin/user/${_id}`, {
+      const response = await axios.get(`https://gym-backend-apis.onrender.com/admin/user/${_id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

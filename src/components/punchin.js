@@ -32,7 +32,7 @@ const Punchin = () => {
 
   const handleSearchSubmit = async () => {
     try {
-      const response = await axios.get(`http://13.60.96.144/customer/details/${searchId}`);
+      const response = await axios.get(`https://gym-backend-apis.onrender.com/customer/details/${searchId}`);
       setUserDetails(response.data);
     } catch (error) {
       console.error('Error fetching user details:', error);

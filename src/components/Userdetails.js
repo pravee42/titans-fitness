@@ -52,7 +52,7 @@ const UserProfile = () => {
     const fetchUserDetails = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await Axios.get(`http://13.60.96.144/admin/user/${id}`, {
+        const response = await Axios.get(`https://gym-backend-apis.onrender.com/admin/user/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

@@ -17,7 +17,7 @@ const Punchinform = () => {
       searchId: searchId,
     });
   
-    const url = `http://13.60.96.144/admin/user/searching?${searchParams.toString()}`;
+    const url = `https://gym-backend-apis.onrender.com/admin/user/searching?${searchParams.toString()}`;
   
     try {
       const token = localStorage.getItem('token');

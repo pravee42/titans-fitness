@@ -109,7 +109,7 @@ const UserInformation = () => {
         address
       };
       const token = localStorage.getItem('token');
-      const response = await fetch('http://13.60.96.144/admin/user/create', {
+      const response = await fetch('https://gym-backend-apis.onrender.com/admin/user/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
