@@ -89,8 +89,9 @@ function Login() {
               <div className="footer-col2">
                 <span className="footer-text09">Contact</span>
                 <div className="footer-list">
-                  <span>+91 9043931098</span>
-                  <span>hello@titanfitness.com</span>
+                <a href="tel:+918489135973">+91 8489135973</a>
+                  <a href="tel:+919043931098">+91 9043931098</a>
+                  <a href="mailto:thetitanfitnessstudio@gmail.com">thetitanfitnessstudio@gmail.com</a>
                 </div>
               </div>
               <div className="footer-col3">
