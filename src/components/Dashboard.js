@@ -3,6 +3,7 @@ import Sidebar from "./side";
 import UserInformation from "./user";
 import "../styles/sty.css";
 import logo from "../img/logo-1.png";
+import logo2 from "./Home/img/logo2.jpg";
 import { useLocation } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -76,7 +77,7 @@ const DashboardLayout = () => {
   const userInfo = isAdmin ? (
     <div className="flex items-center gap-4">
       <img
-        src="admin_photo_url"
+        srcSet={logo2}
         alt="admin_avatar"
         className="inline-block relative object-cover object-center rounded-full w-12 h-12"
       />
@@ -92,16 +93,16 @@ const DashboardLayout = () => {
   ) : (
     <div className="flex items-center gap-4 bg-transparent">
       <img
-        src="https://docs.material-tailwind.com/img/face-2.jpg"
+        srcSet={logo2}
         alt="avatar"
         className="relative inline-block object-cover object-center w-12 h-12 rounded-lg"
       />
       <div>
         <h6 className="bg-transparent block font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-inherit">
-          Admin
+          admin
         </h6>
         <p className="bg-transparent block font-sans text-sm antialiased font-normal leading-normal text-gray-700">
-          Titans-fitness
+          admin
         </p>
       </div>
     </div>

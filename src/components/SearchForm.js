@@ -1,208 +1,148 @@
-import React, { useState } from "react";
-import { Input } from "@material-tailwind/react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faUser,
+  faUserCircle,
+  faPhone,
+  faHourglassStart,
+  faHourglassEnd,
+  faTimeline,
+} from "@fortawesome/free-solid-svg-icons";
+import { Chip } from "@material-tailwind/react";
+import Axios from "axios";
+// import "../../styles/sty.css";
 
-const SearchForm = ({ onSubmit }) => {
-  const [searchResults, setSearchResults] = useState([]);
-  const [memberID, setMemberID] = useState("");
-  const [matchingUser, setMatchingUser] = useState(null);
-  const [name, setName] = useState("");
-  const [mobileNumber, setMobileNumber] = useState("");
-  const [dob, setDob] = useState("");
-  const [address, setAddress] = useState("");
-  
-  const handleMemberIDChange = (event) => {
-    setMemberID(event.target.value);
-  };
+const Attendance = () => {
+  const [tableData, setTableData] = useState([]);
+  const navigate = useNavigate();
 
-  const handleNameChange = (event) => {
-    setName(event.target.value);
-  };
+  const TABLE_HEAD = [
+    { label: "SI.no", icon: faUser },
+    { label: "Customer ID", icon: faUserCircle },
+    { label: "Name", icon: faUserCircle },
+    { label: "Mobile No", icon: faPhone },
+    { label: "In Time", icon: faHourglassStart },
+    { label: "Out Time", icon: faHourglassEnd },
+    { label: "Duration", icon: faTimeline },
+  ];
 
-  const handleMobileNumberChange = (event) => {
-    setMobileNumber(event.target.value);
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await Axios.get("https://gym-backend-apis.onrender.com/admin/user", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
 
-  const handleDobChange = (event) => {
-    setDob(event.target.value);
-  };
+        const users = response.data.users;
+        const enrichedUsers = await Promise.all(
+          users.map(async (user) => {
+            const punchInResponse = await Axios.get(`https://gym-backend-apis.onrender.com/admin/punch/in?userId=${user._id}`, {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            });
 
-  const handleAddressChange = (event) => {
-    setAddress(event.target.value);
-  };
+            const punchOutResponse = await Axios.get(`https://gym-backend-apis.onrender.com/admin/punch/out?userId=${user._id}`, {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const searchParams = new URLSearchParams({
-      ID: memberID,
-      name: name.toLowerCase(),
-      dob,
-      mobile: mobileNumber,
-    });
-  
-    const url = `https://gym-backend-apis.onrender.com/admin/user/searching?${searchParams.toString()}`;
-  
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get(url, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-  
-      if (response.status === 200) {
-        const data = response.data.user;
-        const firstThreeResults = data; // Get only the first three results
-  
-        setSearchResults(firstThreeResults); 
-        onSubmit(firstThreeResults); 
-  
-        console.log('First three search results:', firstThreeResults);
-  
-        // Find the user with the specified memberID
-        const matchingUser = firstThreeResults.find(user => user.ID === parseInt(memberID, 10));
-  
-        if (matchingUser) {
-          console.log('Matching user:', matchingUser);
-          setMatchingUser(matchingUser); // Update the state with the matching user
-        } else {
-          console.log('No matching user found with ID:', memberID);
-          setMatchingUser(null); // Reset the matching user if not found
-        }
-      } else {
-        console.error('Error fetching search results:', response.statusText);
+            const inTime = punchInResponse.data.inTime ? new Date(punchInResponse.data.inTime) : null;
+            const outTime = punchOutResponse.data.outTime ? new Date(punchOutResponse.data.outTime) : null;
+
+            let duration = null;
+            if (inTime && outTime) {
+              const durationMs = outTime - inTime;
+              const durationHours = (durationMs / (1000 * 60 * 60)).toFixed(2);
+              duration = `${durationHours} hrs`;
+            }
+
+            return { ...user, inTime, outTime, duration };
+          })
+        );
+
+        setTableData(enrichedUsers);
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
-    } catch (error) {
-      console.error('Error fetching search results:', error);
-    }    
-  };
-  
-  const handleOpenClick = async (_id) => {
+    };
+
+    fetchData();
+  }, []);
+
+  const handleOpenClick = async (customerId) => {
     try {
-      const response = await axios.get(`https://gym-backend-apis.onrender.com/admin/user/${_id}`, {
+      const response = await Axios.get(`https://gym-backend-apis.onrender.com/admin/user/${customerId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
-      if (response.status === 200) {
-        const newPageUrl = `/user/${_id}`;
-        window.location.href = newPageUrl;
-      } else {
-        console.error('Error fetching user details:', response.statusText);
-      }
+      const newPageUrl = `/user/${customerId}`;
+      navigate(newPageUrl); // Use navigate to redirect to the new page
     } catch (error) {
-      console.error('Error fetching user details:', error);
+      console.error("Error fetching user details:", error);
     }
   };
-  
+
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <div className="flex justify-center gap-4">
-          {/* Input fields */}
-          <Input
-            type="text"
-            value={memberID}
-            onChange={handleMemberIDChange}
-            placeholder="Member ID"
-            size="lg"
-            className="px-7 w-48 bg-white border border-gray-300 rounded-md"
-            label="Member ID"
-          />
-          <Input
-            type="text"
-            value={name}
-            onChange={handleNameChange}
-            placeholder="Name"
-            size="lg"
-            className="px-7 w-48 bg-white border border-gray-300 rounded-md"
-            label="Name"
-          />
-          <Input
-            type="text"
-            value={mobileNumber}
-            onChange={handleMobileNumberChange}
-            placeholder="Mobile Number"
-            size="lg"
-            className="w-1/4 bg-white"
-            label="Mobile Number"
-          />
-          <Input
-            type="date"
-            value={dob}
-            onChange={handleDobChange}
-            placeholder="Date of Birth"
-            size="lg"
-            className="w-1/4 bg-white"
-            label="DOB"
-          />
-        </div>
-        <div className="flex justify-end mt-5">
-          <button type="submit" className="bg-green-500 text-white py-2 px-4 rounded-md ml-auto">
-            <FontAwesomeIcon icon={faSearch} className="mr-2 text-lg px-1" />
-            Search
-          </button>
-        </div>
-      </form>
-
-      {/* Display matching user details */}
-      {matchingUser && (
-  <div className="mt-8">
-    <h3 className="text-lg font-medium">Matching User Details</h3>
-    <div className="bg-gray-100 p-4 rounded-md">
-      <p><strong>ID:</strong> {matchingUser.ID}</p>
-      <p><strong>Name:</strong> {matchingUser.NAME}</p>
-      <p><strong>Mobile Number:</strong> {matchingUser.PHONE}</p>
-      <p><strong>Date of Birth:</strong> {matchingUser.DOB ? matchingUser.DOB.substring(0, 10) : ''}</p>
-      <p><strong>Status:</strong> {matchingUser.STATUS === 1 ? "ACTIVE" : "NON-ACTIVE"}</p>
-      <button onClick={() => handleOpenClick(matchingUser._id)} className="text-indigo-600 hover:text-indigo-900">View</button>
-    </div>
-  </div>
-)}
-
-
-      {/* Display search results */}
-      <div className="mt-8">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SI. No</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer ID</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mobile No</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date of Birth</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {searchResults && searchResults.length > 0 ? (
-              searchResults.map((result, index) => (
-                <tr key={index} className="hover:bg-gray-100">
-                  <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{result.ID}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{result.NAME}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{result.PHONE}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{result.DOB ? result.DOB.substring(0, 10) : ''}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{result.STATUS === 1 ? "ACTIVE" : "NON-ACTIVE"}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <button onClick={() => handleOpenClick(result._id)} className="text-indigo-600 hover:text-indigo-900">View</button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="7" className="px-6 py-4 text-center">No results found</td>
+    <div className="overflow-y-auto px-15 border border-black-1000 h-96">
+      <table className="text-center w-full border-collapse">
+        <thead>
+          <tr className="sticky top-0">
+            {TABLE_HEAD.map(({ label, icon }) => (
+              <th key={label} className="rounded-lg border border-black-800 bg-gray-50 p-4">
+                <div className="flex items-center justify-center gap-1">
+                  <FontAwesomeIcon icon={icon} className="text-green-gray-500 h-3 w-3" />
+                  <span className="font-normal leading-none opacity-70">{label}</span>
+                </div>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {Array.isArray(tableData) && tableData.length > 0 ? (
+            tableData.map((rowData, index) => (
+              <tr key={index} className={`${index % 2 === 0 ? "bg-gray-100" : ""} border-b border-blue-gray-800`}>
+                <td className="p-4 border-l border-r border-blue-gray-800">{index + 1}</td>
+                <td className="p-4 border-l border-r border-blue-gray-800">{rowData._id}</td>
+                <td className="p-4 border-l border-r border-blue-gray-800">{rowData.NAME}</td>
+                <td className="p-4 border-l border-r border-blue-gray-800">{rowData.PHONE}</td>
+                <td className="p-4 border-l border-r border-blue-gray-800">{rowData.inTime ? rowData.inTime.toLocaleTimeString() : "N/A"}</td>
+                <td className="p-4 border-l border-r border-blue-gray-800">{rowData.outTime ? rowData.outTime.toLocaleTimeString() : "N/A"}</td>
+                <td className="p-4 border-l border-r border-blue-gray-800">{rowData.duration ? rowData.duration : "N/A"}</td>
+                <td className="p-4 border-l border-r border-blue-gray-800 w-20">
+                  <Chip
+                    variant="ghost"
+                    size="sm"
+                    value={rowData.STATUS === 1 ? "Active" : "Non-Active"}
+                    color={rowData.STATUS === 1 ? "green" : "blue-gray"}
+                    className="text-gray-800"
+                  />
+                </td>
+                <td className="p-4 border-l border-r border-blue-gray-800 w-20">
+                  <button
+                    className="text-gray-800 bg-green-200 px-3 py-1 rounded-md cursor-pointer hover:bg-green-300"
+                    onClick={() => handleOpenClick(rowData._id)}
+                  >
+                    Open
+                  </button>
+                </td>
               </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={TABLE_HEAD.length} className="p-4 text-center">Loading...</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
     </div>
   );
 };
 
-export default SearchForm;
+export default Attendance;

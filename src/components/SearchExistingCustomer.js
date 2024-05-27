@@ -75,7 +75,7 @@ const SearchExistingCoustomer = () => {
         <div className="md:flex items-center">
           {userInfo}
           <div>
-            {/* Test icon */}
+            
           </div>
         </div>
       </header>

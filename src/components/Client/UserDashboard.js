@@ -15,7 +15,7 @@ const UserDashboard = () => {
   useEffect(() => {
     const fetchUserDashboardData = async () => {
       try {
-        const response = await axios.get(`https://gym-backend-apis.onrender.com/customer/dashboard`, {
+        const response = await axios.get(`http://13.60.96.144/customer/dashboard`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setUserInfo(response.data.info);
@@ -31,7 +31,7 @@ const UserDashboard = () => {
   useEffect(() => {
     const fetchInOutTime = async () => {
       try {
-        const response = await axios.get(`https://gym-backend-apis.onrender.coms/customer/punch`, {
+        const response = await axios.get(`http://13.60.96.144/customer/punch`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setInTime(response.data.inTime);

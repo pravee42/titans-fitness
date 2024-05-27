@@ -60,14 +60,17 @@ const Sidebar = ({ toggleSidebar }) => {
           </a>
         </li>
       </ul>
-      <ul className="absolute bottom-0 mb-11">
-        <li className="hover:text-70AB0E-800 px-1 ">
-        <a href="#" className="block flex items-center" onClick={handleSignOut}>
-          <FontAwesomeIcon icon={faSignOutAlt} className="mr-2 text-lg" />
-          <span className="text-sm"> Sign Out</span>
-        </a>
-        </li>
-      </ul>
+      <div className="relative min-h-screen">
+  <ul className="absolute bottom-10 mb-11 w-full">
+    <li className="hover:text-green-800 px-1">
+      <a href="#" className="block flex items-center justify-center" onClick={handleSignOut}>
+        <FontAwesomeIcon icon={faSignOutAlt} className="mr-2 text-lg" />
+        <span className="text-sm">Sign Out</span>
+      </a>
+    </li>
+  </ul>
+</div>
+
 
       {/* Sidebar 76menu icon for mobile view */}
       <div className="sm:hidden">

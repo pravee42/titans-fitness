@@ -79,8 +79,8 @@ const UserProfile = () => {
   const handleToggleActivation = async () => {
     try {
       const endpoint = isActivated 
-        ? 'http://13.60.96.144/admin/user/non-active' 
-        : 'http://13.60.96.144/admin/user/active';
+        ? 'https://gym-backend-apis.onrender.com/admin/user/non-active' 
+        : 'https://gym-backend-apis.onrender.com/admin/user/active';
       
       const response = await Axios.post(
         endpoint,
@@ -126,7 +126,7 @@ const UserProfile = () => {
       if (editedInfo.image) {
         formData.append('image', editedInfo.image);
       }
-      const response = await Axios.patch(`http://13.60.96.144/admin/user/${id}`, formData, {
+      const response = await Axios.patch(`https://gym-backend-apis.onrender.com/admin/user/${id}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
@@ -148,7 +148,7 @@ const UserProfile = () => {
   const fetchPaymentHistory = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await Axios.get(`http://13.60.96.144/admin/payment/${userId}`, {
+      const response = await Axios.get(`https://gym-backend-apis.onrender.com/admin/payment/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -175,7 +175,7 @@ const UserProfile = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await Axios.post(
-        `http://13.60.96.144/admin/payment/add`,
+        `https://gym-backend-apis.onrender.com/admin/payment/add`,
         {
           id: user.ID,
           type: type,
@@ -222,7 +222,7 @@ const UserProfile = () => {
       const token = localStorage.getItem('token');
       const { id, amount, end, balance } = paymentToEdit;
       const response = await Axios.patch(
-        `http://13.60.96.144/admin/payment/edit`,
+        `https://gym-backend-apis.onrender.com/admin/payment/edit`,
         { id, amount, end, balance },
         {
           headers: {
@@ -262,7 +262,7 @@ const UserProfile = () => {
     try {
       const token = localStorage.getItem('token');
       await Axios.patch(
-        `http://13.60.96.144/admin/payment/edit`,
+        `https://gym-backend-apis.onrender.com/admin/payment/edit`,
         {
           paymentStatus: paymentStatus === 'Paid' ? 'Unpaid' : 'Paid',
         },

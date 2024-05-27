@@ -4,7 +4,7 @@ import UserInformation from "./user";
 import SearchForm from "./SearchForm";
 import Buttons from "./buttons";
 import * as XLSX from 'xlsx';
-
+import logo2 from "./Home/img/logo2.jpg";
 import Preview1 from "./Pr1";
 import "../styles/sty.css";
 import logo from "../img/logo-1.png";
@@ -125,16 +125,16 @@ const CustomerPayment = () => {
     <>
       <div className="flex items-center gap-4 bg-transparent">
         <img
-          src="https://docs.material-tailwind.com/img/face-2.jpg"
+          srcSet={logo2}
           alt="avatar"
           className="relative inline-block object-cover object-center w-12 h-12 rounded-lg"
         />
         <div>
           <h6 className=" bg-transparent block font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-inherit">
-            Coustomer
+            admin
           </h6>
           <p className=" bg-transparent block font-sans text-sm antialiased font-normal leading-normal text-gray-700">
-            Test
+            admin
           </p>
         </div>
       </div>

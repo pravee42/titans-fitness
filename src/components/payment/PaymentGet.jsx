@@ -11,7 +11,7 @@ const PaymentHistory = ({ userId }) => {
     const fetchPaymentHistory = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`https://gym-backend-apis.onrender.com/admin/payment/${userId}`, {
+        const response = await axios.get(`http://13.60.96.144/admin/payment/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -75,7 +75,7 @@ const PaymentHistory = ({ userId }) => {
   const handleDeletePayment = async (paymentId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`https://gym-backend-apis.onrender.com/admin/payment/${paymentId}`, {
+      await axios.delete(`http://13.60.96.144/admin/payment/${paymentId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

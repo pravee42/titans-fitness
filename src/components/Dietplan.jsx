@@ -1,16 +1,11 @@
 import React, { useState } from 'react';
 
-const DietPlans = () => {
+const DietPlans = ({ selectedDietPlan, handleDietPlanChange }) => {
   const [dietPlans, setDietPlans] = useState([
     "Keto Diet",
     "Mediterranean Diet",
     "Paleo Diet"
   ]);
-  const [selectedDietPlan, setSelectedDietPlan] = useState('');
-
-  const handleDietPlanChange = (e) => {
-    setSelectedDietPlan(e.target.value);
-  };
 
   const handleAddDietPlan = () => {
     const newPlan = prompt("Enter the name of the new diet plan:");
@@ -71,6 +66,11 @@ const DietPlans = () => {
           </div>
         ))}
       </div>
+      {selectedDietPlan && (
+        <div className="mt-4">
+          <h4 className="font-bold">Selected Diet Plan: {selectedDietPlan}</h4>
+        </div>
+      )}
     </div>
   );
 };

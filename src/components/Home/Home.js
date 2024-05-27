@@ -335,8 +335,9 @@ const HomePage = () => {
             <div className="flex flex-col p-5">
               <p className="text-sm text-70AB0E-800">CONTACT</p>
               <div className="mt-5">
+                <p>+91 8489135973</p>
                 <p>+91 9043931098</p>
-                <p>hello@titanfitness.com</p>
+                <p>thetitanfitnessstudio@gmail.com</p>
               </div>
             </div>
           </div>
