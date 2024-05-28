@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import logo from './Home/img/logo-1.png';
 import axios from 'axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignOutAlt, faWallet } from '@fortawesome/free-solid-svg-icons';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -78,7 +78,7 @@ const Punchin = () => {
   <ul className="flex md:absolute md:bottom-2 md:left-0 md:mb-3 md:ml-4">
 
           <li className="hover:text-70AB0E-800 px-1">
-            <a href="#" className="block flex items-center" onClick={handleSignOut}>
+            <a href="/" className="block flex items-center" onClick={handleSignOut}>
               <FontAwesomeIcon icon={faSignOutAlt} className="mr-2 text-lg" />
               <span className="text-sm">Sign Out</span>
             </a>
