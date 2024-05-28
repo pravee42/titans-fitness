@@ -3,7 +3,6 @@ import { Input } from "@material-tailwind/react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
-
 const UserSearchForm = ({ onSubmit }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [memberID, setMemberID] = useState("");
@@ -15,8 +14,6 @@ const UserSearchForm = ({ onSubmit }) => {
   const handleNameChange = (event) => {
     setName(event.target.value);
   };
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const searchParams = new URLSearchParams({
@@ -65,8 +62,6 @@ const UserSearchForm = ({ onSubmit }) => {
       console.error('Error fetching user details:', error);
     }
   };
-  
-
   return (
     <div>
       <form onSubmit={handleSubmit}>
