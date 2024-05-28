@@ -231,9 +231,7 @@ const HomePage = () => {
               {expandedRow === "weightGain" && (
                 <div className="expanded-content">
                   <p className="expanded-text text-black text-black text-sm mx-16 mb-5">
-                    social aspect of going to the gym, where they can work out
-                    with friends, join group classes, or meet like-minded
-                    individuals with similar fitness goals.
+                  Weight gain is an increase in body weight. This can involve an increase in muscle mass, fat deposits, excess fluids such as water or other factors. Weight gain can be a symptom of a serious medical condition.
                   </p>
                 </div>
               )}
@@ -255,9 +253,7 @@ const HomePage = () => {
               {expandedRow === "weightLoss" && (
                 <div className="expanded-content">
                   <p className="expanded-text text-black text-sm mx-16 mb-5">
-                    social aspect of going to the gym, where they can work out
-                    with friends, join group classes, or meet like-minded
-                    individuals with similar fitness goals.
+                  we give less weight to the less precise measurements and more weight to more precise measurements when estimating the unknown parameters in the model.
                   </p>
                 </div>
               )}
@@ -281,9 +277,7 @@ const HomePage = () => {
               {expandedRow === "normalFit" && (
                 <div className="expanded-content">
                   <p className="expanded-text text-black text-sm mx-16 mb-5">
-                    social aspect of going to the gym, where they can work out
-                    with friends, join group classes, or meet like-minded
-                    individuals with similar fitness goals.
+                  Muscular strength and endurance: Gym fit individuals have developed their muscles and can perform exercises that require strength and endurance, such as weightlifting, resistance training, or bodyweight exercises.
                   </p>
                 </div>
               )}
@@ -306,9 +300,7 @@ const HomePage = () => {
                 <div className="expanded-content">
                   <p className="expanded-text text-black text-sm mx-16 mb-5 w-50">
                     {" "}
-                    Some people enjoy the social aspect of going to the gym, where
-                    they can work out with friends, join group classes, or meet
-                    like-minded individuals with similar fitness goals.{" "}
+                    CrossFit is a unique structured fitness system that focuses on strength and conditioning. It features high-intensity workout that changes every day. A CrossFit session is usually held in a CrossFit gym or a “box”. This is the dedicated place where people who sign up meet for the sessions..{" "}
                   </p>
                 </div>
               )}
@@ -335,9 +327,14 @@ const HomePage = () => {
             <div className="flex flex-col p-5">
               <p className="text-sm text-70AB0E-800">CONTACT</p>
               <div className="mt-5">
-                <p>+91 8489135973</p>
-                <p>+91 9043931098</p>
-                <p>thetitanfitnessstudio@gmail.com</p>
+              <p>
+              <a href="tel:+918489135973">+91 8489135973</a>
+              </p>
+              <p>
+              <a href="tel:+919043931098">+91 9043931098</a>
+              </p>
+              <p>
+              <a href="mailto:thetitanfitnessstudio@gmail.com">thetitanfitnessstudio@gmail.com</a></p>
               </div>
             </div>
           </div>
@@ -357,7 +354,7 @@ const HomePage = () => {
                   </a>
                 </div>
                 <div className="mb-2">
-                  <p className="text-black text-lg font-bold mt-5">Cards, Gpay, and Phone Pay Accepted here</p>
+                  <p className="text-black text-lg font-bold mt-5">Cards, All UPI transactions are Accepted here</p>
                 </div>
               </div>
             </div>

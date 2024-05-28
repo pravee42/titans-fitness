@@ -5,8 +5,6 @@ import * as XLSX from 'xlsx';
 import logo from '../img/gymlogo.jpg';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-
 const UserProfile = () => {
   const { id } = useParams();
   const [user, setUser] = useState(null);

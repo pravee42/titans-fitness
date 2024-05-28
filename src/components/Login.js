@@ -89,9 +89,9 @@ function Login() {
               <div className="footer-col2">
                 <span className="footer-text09">Contact</span>
                 <div className="footer-list">
-                <a href="tel:+918489135973">+91 8489135973</a>
-                  <a href="tel:+919043931098">+91 9043931098</a>
-                  <a href="mailto:thetitanfitnessstudio@gmail.com">thetitanfitnessstudio@gmail.com</a>
+                  <span><a href="tel:+918489135973">+91 8489135973</a></span>
+                  <span><a href="tel:+919043931098">+91 9043931098</a></span>
+                  <span><a href="mailto:thetitanfitnessstudio@gmail.com">thetitanfitnessstudio@gmail.com</a></span>
                 </div>
               </div>
               <div className="footer-col3">
@@ -104,7 +104,7 @@ function Login() {
                     <img src={whatsapp} alt="WhatsApp" className="footer-item1" />
                   </a>
                   <a href="https://maps.app.goo.gl/bmQFcQ2PV89kd2Px6?g_st=iw">
-                    <img src={tele} alt="Telegram" className="footer-item2" />
+                    <img src={tele} alt="Location" className="footer-item2" />
                   </a>
                 </div>
               </div>

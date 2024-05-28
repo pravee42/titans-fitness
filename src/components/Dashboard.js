@@ -72,10 +72,11 @@ const DashboardLayout = () => {
 
   let location = useLocation();
 
-  const isAdmin = false; // Set to true if the user is an admin, false otherwise
+  const isAdmin = false;
 
   const userInfo = isAdmin ? (
     <div className="flex items-center gap-4">
+      
       <img
         srcSet={logo2}
         alt="admin_avatar"
@@ -83,7 +84,7 @@ const DashboardLayout = () => {
       />
       <div>
         <h6 className="block font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-inherit">
-          Admin Name
+          Admin
         </h6>
         <p className="block font-sans text-sm antialiased font-normal leading-normal text-gray-700">
           Admin
@@ -92,6 +93,7 @@ const DashboardLayout = () => {
     </div>
   ) : (
     <div className="flex items-center gap-4 bg-transparent">
+      
       <img
         srcSet={logo2}
         alt="avatar"
@@ -125,6 +127,7 @@ const DashboardLayout = () => {
 
           {/* Test icon */}
           <div>
+            
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -150,6 +153,7 @@ const DashboardLayout = () => {
         <div className="flex-1 px-5 md:px-10 flex flex-col md:flex-row relative">
           {/* UserInformation */}
           <div className="w-full md:w-1/2 pr-4">
+            
             <UserInformation
               user={user}
               handleSubmit={handleSubmit}

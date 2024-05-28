@@ -24,12 +24,21 @@
     right: 10rem; /* Adjust right positioning as needed */
     width: 100%;
     background-color: white;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1); /* Equivalent to shadow-md */
-    padding: 1.25rem; /* Equivalent to p-5 */
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+    padding: 1.25rem; 
     margin-top: 1.25rem;
     margin-left: 1.25rem;
-    z-index: 1000; /* Ensures it stays on top */
+    z-index: 1000;
   }
+  .container {
+    max-width: 100%; /* Ensure the container does not exceed the full width */
+    overflow: hidden; /* Hide overflow content */
+  }
+  
+  .inside h1 {
+    word-break: break-word; /* Break long words to prevent overflow */
+  }
+  
   
   @media (min-width: 1024px) {
     .preview-section {

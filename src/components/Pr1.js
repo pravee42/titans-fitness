@@ -27,10 +27,10 @@ import { faPhone, faEnvelope, faCalendarAlt, faMapMarkerAlt } from '@fortawesome
                         class="relative inline-block object-cover object-center h-[58px] w-[58px] !rounded-full" />
                     <div className='bg-transparent justify-center item-center text-center' >
                         <h6 class="block font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-inherit">
-                          Tania Andrew
+                          admin
                         </h6>
                         <p class="block font-sans text-sm antialiased font-normal leading-normal text-gray-700">
-                          Web Developer
+                          admin
                         </p>
                     </div>
                 </div>

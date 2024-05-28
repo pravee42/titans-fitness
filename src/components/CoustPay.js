@@ -18,7 +18,7 @@ import {
 
 
 
-import Customertable from "./customertable";
+import Customertable from "./tables/customertable";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {

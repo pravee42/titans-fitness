@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 
 const DietPlans = ({ selectedDietPlan, handleDietPlanChange }) => {
   const [dietPlans, setDietPlans] = useState([
-    "Keto Diet",
-    "Mediterranean Diet",
-    "Paleo Diet"
+    "Weight Loss",
+    "Weight Gain"
   ]);
 
   const handleAddDietPlan = () => {

@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faUserCircle, faPhone, faCalendarAlt, faCheckCircle, faEdit, faHourglassStart,faTimeline,faHourglassEnd,faMoneyBill } from "@fortawesome/free-solid-svg-icons";
+import {
+  faUser,
+  faUserCircle,
+  faPhone,
+  faHourglassStart,
+  faHourglassEnd,
+  faTimeline,
+} from "@fortawesome/free-solid-svg-icons";
 import { Chip } from "@material-tailwind/react";
 import Axios from "axios";
+import Loading from '../loading';
 import "../../styles/sty.css";
+
 const Attendance = () => {
   const [tableData, setTableData] = useState([]);
   const navigate = useNavigate();
@@ -15,7 +24,7 @@ const Attendance = () => {
     { label: "Name", icon: faUserCircle },
     { label: "Mobile No", icon: faPhone },
     { label: "In Time", icon: faHourglassStart },
-    { label: "Out Time", icon:faHourglassEnd },
+    { label: "Out Time", icon: faHourglassEnd },
     { label: "Duration", icon: faTimeline },
   ];
 
@@ -27,7 +36,37 @@ const Attendance = () => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-        setTableData(response.data.users);
+
+        const users = response.data.users;
+        const enrichedUsers = await Promise.all(
+          users.map(async (user) => {
+            const punchInResponse = await Axios.get(`https://gym-backend-apis.onrender.com/admin/punch/in?userId=${user.ID}`, {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            });
+
+            const punchOutResponse = await Axios.get(`https://gym-backend-apis.onrender.com/admin/punch/out?userId=${user.ID}`, {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            });
+
+            const inTime = punchInResponse.data.inTime ? new Date(punchInResponse.data.inTime) : null;
+            const outTime = punchOutResponse.data.outTime ? new Date(punchOutResponse.data.outTime) : null;
+
+            let duration = null;
+            if (inTime && outTime) {
+              const durationMs = outTime - inTime;
+              const durationHours = (durationMs / (1000 * 60 * 60)).toFixed(2);
+              duration = `${durationHours} hrs`;
+            }
+
+            return { ...user, inTime, outTime, duration };
+          })
+        );
+
+        setTableData(enrichedUsers);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -43,8 +82,7 @@ const Attendance = () => {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-  
-      // Construct the URL for the new page
+
       const newPageUrl = `/user/${customerId}`;
       navigate(newPageUrl); // Use navigate to redirect to the new page
     } catch (error) {
@@ -54,7 +92,7 @@ const Attendance = () => {
 
   return (
     <div className="overflow-y-auto px-15 border border-black-1000 h-96">
-      <table className="text-center w-100 border-collapse">
+      <table className="text-center w-full border-collapse">
         <thead>
           <tr className="sticky top-0">
             {TABLE_HEAD.map(({ label, icon }) => (
@@ -71,11 +109,13 @@ const Attendance = () => {
           {Array.isArray(tableData) && tableData.length > 0 ? (
             tableData.map((rowData, index) => (
               <tr key={index} className={`${index % 2 === 0 ? "bg-gray-100" : ""} border-b border-blue-gray-800`}>
-                <td className="p-4 border-l border-r border-blue-gray-800">{rowData.ID}</td>
+                <td className="p-4 border-l border-r border-blue-gray-800">{index + 1}</td>
                 <td className="p-4 border-l border-r border-blue-gray-800">{rowData._id}</td>
                 <td className="p-4 border-l border-r border-blue-gray-800">{rowData.NAME}</td>
                 <td className="p-4 border-l border-r border-blue-gray-800">{rowData.PHONE}</td>
-                <td className="p-4 border-l border-r border-blue-gray-800">{new Date(rowData.DOB).toLocaleDateString()}</td>
+                <td className="p-4 border-l border-r border-blue-gray-800">{rowData.inTime ? rowData.inTime.toLocaleTimeString() : "N/A"}</td>
+                <td className="p-4 border-l border-r border-blue-gray-800">{rowData.outTime ? rowData.outTime.toLocaleTimeString() : "N/A"}</td>
+                <td className="p-4 border-l border-r border-blue-gray-800">{rowData.duration ? rowData.duration : "N/A"}</td>
                 <td className="p-4 border-l border-r border-blue-gray-800 w-20">
                   <Chip
                     variant="ghost"
@@ -96,9 +136,9 @@ const Attendance = () => {
               </tr>
             ))
           ) : (
-            <tr>
-              <td colSpan={TABLE_HEAD.length} className="p-4 text-center">Loading...</td>
-            </tr>
+            <td colSpan={TABLE_HEAD.length} className="p-4 text-center">
+              <Loading />
+            </td>
           )}
         </tbody>
       </table>

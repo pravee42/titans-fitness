@@ -5,9 +5,11 @@ import { faUser, faUserCircle, faPhone, faCalendarAlt, faCheckCircle, faEdit } f
 import { Chip } from "@material-tailwind/react";
 import Axios from "axios";
 import "../../styles/sty.css";
+import Loading from '../loading';
 
 const Tablegym = () => {
   const [tableData, setTableData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const TABLE_HEAD = [
     { label: "Customer ID", icon: faUserCircle },
     { label: "Name", icon: faUserCircle },
@@ -26,8 +28,10 @@ const Tablegym = () => {
           },
         });
         setTableData(response.data.users);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
+        setIsLoading(false);
       }
     };
 
@@ -95,7 +99,9 @@ const Tablegym = () => {
             ))
           ) : (
             <tr>
-              <td colSpan={TABLE_HEAD.length} className="p-4 text-center">Loading...</td>
+              <td colSpan={TABLE_HEAD.length} className="p-4 text-center">
+                            <Loading />
+              </td>
             </tr>
           )}
         </tbody>
