@@ -81,24 +81,25 @@ const UserInformation = () => {
     setPreviewData({ ...previewData, email: newEmail }); 
   };
 
-  const handleFileChange = (event) => {
+  const handleFileChange = (event) => { 
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImage(reader.result);
-        setImageFile(file); // Store the file object
+        const base64Image = reader.result;
+        setImage(base64Image);
+        setImageFile(file);
         setImageUploaded(true);
-        setPreviewData({ ...previewData, imageUrl: reader.result }); // Update preview data
+        setPreviewData({ ...previewData, imageUrl: base64Image }); 
       };
       reader.readAsDataURL(file);
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Submitted: ", {
       name,
+      image,
       mobile,
       email,
       password,
@@ -107,9 +108,9 @@ const UserInformation = () => {
       address
     });
     notify();
-    setTimeout(() => {
-      window.location.reload();
-    }, 5000);
+    // setTimeout(() => {
+    //   window.location.reload();
+    // }, 5000);
   
     try {
       const formData = new FormData();
@@ -121,14 +122,14 @@ const UserInformation = () => {
       formData.append('dob', dob);
       formData.append('address', address);
       if (imageFile) {
-        formData.append('image', imageFile); // Append the image file
+        formData.append('image', imageFile); 
       }
   
       const token = localStorage.getItem('token');
-      const response = await fetch('http://13.60.96.144/admin/user/create', {
+      const response = await fetch('https://gym-backend-apis.onrender.com/admin/user/create', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}` // Only set Authorization header
+          'Authorization': `Bearer ${token}` 
         },
         body: formData,
       });
@@ -168,7 +169,7 @@ const UserInformation = () => {
             </div>
 
             <Input
-              type="text"
+              // type="text"
               size="md"
               color="blue"
               outline={false.toString()}
@@ -180,7 +181,7 @@ const UserInformation = () => {
             />
 
             <Input
-              type="text"
+              // type="text"
               size="regular"
               color="lightBlue"
               outline={false}
@@ -192,7 +193,7 @@ const UserInformation = () => {
             />
 
             <Input
-              type="email"
+              // type="email"
               size="regular"
               color="lightBlue"
               outline={false}
@@ -209,7 +210,7 @@ const UserInformation = () => {
             )}
 
             <Input
-              type="password"
+              // type="password"
               size="regular"
               color="lightBlue"
               outline={false}
@@ -226,7 +227,6 @@ const UserInformation = () => {
                 size="regular"
                 color="lightBlue"
                 outline={false}
-                placeholder="01/01/2024"
                 value={dob}
                 onChange={handleDobChange}
                 className="font-bold"
