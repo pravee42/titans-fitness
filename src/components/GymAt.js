@@ -111,10 +111,10 @@ const GymAt = () => {
         />
         <div>
           <h6 className=" bg-transparent block font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-inherit">
-            Gym Attendance
+           admin
           </h6>
           <p className=" bg-transparent block font-sans text-sm antialiased font-normal leading-normal text-gray-700">
-            Test
+            admin
           </p>
         </div>
       </div>
@@ -129,7 +129,7 @@ const GymAt = () => {
           {/* Adjust width and height as needed */}
           <div className="mx-5">
             <FontAwesomeIcon icon={faWallet} className="text-70AB0E-800 mr-2" />
-            <span className="text-70AB0E-800 "> Gym Attendance</span>
+            <span className="text-70AB0E-800 "> admin</span>
           </div>
           {/* Search Existing Customer text */}
          
@@ -164,16 +164,8 @@ const GymAt = () => {
           />
         </div>
 
-        {/* Centered content */}
         <div className="flex flex-grow flex-col  mt-5">
-          {/* SearchForm centered */}
-          <div className="flex justify-end mt-5 px-20">
-            <button className="btn">
-              <FontAwesomeIcon icon={faFileExcel} className="mr-1" />
-              Excel
-            </button>
-            
-          </div>
+          
           <div className="flex flex-col">
           <div className="flex justify-center mt-20 items-center">
             <SearchForm onSubmit={handleSubmit} />
@@ -194,6 +186,13 @@ const GymAt = () => {
           {/* Table centered */}
           <div className="flex justify-center mt-5">
           <Gymtable />
+          </div>
+          <div className="flex justify-end mt-5 px-20">
+            <button className="btn">
+              <FontAwesomeIcon icon={faFileExcel} className="mr-1" />
+              Excel
+            </button>
+            
           </div>
 
           {/* Buttons aligned to the right */}

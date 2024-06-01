@@ -9,6 +9,8 @@ import Preview1 from "./Pr1";
 import "../styles/sty.css";
 import logo from "../img/logo-1.png";
 import { useLocation } from "react-router-dom";
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+
 import { Route } from "react-router-dom";
 import {
   Card,
@@ -140,8 +142,27 @@ const CustomerPayment = () => {
       </div>
     </>
   );
+  const handleSignOut = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/";
+  };
   return (
     <div>
+      <div className="fixed bottom-0 left-0 mb-3 ml-4 z-10">
+  <ul className="flex">
+    <li className="hover:text-70AB0E-800 px-1">
+      <a href="/" className="block flex items-center" onClick={handleSignOut}>
+        <FontAwesomeIcon icon={faSignOutAlt} className="mr-2 text-lg" />
+        <span className="text-sm">Sign Out</span>
+      </a>
+    </li>
+  </ul>
+</div>
+<div className="fixed bottom-0 right-0 mb-3 pr-4">
+  <ul className="flex">
+    <span className="text-sm">The Titans Fitness Studio -UniSex</span>
+  </ul>
+</div>
     <header className="py-4 px-5  md:flex md:items-center md:justify-between">
       <div className="flex items-center">
         {toggleButton}
@@ -184,6 +205,17 @@ const CustomerPayment = () => {
       {/* Centered content */}
       <div className="flex flex-grow flex-col  mt-5">
   {/* SearchForm centered */}
+
+  <div className="flex flex-col">
+  <div className="flex justify-center mt-20 items-center">
+            <SearchForm onSubmit={handleSubmit} />
+          </div>
+
+</div>
+
+  <div className="flex justify-center mt-5">
+    <Customertable />
+  </div>
   <div className="flex justify-end mt-5 px-20">
       <button className="btn" onClick={handleDownloadExcel}>
       <FontAwesomeIcon icon={faFileExcel} className="mr-1" />
@@ -191,17 +223,6 @@ const CustomerPayment = () => {
     </button>
 
   </div>
-  <div className="flex flex-col">
-  <div className="flex justify-center mt-20 items-center">
-            <SearchForm onSubmit={handleSubmit} />
-          </div>
-
-</div>
-  {/* Table centered */}
-  <div className="flex justify-center mt-5">
-    <Customertable />
-  </div>
-  {/* Buttons aligned to the right */}
 </div>
     </div>
   </div>

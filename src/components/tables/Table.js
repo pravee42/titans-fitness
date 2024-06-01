@@ -57,7 +57,7 @@ const Tablegym = () => {
 
   return (
     <div className="overflow-y-auto px-15 border border-black-1000 h-96">
-      <table className="text-center w-100 border-collapse">
+      <table className="text-center w-150 border-collapse">
         <thead>
           <tr className="sticky top-0">
             {TABLE_HEAD.map(({ label, icon }) => (
@@ -78,7 +78,8 @@ const Tablegym = () => {
                 <td className="p-4 border-l border-r border-blue-gray-800">{rowData.NAME}</td>
                 <td className="p-4 border-l border-r border-blue-gray-800">{rowData.PHONE}</td>
                 <td className="p-4 border-l border-r border-blue-gray-800">{new Date(rowData.DOB).toLocaleDateString()}</td>
-                <td className="p-4 border-l border-r border-blue-gray-800 w-20">
+                <td className="p-4 border-l border-r border-blue-gray-800 w-20 relative">
+                <div className="z-10">
                   <Chip
                     variant="ghost"
                     size="sm"
@@ -86,7 +87,9 @@ const Tablegym = () => {
                     color={rowData.STATUS === 1 ? "green" : "blue-gray"}
                     className="text-gray-800"
                   />
-                </td>
+                </div>
+              </td>
+
                 <td className="p-4 border-l border-r border-blue-gray-800 w-20">
                   <button
                     className="text-gray-800 bg-green-200 px-3 py-1 rounded-md cursor-pointer hover:bg-green-300"

@@ -21,10 +21,10 @@ const Sidebar = ({ toggleSidebar }) => {
   const handlepunchtime = () => {
     window.location.href = "/attendance";
   };
-  const handleSignOut = () => {
-    localStorage.removeItem("token");
-    window.location.href = "/";
-  };
+  // const handleSignOut = () => {
+  //   localStorage.removeItem("token");
+  //   window.location.href = "/";
+  // };
   
   return (
     <div className="sidebar bg-white text-black w-100 min-h-screen px-4 flex flex-col">
@@ -61,14 +61,14 @@ const Sidebar = ({ toggleSidebar }) => {
         </li>
       </ul>
       <div className="relative min-h-screen">
-  <ul className="absolute bottom-10 mb-11 w-full">
+  {/* <ul className="absolute bottom-10 mb-11 w-full">
     <li className="hover:text-green-800 px-1">
       <a href="#" className="block flex items-center justify-center" onClick={handleSignOut}>
         <FontAwesomeIcon icon={faSignOutAlt} className="mr-2 text-lg" />
         <span className="text-sm">Sign Out</span>
       </a>
     </li>
-  </ul>
+  </ul> */}
 </div>
 
 

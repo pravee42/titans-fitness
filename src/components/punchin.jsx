@@ -1,48 +1,43 @@
-import React, { useState } from "react";
-import logo from './Home/img/logo-1.png';
+import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import logo from './Home/img/logo-1.png';
 const Punchin = () => {
   const [searchId, setSearchId] = useState("");
   const [userDetails, setUserDetails] = useState(null);
   const [punchTimes, setPunchTimes] = useState([]);
   const [paymentDetails, setPaymentDetails] = useState([]);
+
   const handleSearchChange = (event) => {
     setSearchId(event.target.value);
   };
+
   const handleSearchSubmit = async () => {
     try {
       const token = localStorage.getItem("token");
       const headers = { Authorization: `Bearer ${token}` };
-      
+
       const userDetailsResponse = await axios.get(`https://gym-backend-apis.onrender.com/admin/user/searching?name={{userName}}&dob={{dob}}&mobile={{mobile}}&userID=${searchId}`, { headers });
       setUserDetails(userDetailsResponse.data);
-      console.log("User details:", userDetailsResponse.data);
+      
       const punchInTimesResponse = await axios.get(`https://gym-backend-apis.onrender.com/admin/punch/in?userId=${searchId}`, { headers });
-      console.log("Punch in response:", punchInTimesResponse.data);
-
       const punchOutTimesResponse = await axios.get(`https://gym-backend-apis.onrender.com/admin/punch/out?userId=${searchId}`, { headers });
-      console.log("Punch out response:", punchOutTimesResponse.data);
       const punchTimesData = {
         IN_TIME: punchInTimesResponse.data.timing.IN_TIME,
         OUT_TIME: punchOutTimesResponse.data.timing.OUT_TIME
       };
-
       setPunchTimes(punchTimesData);
-      console.log("Punch times:", punchTimesData);
-  
+
       const paymentDetailsResponse = await axios.get(`https://gym-backend-apis.onrender.com/admin/payment/${searchId}`, { headers });
       setPaymentDetails(paymentDetailsResponse.data);
-      console.log("Payment details:", paymentDetailsResponse.data);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
-  
+
   const handlePunchIn = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -58,7 +53,7 @@ const Punchin = () => {
       console.error('Error punching in:', error);
     }
   };
-  
+
   const handlePunchOut = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -66,7 +61,6 @@ const Punchin = () => {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       };
-  
       await axios.post(`https://gym-backend-apis.onrender.com/admin/time/out`, { id: searchId }, { headers });
       toast.success("Checked out successfully!");
       handleSearchSubmit();
@@ -75,7 +69,23 @@ const Punchin = () => {
       console.error('Error punching out:', error);
     }
   };
-  
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.ctrlKey && event.key === "=") {
+        handlePunchIn();
+      } else if (event.ctrlKey && event.key === "-") {
+        handlePunchOut();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   const handleSignOut = () => {
     localStorage.removeItem("token");
     window.location.href = "/";
@@ -96,7 +106,6 @@ const Punchin = () => {
     </li>
   </ul>
 </div>
-
 <div className="fixed bottom-0 right-0 mb-3 pr-4">
   <ul className="flex">
     <span className="text-sm">The Titans Fitness Studio -UniSex</span>

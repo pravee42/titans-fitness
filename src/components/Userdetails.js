@@ -249,14 +249,14 @@ const activateUser = async () => {
     try {
       const token = localStorage.getItem('token');
       const response = await Axios.post(
-        `https://gym-backend-apis.onrender.com/admin/payment/add`,
+        'https://gym-backend-apis.onrender.com/admin/payment/add',
         {
           id: user.ID,
-          type: type,
-          amount: newPayment, 
+          type,
+          amount: newPayment,
           effective: effectiveDate,
           end: endDate,
-          balance: balance, 
+          balance,
         },
         {
           headers: {
@@ -264,7 +264,7 @@ const activateUser = async () => {
           },
         }
       );
-  
+
       console.log('Server response:', response);
       setPaymentStatus(response.data.paymentStatus);
       setNextDue(response.data.nextDue);
@@ -274,15 +274,16 @@ const activateUser = async () => {
       setEndDate('');
       setBalance('');
       setType('');
-      notify();
+      toast.success('Payment added successfully!');
     } catch (error) {
       console.error('Error adding payment:', error);
-  
+
       if (error.response && error.response.headers) {
         console.log('Redirect Location:', error.response.headers.location);
       }
-  
+
       setError('Error adding payment');
+      toast.error('Error adding payment');
     }
   };
   
@@ -328,7 +329,7 @@ const activateUser = async () => {
 </div>
 
   <div className="relative z-10">
-      <header className="py-4 px-5 flex items-center justify-between bg-green-600">
+  <header className="py-4 px-5 flex items-center justify-between" style={{ backgroundColor: '#70AB0E' }}>
         <div className="flex items-center">
           <img src={logo} alt="Logo" className="w-50 h-10 mr-2" />
           <span className="text-white text-2xl font-semibold">Customer Details</span>
@@ -403,26 +404,26 @@ const activateUser = async () => {
             
 <button
         onClick={activateUser}
-        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-2 mr-2"
+        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-2 mr-2" style={{ backgroundColor: '#79BA0F' }}
         
       >
         Activate User
       </button>
       <button
         onClick={deactivateUser}
-        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-2 mr-2"
+        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-2 mr-2" style={{ backgroundColor: '#79BA0F' }}
       >
         Deactivate User
       </button>
   <button
     onClick={handleEdit}
-    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-2 mr-2"
+    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-2 mr-2" style={{ backgroundColor: '#79BA0F' }}
   >
     Edit Info
   </button>
   <button
     onClick={handleDownload}
-    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-2"
+    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-2" style={{ backgroundColor: '#79BA0F' }}
   >
     Download Payments
   </button>
@@ -498,7 +499,7 @@ const activateUser = async () => {
               </div>
               <button
                 onClick={handleSaveEdit}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+                className=" hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4" style={{ backgroundColor: '#79BA0F' }}
               >
                 Save
               </button>
@@ -511,7 +512,7 @@ const activateUser = async () => {
             </div>
           )}
           <div className="bg-gray-100 p-4 rounded shadow-md mb-4">
-  <h3 className="text-xl font-bold mb-4">Add Payment</h3>
+  <h3 className="text-xl font-bold mb-4" >Add Payment</h3>
   <div className="grid grid-cols-2 gap-4">
     <div>
       <label className="block font-semibold mb-2">Payment Amount:</label>
@@ -561,7 +562,7 @@ const activateUser = async () => {
   </div>
   <button
     onClick={handleAddPayment}
-    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4"
+    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4" style={{ backgroundColor: '#79BA0F' }}
   >
     Add Payment
   </button>

@@ -6,8 +6,9 @@ import { faPhone, faEnvelope, faCalendarAlt, faCheckCircle, faMapMarkerAlt } fro
 import '../styles/preview.css';
 import DietPlans from "./Dietplan";
 import { ToastContainer, toast } from 'react-toastify';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import 'react-toastify/dist/ReactToastify.css';
-
+import logo from './Home/img/logo-1.png';
 const UserInformationForm = styled.form`
   position: relative;
   height: 100%;
@@ -143,13 +144,33 @@ const UserInformation = () => {
       console.error('Error submitting form data:', error);
     }
   };
+  
+  const handleSignOut = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/";
+  };
 
   return (
     <UserInformationForm className="flex flex-col justify-between" onSubmit={handleSubmit}>
       <Card color="transparent" shadow={false}>
         <div className="mt-2 mb-2 h-full form max-w-screen-lg sm:w-96">
-          <h2 className="font-bold mb-3">Customer ID</h2>
+ <h2 className="font-bold mb-3">Customer ID</h2>
           <h4 className="mb-3">User INFORMATION</h4>
+          <div className="fixed bottom-0 left-0 mb-3 ml-4 z-10">
+  <ul className="flex">
+    <li className="hover:text-70AB0E-800 px-1">
+      <a href="/" className="block flex items-center" onClick={handleSignOut}>
+        <FontAwesomeIcon icon={faSignOutAlt} className="mr-2 text-lg" />
+        <span className="text-sm">Sign Out</span>
+      </a>
+    </li>
+  </ul>
+</div>
+<div className="fixed bottom-0 right-0 mb-3 pr-4">
+  <ul className="flex">
+    <span className="text-sm">The Titans Fitness Studio -UniSex</span>
+  </ul>
+</div>
           <div className="gap-5 flex flex-col overflow-auto">
             <div className="flex items-center justify-center w-32 h-32 mb-5 relative">
               {image ? (

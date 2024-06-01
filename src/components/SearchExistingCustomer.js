@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faUndo, faFileExcel, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import logo from "../img/logo-1.png";
 import { useLocation, useNavigate } from "react-router-dom";
+import log from './Home/img/logo-1.png';
 
 const SearchExistingCoustomer = () => {
   const [user, setUser] = useState([]);
@@ -61,17 +62,23 @@ const SearchExistingCoustomer = () => {
   );
 
   return (
+    
     <div>
       <header className="py-4 px-5 md:flex md:items-center md:justify-between">
         <div className="flex items-center">
           {toggleButton}
           <img src={logo} alt="Logo" className="w-50 h-10 mr-2" />
+          
           <div className="mx-5">
             <FontAwesomeIcon icon={faSearch} className="text-70AB0E-800 mr-2" />
             <span className="text-70AB0E-800"> Search Existing Customer</span>
           </div>
         </div>
-
+        <div className="fixed bottom-0 left-0 mb-3 pr-4">
+  <ul className="flex">
+    <span className="text-sm">The Titans Fitness Studio -UniSex</span>
+  </ul>
+</div>
         <div className="md:flex items-center">
           {userInfo}
           <div>
@@ -79,7 +86,7 @@ const SearchExistingCoustomer = () => {
           </div>
         </div>
       </header>
-
+      
       <div className="flex">
         <div>
           <Sidebar toggleSidebar={toggleSidebar} pathname={location.pathname} id="default-sidebar" />
@@ -102,10 +109,6 @@ const SearchExistingCoustomer = () => {
             <button className="btn">
               <FontAwesomeIcon icon={faFileExcel} className="mr-1" />
               Excel
-            </button>
-            <button className="btn">
-              <FontAwesomeIcon icon={faCheckCircle} className="mr-1" />
-              Auto Check-out
             </button>
           </div>
         </div>

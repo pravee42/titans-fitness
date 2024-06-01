@@ -6,12 +6,12 @@ const DietPlans = ({ selectedDietPlan, handleDietPlanChange }) => {
     "Weight Gain"
   ]);
 
-  const handleAddDietPlan = () => {
-    const newPlan = prompt("Enter the name of the new diet plan:");
-    if (newPlan) {
-      setDietPlans([...dietPlans, newPlan]);
-    }
-  };
+  // const handleAddDietPlan = () => {
+  //   const newPlan = prompt("Enter the name of the new diet plan:");
+  //   if (newPlan) {
+  //     setDietPlans([...dietPlans, newPlan]);
+  //   }
+  // };
 
   const handleEditDietPlan = (index) => {
     const editedPlan = prompt("Edit the name of the diet plan:", dietPlans[index]);
@@ -50,10 +50,10 @@ const DietPlans = ({ selectedDietPlan, handleDietPlanChange }) => {
           </option>
         ))}
       </select>
-      <div className="mt-4">
+      {/* <div className="mt-4">
         <button onClick={handleAddDietPlan} className="bg-green-500 text-white py-2 px-4 rounded mr-2">Add Diet Plan</button>
-      </div>
-      <div>
+      </div> */}
+      {/* <div>
         <h3 className="mt-4 mb-2 font-bold">Edit Diet Plans</h3>
         {dietPlans.map((plan, index) => (
           <div key={index} className="flex items-center justify-between">
@@ -64,7 +64,7 @@ const DietPlans = ({ selectedDietPlan, handleDietPlanChange }) => {
             </div>
           </div>
         ))}
-      </div>
+      </div> */}
       {selectedDietPlan && (
         <div className="mt-4">
           <h4 className="font-bold">Selected Diet Plan: {selectedDietPlan}</h4>
