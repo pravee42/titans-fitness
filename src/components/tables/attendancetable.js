@@ -38,6 +38,8 @@ const Attendance = () => {
         });
 
         const users = response.data.users;
+        console.log("Users fetched:", users);
+
         const enrichedUsers = await Promise.all(
           users.map(async (user) => {
             const punchInResponse = await Axios.get(`https://gym-backend-apis.onrender.com/admin/punch/in?userId=${user.ID}`, {
@@ -51,6 +53,9 @@ const Attendance = () => {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
               },
             });
+
+            console.log(`Punch in data for user ${user.ID}:`, punchInResponse.data);
+            console.log(`Punch out data for user ${user.ID}:`, punchOutResponse.data);
 
             const inTime = punchInResponse.data.inTime ? new Date(punchInResponse.data.inTime) : null;
             const outTime = punchOutResponse.data.outTime ? new Date(punchOutResponse.data.outTime) : null;

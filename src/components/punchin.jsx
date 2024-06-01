@@ -18,12 +18,23 @@ const Punchin = () => {
     try {
       const token = localStorage.getItem("token");
       const headers = { Authorization: `Bearer ${token}` };
+      
       const userDetailsResponse = await axios.get(`https://gym-backend-apis.onrender.com/admin/user/searching?name={{userName}}&dob={{dob}}&mobile={{mobile}}&userID=${searchId}`, { headers });
       setUserDetails(userDetailsResponse.data);
       console.log("User details:", userDetailsResponse.data);
-      const punchTimesResponse = await axios.get(`https://gym-backend-apis.onrender.com/admin/punch/in?userId=${searchId}`, { headers });
-      setPunchTimes(punchTimesResponse.data);
-      console.log("Punch times:", punchTimesResponse.data);
+      const punchInTimesResponse = await axios.get(`https://gym-backend-apis.onrender.com/admin/punch/in?userId=${searchId}`, { headers });
+      console.log("Punch in response:", punchInTimesResponse.data);
+
+      const punchOutTimesResponse = await axios.get(`https://gym-backend-apis.onrender.com/admin/punch/out?userId=${searchId}`, { headers });
+      console.log("Punch out response:", punchOutTimesResponse.data);
+      const punchTimesData = {
+        IN_TIME: punchInTimesResponse.data.timing.IN_TIME,
+        OUT_TIME: punchOutTimesResponse.data.timing.OUT_TIME
+      };
+
+      setPunchTimes(punchTimesData);
+      console.log("Punch times:", punchTimesData);
+  
       const paymentDetailsResponse = await axios.get(`https://gym-backend-apis.onrender.com/admin/payment/${searchId}`, { headers });
       setPaymentDetails(paymentDetailsResponse.data);
       console.log("Payment details:", paymentDetailsResponse.data);
@@ -75,18 +86,22 @@ const Punchin = () => {
        <div className="absolute inset-0 flex items-center justify-center opacity-50 z-0">
     <img src={logo} alt="Logo" className="w-1/2 h-1/2 object-contain" style={{ opacity: 0.3 }} />
   </div>
-  <ul className="flex md:absolute md:bottom-2 md:left-0 md:mb-3 md:ml-4">
+  <div className="fixed bottom-0 left-0 mb-3 ml-4 z-10">
+  <ul className="flex">
+    <li className="hover:text-70AB0E-800 px-1">
+      <a href="/" className="block flex items-center" onClick={handleSignOut}>
+        <FontAwesomeIcon icon={faSignOutAlt} className="mr-2 text-lg" />
+        <span className="text-sm">Sign Out</span>
+      </a>
+    </li>
+  </ul>
+</div>
 
-          <li className="hover:text-70AB0E-800 px-1">
-            <a href="/" className="block flex items-center" onClick={handleSignOut}>
-              <FontAwesomeIcon icon={faSignOutAlt} className="mr-2 text-lg" />
-              <span className="text-sm">Sign Out</span>
-            </a>
-          </li>
-        </ul>
-        <ul className="flex md:absolute md:bottom-2 md:right-0 md:mb-3 md:pr-4">
-              <span className="text-sm">The Titans Fitness Studio -UniSex</span>
-        </ul>
+<div className="fixed bottom-0 right-0 mb-3 pr-4">
+  <ul className="flex">
+    <span className="text-sm">The Titans Fitness Studio -UniSex</span>
+  </ul>
+</div>
   <div className="relative z-10">
       <header className="py-4 px-5 flex items-center justify-between bg-green-600">
         <div className="flex items-center">
@@ -225,22 +240,24 @@ const Punchin = () => {
           </tr>
         </thead>
         <tbody>
-          {punchTimes && punchTimes.IN_TIME ? (
-            <tr>
-              <td className="py-3 px-6">{new Date(punchTimes.IN_TIME).toLocaleTimeString()}</td>
-              <td className="py-3 px-6">{punchTimes.OUT_TIME ? new Date(punchTimes.OUT_TIME).toLocaleTimeString() : 'N/A'}</td>
-              <td className="py-3 px-6">
-                {punchTimes.OUT_TIME
-                  ? `${Math.floor((new Date(punchTimes.OUT_TIME) - new Date(punchTimes.IN_TIME)) / (1000 * 60))} minutes`
-                  : 'N/A'}
-              </td>
-            </tr>
-          ) : (
-            <tr>
-              <td className="py-3 px-6" colSpan="3">No punch times available for today.</td>
-            </tr>
-          )}
-        </tbody>
+  {punchTimes && punchTimes.IN_TIME ? (
+    <tr>
+      <td className="py-3 px-6">{new Date(punchTimes.IN_TIME).toLocaleTimeString()}</td>
+      <td className="py-3 px-6">{punchTimes.OUT_TIME ? new Date(punchTimes.OUT_TIME).toLocaleTimeString() : 'N/A'}</td>
+      <td className="py-3 px-6">
+        {punchTimes.OUT_TIME
+          ? `${Math.floor((new Date(punchTimes.OUT_TIME) - new Date(punchTimes.IN_TIME)) / (1000 * 60))} minutes`
+          : 'N/A'}
+      </td>
+    </tr>
+  ) : (
+    <tr>
+      <td className="py-3 px-6" colSpan="3">No punch times available for today.</td>
+    </tr>
+  )}
+</tbody>
+
+
       </table>
     </div>
   )}
@@ -253,5 +270,5 @@ const Punchin = () => {
            );
          };
          
-         export default Punchin;
+export default Punchin;
          
