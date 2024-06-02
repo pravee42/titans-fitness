@@ -112,7 +112,7 @@ const Punchin = () => {
   </ul>
 </div>
   <div className="relative z-10">
-      <header className="py-4 px-5 flex items-center justify-between bg-green-600">
+      <header className="py-4 px-5 flex items-center justify-between bg-custom-green">
         <div className="flex items-center">
           <img src={logo} alt="Logo" className="w-50 h-10 mr-2" />
           <span className="text-white text-2xl font-semibold">Customer Time Punch IN/OUT</span>
@@ -131,13 +131,13 @@ const Punchin = () => {
           </div>
           <div className="flex justify-between">
             <button
-              className="bg-green-500 text-white px-4 py-2 rounded-lg"
+              className="bg-custom-green text-white px-4 py-2 rounded-lg"
               onClick={handleSearchSubmit}
             >
               Search
             </button>
             <button
-              className="bg-green-500 text-white px-4 py-2 rounded-lg"
+              className="bg-custom-green text-white px-4 py-2 rounded-lg"
               onClick={handlePunchIn}
             >
               Check-In

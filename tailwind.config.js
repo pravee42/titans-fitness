@@ -7,11 +7,13 @@ module.exports = withMT({
   ],
   theme: {
     extend: {
+      
       fontFamily: {
         satoshi: ['Satoshi', 'sans-serif'],
         // Add more custom font families here if needed
       },
       colors: {
+        'custom-green': '#70AB0E',
         '70AB0E': {
           '800': '#70AB0E'
         },

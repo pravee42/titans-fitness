@@ -193,39 +193,29 @@ const CustomerPayment = () => {
     </header>
   
     <div className="flex">
-      {/* Sidebar on the left */}
-      <div>
-        <Sidebar
-          toggleSidebar={toggleSidebar}
-          pathname={location.pathname}
-          id="default-sidebar"
-        />
-      </div>
-  
-      {/* Centered content */}
-      <div className="flex flex-grow flex-col  mt-5">
-  {/* SearchForm centered */}
+        <div>
+          <Sidebar toggleSidebar={toggleSidebar} pathname={location.pathname} id="default-sidebar" />
+        </div>
 
-  <div className="flex flex-col">
-  <div className="flex justify-center mt-20 items-center">
+        <div className="flex flex-grow flex-col -mt-20">
+          <div className="flex justify-center mt-20 items-center">
             <SearchForm onSubmit={handleSubmit} />
           </div>
 
+          <div className="flex justify-center mt-5">
+            <Customertable user={user} />
+          </div>
+
+          <div className="flex justify-end mt-[-20px] mr-[10px]">
+  <button className="btn">
+    <FontAwesomeIcon icon={faFileExcel} className="mr-1" />
+    Excel
+  </button>
 </div>
 
-  <div className="flex justify-center mt-5">
-    <Customertable />
-  </div>
-  <div className="flex justify-end mt-5 px-20">
-      <button className="btn" onClick={handleDownloadExcel}>
-      <FontAwesomeIcon icon={faFileExcel} className="mr-1" />
-      Excel
-    </button>
-
-  </div>
-</div>
+        </div>
+      </div>
     </div>
-  </div>
   
   );
 };

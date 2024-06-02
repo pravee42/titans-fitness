@@ -151,6 +151,7 @@ const UserInformation = () => {
   };
 
   return (
+
     <UserInformationForm className="flex flex-col justify-between" onSubmit={handleSubmit}>
       <Card color="transparent" shadow={false}>
         <div className="mt-2 mb-2 h-full form max-w-screen-lg sm:w-96">
@@ -192,7 +193,6 @@ const UserInformation = () => {
             <Input
               // type="text"
               size="md"
-              color="blue"
               outline={false.toString()}
               placeholder="Full name"
               value={name}
@@ -324,6 +324,7 @@ const UserInformation = () => {
         </div>
       </Card>
     </UserInformationForm>
+
   );
 };
 

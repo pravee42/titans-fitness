@@ -335,7 +335,7 @@ const activateUser = async () => {
           <span className="text-white text-2xl font-semibold">Customer Details</span>
         </div>
       </header>
-    <div className="container mx-auto p-4 bg-green-100">
+    <div className="container mx-auto p-4 bg-custom-green">
       {user ? (
         <div className="bg-white p-4 rounded shadow-md w-full">
           <h2 className="text-2xl font-bold mb-4 text-right">Customer ID: {user.ID}</h2>
@@ -404,7 +404,7 @@ const activateUser = async () => {
             
 <button
         onClick={activateUser}
-        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-2 mr-2" style={{ backgroundColor: '#79BA0F' }}
+        className="bg-custom-green hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-2 mr-2" style={{ backgroundColor: '#79BA0F' }}
         
       >
         Activate User
@@ -417,13 +417,13 @@ const activateUser = async () => {
       </button>
   <button
     onClick={handleEdit}
-    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-2 mr-2" style={{ backgroundColor: '#79BA0F' }}
+    className="bg-custom-green hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-2 mr-2" style={{ backgroundColor: '#79BA0F' }}
   >
     Edit Info
   </button>
   <button
     onClick={handleDownload}
-    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-2" style={{ backgroundColor: '#79BA0F' }}
+    className="bg-custom-green hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-2" style={{ backgroundColor: '#79BA0F' }}
   >
     Download Payments
   </button>
@@ -562,7 +562,7 @@ const activateUser = async () => {
   </div>
   <button
     onClick={handleAddPayment}
-    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4" style={{ backgroundColor: '#79BA0F' }}
+    className="bg-custom-green hover:bg-custom-green text-white font-bold py-2 px-4 rounded mt-4" style={{ backgroundColor: '#79BA0F' }}
   >
     Add Payment
   </button>

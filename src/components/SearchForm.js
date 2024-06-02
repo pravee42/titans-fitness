@@ -102,7 +102,7 @@ const SearchForm = ({ onSubmit }) => {
         <div className="flex justify-center gap-4">
           {/* Input fields */}
           <Input
-            type="text"
+            // type="text"
             value={memberID}
             onChange={handleMemberIDChange}
             placeholder="Member ID"
@@ -111,7 +111,7 @@ const SearchForm = ({ onSubmit }) => {
             label="Member ID"
           />
           <Input
-            type="text"
+            // type="text"
             value={name}
             onChange={handleNameChange}
             placeholder="Name"
@@ -120,7 +120,7 @@ const SearchForm = ({ onSubmit }) => {
             label="Name"
           />
           <Input
-            type="text"
+            // type="text"
             value={mobileNumber}
             onChange={handleMobileNumberChange}
             placeholder="Mobile Number"

@@ -6,7 +6,10 @@ import Gymtable from "./tables/attendancetable";
 import "../styles/sty.css";
 import logo from "../img/logo-1.png";
 import { useLocation } from "react-router-dom";
+import logo2 from "./Home/img/logo2.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+
 import {
   faSearch,
   faUndo,
@@ -96,7 +99,7 @@ const GymAt = () => {
             Admin Name
           </h6>
           <p className="block font-sans text-sm antialiased font-normal leading-normal text-gray-700">
-            Admin
+            Gym Attendance
           </p>
         </div>
       </div>
@@ -104,8 +107,8 @@ const GymAt = () => {
   ) : (
     <>
       <div className="flex items-center gap-4 bg-transparent">
-        <img
-          src="https://docs.material-tailwind.com/img/face-2.jpg"
+      <img
+          srcSet={logo2}
           alt="avatar"
           className="relative inline-block object-cover object-center w-12 h-12 rounded-lg"
         />
@@ -120,25 +123,39 @@ const GymAt = () => {
       </div>
     </>
   );
+  const handleSignOut = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/";
+  };
   return (
     <div>
+      <div className="fixed bottom-0 left-0 mb-3 ml-4 z-10">
+  <ul className="flex">
+    <li className="hover:text-70AB0E-800 px-1">
+      <a href="/" className="block flex items-center" onClick={handleSignOut}>
+        <FontAwesomeIcon icon={faSignOutAlt} className="mr-2 text-lg" />
+        <span className="text-sm">Sign Out</span>
+      </a>
+    </li>
+  </ul>
+</div>
+<div className="fixed bottom-0 right-0 mb-3 pr-4">
+  <ul className="flex">
+    <span className="text-sm">The Titans Fitness Studio -UniSex</span>
+  </ul>
+</div>
       <header className="py-4 px-5  md:flex md:items-center md:justify-between">
         <div className="flex items-center">
           {toggleButton}
           <img src={logo} alt="Logo" className="w-50 h-10 mr-2" />{" "}
-          {/* Adjust width and height as needed */}
           <div className="mx-5">
             <FontAwesomeIcon icon={faWallet} className="text-70AB0E-800 mr-2" />
-            <span className="text-70AB0E-800 "> admin</span>
+            <span className="text-70AB0E-800 "> Gym Attendance</span>
           </div>
-          {/* Search Existing Customer text */}
-         
         </div>
 
         <div className="md:flex items-center">
           {userInfo}
-
-          {/* Test icon */}
           <div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -155,7 +172,6 @@ const GymAt = () => {
       </header>
 
       <div className="flex">
-        {/* Sidebar on the left */}
         <div>
           <Sidebar
             toggleSidebar={toggleSidebar}
@@ -163,9 +179,7 @@ const GymAt = () => {
             id="default-sidebar"
           />
         </div>
-
         <div className="flex flex-grow flex-col  mt-5">
-          
           <div className="flex flex-col">
           <div className="flex justify-center mt-20 items-center">
             <SearchForm onSubmit={handleSubmit} />
@@ -183,19 +197,10 @@ const GymAt = () => {
     Evening
   </label>
 </div>
-          {/* Table centered */}
           <div className="flex justify-center mt-5">
           <Gymtable />
           </div>
-          <div className="flex justify-end mt-5 px-20">
-            <button className="btn">
-              <FontAwesomeIcon icon={faFileExcel} className="mr-1" />
-              Excel
-            </button>
-            
-          </div>
-
-          {/* Buttons aligned to the right */}
+          
         </div>
       </div>
     </div>

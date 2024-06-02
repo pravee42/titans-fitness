@@ -1,0 +1,25 @@
+.background-image {
+    background-image: url('../Home/img/logo-1.png'); /* Adjust the path accordingly */
+    background-size: 50%; /* Adjust the size as necessary */
+    background-position: center;
+    background-repeat: no-repeat; /* Ensures the image doesn't repeat */
+    height: 100vh; /* Adjust the height as necessary */
+    position: relative; 
+    
+  }
+  
+  .background-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1; 
+  }
+  
+  .background-content {
+    position: relative; /* Needed to stack content above the background image */
+    z-index: 2; /* Ensures content is above the ::after pseudo-element */
+  }
+  

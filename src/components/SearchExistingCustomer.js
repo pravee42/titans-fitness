@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import Axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import Sidebar from "./side";
 import SearchForm from "./SearchForm";
 import Tableg from "./tables/Table";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faUndo, faFileExcel, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import logo from "../img/logo-1.png";
 import { useLocation, useNavigate } from "react-router-dom";
 import log from './Home/img/logo-1.png';
+import logo2 from "./Home/img/logo2.jpg";
 
 const SearchExistingCoustomer = () => {
   const [user, setUser] = useState([]);
@@ -60,7 +62,10 @@ const SearchExistingCoustomer = () => {
       {/* Regular user info */}
     </>
   );
-
+  const handleSignOut = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/";
+  };
   return (
     
     <div>
@@ -74,6 +79,31 @@ const SearchExistingCoustomer = () => {
             <span className="text-70AB0E-800"> Search Existing Customer</span>
           </div>
         </div>
+        <div className="fixed bottom-0 right-0 mb-3 ml-2 z-10">
+  <ul className="flex">
+    <li className="hover:text-70AB0E-800 px-1">
+      <a href="/" className="block flex items-center" onClick={handleSignOut}>
+        <FontAwesomeIcon icon={faSignOutAlt} className="mr-2 text-lg" />
+        <span className="text-sm">Sign Out</span>
+      </a>
+    </li>
+  </ul>
+</div>
+<div className="fixed top-0 right-0 mb-3 pr-4">
+        <img
+          srcSet={logo2}
+          alt="avatar"
+          className="relative inline-block object-cover object-center w-12 h-12 rounded-lg"
+        />
+        <div>
+          <h6 className=" bg-transparent block font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-inherit">
+            admin
+          </h6>
+          <p className=" bg-transparent block font-sans text-sm antialiased font-normal leading-normal text-gray-700">
+            admin
+          </p>
+        </div>
+      </div>
         <div className="fixed bottom-0 left-0 mb-3 pr-4">
   <ul className="flex">
     <span className="text-sm">The Titans Fitness Studio -UniSex</span>

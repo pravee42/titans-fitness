@@ -13,7 +13,7 @@ const TableCustomer = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const TABLE_HEAD = [
-    { label: "SI.no", icon: faUser },
+    
     { label: "Customer ID", icon: faUserCircle },
     { label: "Name", icon: faUserCircle },
     { label: "Mobile No", icon: faPhone },
@@ -78,7 +78,6 @@ const TableCustomer = () => {
             tableData.map((rowData, index) => (
               <tr key={index} className={`${index % 2 === 0 ? "bg-gray-100" : ""} border-b border-blue-gray-800`}>
                 <td className="p-4 border-l border-r border-blue-gray-800">{rowData.ID}</td>
-                <td className="p-4 border-l border-r border-blue-gray-800">{rowData._id}</td>
                 <td className="p-4 border-l border-r border-blue-gray-800">{rowData.NAME}</td>
                 <td className="p-4 border-l border-r border-blue-gray-800">{rowData.PHONE}</td>
                 <td className="p-4 border-l border-r border-blue-gray-800">{new Date(rowData.DOB).toLocaleDateString()}</td>
