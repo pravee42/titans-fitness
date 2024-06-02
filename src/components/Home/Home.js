@@ -339,26 +339,23 @@ const HomePage = () => {
             </div>
           </div>
           <div className="lg:w-1/2">
-            <div className="flex flex-col p-5">
-              <p className="text-sm text-70AB0E-800">FOLLOW US</p>
-              <div className="mt-5">
-                <div className="footer-list1">
-                  <a href="https://www.instagram.com/the_titans_fitness_studio?igsh=MWNmODMwcTFoZDhjdQ%3D%3D&utm_source=qr">
-                    <img src={insta} alt="Instagram" className="footer-item" />
-                  </a>
-                  <a href="https://wa.me/919043931098">
-                    <img src={whatsapp} alt="WhatsApp" className="footer-item1" />
-                  </a>
-                  <a href="https://maps.app.goo.gl/bmQFcQ2PV89kd2Px6?g_st=iw">
-                    <img src={loc} alt="Location" className="footer-item2" />
-                  </a>
-                </div>
-                <div className="mb-2">
-                  <p className="text-black text-lg font-bold mt-5">Cards, All UPI transactions are Accepted here</p>
-                </div>
-              </div>
-            </div>
-          </div>
+  <div className="flex flex-col p-5">
+    <p className="text-sm text-70AB0E-800 mb-5">FOLLOW US</p>
+    <div className="flex items-center space-x-4">
+      <a href="https://www.instagram.com/the_titans_fitness_studio?igsh=MWNmODMwcTFoZDhjdQ%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer">
+        <img src={insta} alt="Instagram" className="w-10 h-10" />
+      </a>
+      <a href="https://wa.me/919043931098" target="_blank" rel="noopener noreferrer">
+        <img src={whatsapp} alt="WhatsApp" className="w-10 h-10" />
+      </a>
+      <a href="https://maps.app.goo.gl/bmQFcQ2PV89kd2Px6?g_st=iw" target="_blank" rel="noopener noreferrer">
+        <img src={loc} alt="Location" className="w-10 h-10" />
+      </a>
+    </div>
+    <p className="text-black text-lg font-bold mt-5">We accept all major cards and UPI transactions.</p>
+  </div>
+</div>
+
         </div>
         </div> 
          </div></div>
