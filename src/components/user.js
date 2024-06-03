@@ -99,51 +99,65 @@ const UserInformation = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Submitted: ", {
-      name,
-      image,
-      mobile,
-      email,
-      password,
-      dob,
-      diet: selectedDietPlan,
-      address
+        name,
+        mobile,
+        email,
+        password,
+        dob,
+        address
     });
     notify();
-    // setTimeout(() => {
-    //   window.location.reload();
-    // }, 5000);
-  
+
     try {
-      const formData = new FormData();
-      formData.append('name', name);
-      formData.append('mobile', mobile);
-      formData.append('email', email);
-      formData.append('password', password);
-      formData.append('diet', selectedDietPlan);
-      formData.append('dob', dob);
-      formData.append('address', address);
-      if (imageFile) {
-        formData.append('image', imageFile); 
-      }
-  
-      const token = localStorage.getItem('token');
-      const response = await fetch('https://gym-backend-apis.onrender.com/admin/user/create', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}` 
-        },
-        body: formData,
-      });
-  
-      if (response.ok) {
-        console.log('Form data submitted successfully!');
-      } else {
-        console.error('Error submitting form data:', response.statusText);
-      }
+        const formData = {
+            name,
+            mobile,
+            email,
+            password,
+            dob,
+            address,
+            image: image ? `here+${await getImageBase64(image)}` : "" // encode image if present
+        };
+        
+        // Send form data
+        sendData(formData);
     } catch (error) {
-      console.error('Error submitting form data:', error);
+        console.error('Error submitting form data:', error);
     }
-  };
+};
+
+const sendData = async (data) => {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('https://gym-backend-apis.onrender.com/admin/user/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (response.ok) {
+            console.log('Form data submitted successfully!');
+        } else {
+            console.error('Error submitting form data:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error submitting form data:', error);
+    }
+};
+
+const getImageBase64 = async (imageUrl) => {
+    const blob = await fetch(imageUrl).then((res) => res.blob());
+    const reader = new FileReader();
+    return new Promise((resolve, reject) => {
+        reader.onloadend = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+    });
+};
+
   
   const handleSignOut = () => {
     localStorage.removeItem("token");
@@ -254,12 +268,10 @@ const UserInformation = () => {
                 label="DOB"
               />
             </div>
-
             <DietPlans 
   selectedDietPlan={selectedDietPlan} 
   handleDietPlanChange={(e) => setSelectedDietPlan(e.target.value)} 
 />
-            
             <div className="col-span-full mb-5">
               <label htmlFor="about" className="block text-sm font-medium leading-6 text-gray-900">Address</label>
               <div className="mt-2">
@@ -272,7 +284,6 @@ const UserInformation = () => {
                 />
               </div>
             </div>
-
             {previewData && (
               <div className="preview-section mb-5">
                 <div className="container">
