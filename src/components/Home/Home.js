@@ -1,6 +1,6 @@
 import React from "react";
-import { useState } from "react";
-import logo from "./img/logo-1.png"; 
+import { useState, useEffect } from "react";
+import logo from "./img/web1.png"; 
 import brand from "./img/logo2.jpg";
 import girl from "./img/girlexe.jpg"; 
 import Boy from "./img/trainer.jpg"; 
@@ -23,6 +23,7 @@ const handleLoginButtonClick = () => {
 };
 
 const HomePage = () => {
+  const [showLoginButton, setShowLoginButton] = useState(true);
   const champions = [
     {
       image: Boy,
@@ -64,17 +65,40 @@ const HomePage = () => {
       setExpandedRow(row); 
     }
   };
+  useEffect(() => {
+    setShowLoginButton(true);
+  }, []);
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      // If user has scrolled down, hide the login button
+      if (scrollPosition > 0) {
+        setShowLoginButton(false);
+      } else {
+        // If user is at the top of the page, show the login button
+        setShowLoginButton(true);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+
+    // Clean up function to remove scroll event listener
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <div className="relative h-screen bg-cover bg-center" style={{ backgroundImage: `url(${girl})` }}>
   <div className="h-screen flex flex-col justify-center items-center bg-opacity-50">
-    <div className="absolute h-64 w-full top-0 flex items-start justify-between px-10 py-10 flex-wrap">
-      <div className="flex justify-between items-center w-full sm:w-auto">
-        <img src={brand} alt="Brand" className="h-10 w-10 rounded-full sm:h-12 sm:w-12" />
-        <img src={logo} alt="Logo" className="h-20 w-42 sm:ml-5" />
+  <div className="absolute top-0 left-0 flex items-start px-10 py-10">
+        <div className="flex items-start">
+          <img src={brand} alt="Brand" className="h-10 w-10 rounded-full sm:h-12 sm:w-12" />
+          <img src={logo} alt="Logo" className="h-32 w-64 ml-2 mt-[-30px]"/>
+        </div>
+        
       </div>
-    </div>
-    <div className="fixed top-10 md:top-0 right-2 md:right-20 p-2 md:p-4">
+      {showLoginButton && (
+    <div className="fixed top-5 md:top-0 right-2 md:right-20 p-2 md:p-4">
   <button
     className="rounded-full border border-white bg-transparent px-4 md:px-8 py-1 md:py-2 flex items-center justify-center text-white text-sm md:text-base"
     onClick={handleLoginButtonClick}
@@ -83,6 +107,7 @@ const HomePage = () => {
     Login
   </button>
 </div>
+)}
 <div className="font-nerwester">
       <div className="absolute left-1 md:right-1/4 lg:right-1/2 top-1/2 transform -translate-y-1/2 p-5 rounded-lg text-center font-norwester">
   <h1 className="text-white text-4xl md:text-6xl lg:text-8xl mb-4" style={{ letterSpacing: '2px', textShadow: '5px 2px 11px rgba(0,0,0,0.3)' }}>
@@ -336,6 +361,15 @@ const HomePage = () => {
               <p>
               <a href="mailto:thetitanfitnessstudio@gmail.com">thetitanfitnessstudio@gmail.com</a></p>
               </div>
+              <div className="flex flex-col items-center mt-5">
+        <a href="https://www.codebuilders.in" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline mb-2">
+          www.codebuilders.in
+        </a>
+        <div className="flex items-center">
+          <span>Powered by</span>
+          <img src="https://www.codebuilders.in/img/code-builders-logo.svg" alt="Powered by" className="w-20 h-20 ml-2" />
+        </div>
+      </div>
             </div>
           </div>
           <div className="lg:w-1/2">
@@ -364,5 +398,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
-

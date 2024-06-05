@@ -139,7 +139,7 @@ const SearchForm = ({ onSubmit }) => {
           />
         </div>
         <div className="flex justify-end mt-5">
-          <button type="submit" className="bg-green-500 text-white py-2 px-4 rounded-md ml-auto">
+          <button type="submit" className="bg-custom-green text-white py-2 px-4 rounded-md ml-auto">
             <FontAwesomeIcon icon={faSearch} className="mr-2 text-lg px-1" />
             Search
           </button>
@@ -163,7 +163,7 @@ const SearchForm = ({ onSubmit }) => {
 
 
       {/* Display search results */}
-      <div className="mt-8">
+      {/* <div className="mt-8">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -198,7 +198,7 @@ const SearchForm = ({ onSubmit }) => {
             )}
           </tbody>
         </table>
-      </div>
+      </div> */}
     </div>
   );
 };

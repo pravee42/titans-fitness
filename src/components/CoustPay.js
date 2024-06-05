@@ -202,16 +202,16 @@ const CustomerPayment = () => {
             <SearchForm onSubmit={handleSubmit} />
           </div>
 
-          <div className="flex justify-center mt-5">
+          <div className="flex justify-center mt-5 mb-10">
             <Customertable user={user} />
           </div>
 
-          <div className="flex justify-end mt-[-20px] mr-[10px]">
+          {/* <div className="flex justify-end mt-[-20px] mr-[10px]">
   <button className="btn">
     <FontAwesomeIcon icon={faFileExcel} className="mr-1" />
     Excel
   </button>
-</div>
+</div> */}
 
         </div>
       </div>

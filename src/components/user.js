@@ -98,36 +98,46 @@ const UserInformation = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     console.log("Submitted: ", {
         name,
+        image,
         mobile,
         email,
         password,
         dob,
+        diet: selectedDietPlan,
         address
     });
+
     notify();
 
     try {
-        const formData = {
-            name,
-            mobile,
-            email,
-            password,
-            dob,
-            address,
-            image: image ? `here+${await getImageBase64(image)}` : "" // encode image if present
+        const convertImageToBase64 = (imageFile) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(imageFile);
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
         };
-        
-        // Send form data
-        sendData(formData);
-    } catch (error) {
-        console.error('Error submitting form data:', error);
-    }
-};
 
-const sendData = async (data) => {
-    try {
+        let base64Image = "";
+        if (imageFile) {
+            base64Image = await convertImageToBase64(imageFile);
+        }
+
+        const jsonData = {
+            name: name,
+            mobile: mobile,
+            email: email,
+            password: password,
+            diet: selectedDietPlan,
+            dob: dob,
+            address: address,
+            image: base64Image
+        };
+
         const token = localStorage.getItem('token');
         const response = await fetch('https://gym-backend-apis.onrender.com/admin/user/create', {
             method: 'POST',
@@ -135,7 +145,7 @@ const sendData = async (data) => {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify(data),
+            body: JSON.stringify(jsonData)
         });
 
         if (response.ok) {
@@ -146,16 +156,6 @@ const sendData = async (data) => {
     } catch (error) {
         console.error('Error submitting form data:', error);
     }
-};
-
-const getImageBase64 = async (imageUrl) => {
-    const blob = await fetch(imageUrl).then((res) => res.blob());
-    const reader = new FileReader();
-    return new Promise((resolve, reject) => {
-        reader.onloadend = () => resolve(reader.result.split(',')[1]);
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-    });
 };
 
   
@@ -182,6 +182,15 @@ const getImageBase64 = async (imageUrl) => {
   </ul>
 </div>
 <div className="fixed bottom-0 right-0 mb-3 pr-4">
+<div className="flex flex-col items-center mt-2">
+        <a href="https://www.codebuilders.in" target="_blank" rel="noopener noreferrer" className="text-black-600 underline">
+          www.codebuilders.in
+        </a>
+        <div className="flex items-center">
+          <span>Powered by</span>
+          <img src="https://www.codebuilders.in/img/code-builders-logo.svg" alt="Powered by" className="w-20 h-20 ml-2" />
+        </div>
+      </div>
   <ul className="flex">
     <span className="text-sm">The Titans Fitness Studio -UniSex</span>
   </ul>
@@ -326,7 +335,7 @@ const getImageBase64 = async (imageUrl) => {
 
             <button
               type="submit"
-              className="sticky bottom-5 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+              className="sticky bottom-5 bg-custom-green hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
             >
               Submit
             </button>
