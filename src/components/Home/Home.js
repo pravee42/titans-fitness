@@ -10,6 +10,7 @@ import insta from './img/insta.png';
 import whatsapp from './img/whatsapp.png';
 import loc from './img/location.png';
 import EquipmentGrid from "../Equipment";
+import cb from '../../img/foot.png';
 
 import './Home.css';
 
@@ -335,7 +336,7 @@ const HomePage = () => {
         <div className="flex flex-col md:flex-row ml-2 md:ml-20">
       <div className="md:w-1/2 mt-10 md:mt-20 justify-center">
         <p className="text-4xl">
-          <img src={logo} alt="Logo" className="h-12 w-auto" />
+          <img src={logo} alt="Logo" className="h-24 w-auto" />
         </p>
         <p className="text-xl mt-3 md:w-96">
           Unleash Your Inner Titan at Titans Fitness Gym -
@@ -346,6 +347,7 @@ const HomePage = () => {
           Drop a line
         </button>
       </div>
+
       <div className="md:w-1/2 mt-10 md:mt-20 ml-auto lg:max-w-full lg:flex border-t border-l border-70AB0E-800">
         <div className="max-w-sm w-full lg:max-w-full lg:flex">
           <div className="lg:w-1/2 lg:border-r border-70AB0E-800 lg:border-b-0">
@@ -362,6 +364,7 @@ const HomePage = () => {
               <a href="mailto:thetitanfitnessstudio@gmail.com">thetitanfitnessstudio@gmail.com</a></p>
               </div>
               <div className="flex flex-col items-center mt-5">
+                
         <a href="https://www.codebuilders.in" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline mb-2">
           www.codebuilders.in
         </a>
@@ -387,12 +390,16 @@ const HomePage = () => {
       </a>
     </div>
     <p className="text-black text-lg font-bold mt-5">We accept all major cards and UPI transactions.</p>
+
   </div>
 </div>
 
         </div>
         </div> 
-         </div></div>
+         </div>
+         <img src={cb} alt="Footer Logo" className="w-200 h-20 ml-2 bottom-0" />
+         </div>
+         
     
     );
 };

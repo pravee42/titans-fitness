@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserCircle, faPhone, faHourglassStart, faHourglassEnd, faMoneyBill } from "@fortawesome/free-solid-svg-icons";
+import {
+  faUserCircle,
+  faPhone,
+  faHourglassStart,
+  faHourglassEnd,
+  faMoneyBill,
+} from "@fortawesome/free-solid-svg-icons";
 import Axios from "axios";
 import "../../styles/sty.css";
-import Loading from '../loading';
+import Loading from "../loading";
 
 const Attendancetable = () => {
   const [tableData, setTableData] = useState([]);
@@ -29,7 +35,10 @@ const Attendancetable = () => {
         const token = localStorage.getItem("token");
         const headers = { Authorization: `Bearer ${token}` };
 
-        const response = await Axios.get("https://gym-backend-apis.onrender.com/admin/punch/out", { headers });
+        const response = await Axios.get(
+          "https://gym-backend-apis.onrender.com/admin/punch/out",
+          { headers }
+        );
 
         setTableData(response.data.timing);
         setIsLoading(false);
@@ -44,11 +53,14 @@ const Attendancetable = () => {
 
   const handleOpenClick = async (customerId) => {
     try {
-      const response = await Axios.get(`https://gym-backend-apis.onrender.com/admin/user/${customerId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await Axios.get(
+        `https://gym-backend-apis.onrender.com/admin/user/${customerId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       const newPageUrl = `/user/${customerId}`;
       navigate(newPageUrl);
     } catch (error) {
@@ -64,8 +76,18 @@ const Attendancetable = () => {
     <div className="overflow-y-auto w-full h-screen p-4 mb-10">
       {/* Period buttons */}
       <div className="mb-4">
-        <button onClick={() => handlePeriodClick("morning")} className="mr-4 border rounded px-4 py-2 bg-custom-green hover:bg-green-600">Morning</button>
-        <button onClick={() => handlePeriodClick("evening")} className="border rounded px-4 py-2 bg-custom-green hover:bg-green-600">Evening</button>
+        <button
+          onClick={() => handlePeriodClick("morning")}
+          className="mr-4 border rounded px-4 py-2 bg-custom-green hover:bg-green-600"
+        >
+          Morning
+        </button>
+        <button
+          onClick={() => handlePeriodClick("evening")}
+          className="border rounded px-4 py-2 bg-custom-green hover:bg-green-600"
+        >
+          Evening
+        </button>
       </div>
 
       {/* Filter input */}
@@ -81,10 +103,18 @@ const Attendancetable = () => {
         <thead>
           <tr className="sticky top-0.1">
             {TABLE_HEAD.map(({ label, icon }) => (
-              <th key={label} className="border border-black-800 bg-gray-50 p-4">
+              <th
+                key={label}
+                className="border border-black-800 bg-gray-50 p-4"
+              >
                 <div className="flex items-center justify-center gap-1">
-                  <FontAwesomeIcon icon={icon} className="text-green-gray-500 h-3 w-3" />
-                  <span className="font-normal leading-none opacity-70">{label}</span>
+                  <FontAwesomeIcon
+                    icon={icon}
+                    className="text-green-gray-500 h-3 w-3"
+                  />
+                  <span className="font-normal leading-none opacity-70">
+                    {label}
+                  </span>
                 </div>
               </th>
             ))}
@@ -94,23 +124,46 @@ const Attendancetable = () => {
           {Array.isArray(tableData) && tableData.length > 0 ? (
             tableData
               .filter((rowData) => {
+                if (!rowData.IN_TIME) {
+                  return false;
+                }
+                const hour = parseInt(rowData.IN_TIME.slice(11, 13));
                 if (period === "morning") {
-                  const hour = parseInt(rowData.IN_TIME.slice(11, 13));
                   return hour >= 6 && hour < 12;
                 } else if (period === "evening") {
-                  const hour = parseInt(rowData.IN_TIME.slice(11, 13));
                   return hour >= 12 && hour <= 24;
                 }
                 return true;
               })
-              .filter((rowData) => rowData.CUSTOMER_NAME.toLowerCase().includes(filter.toLowerCase()))
+
+              .filter((rowData) =>
+                rowData.CUSTOMER_NAME.toLowerCase().includes(
+                  filter.toLowerCase()
+                )
+              )
               .map((rowData, index) => (
-                <tr key={index} className={`${index % 2 === 0 ? "bg-gray-100" : ""} border-b border-blue-gray-800`}>
-                  <td className="p-4 border-l border-r border-blue-gray-800">{rowData.CUSTOMER_PROFILE_ID}</td>
-                  <td className="p-4 border-l border-r border-blue-gray-800">{rowData.CUSTOMER_NAME}</td>
-                  <td className="p-4 border-l border-r border-blue-gray-800">{rowData.PHONE}</td>
-                  <td className="p-4 border-l border-r border-blue-gray-800">{rowData.IN_TIME.slice(11, 16)}</td>
-                  <td className="p-4 border-l border-r border-blue-gray-800">{rowData.OUT_TIME.slice(11, 16)}</td>
+                <tr
+                  key={index}
+                  className={`${
+                    index % 2 === 0 ? "bg-gray-100" : ""
+                  } border-b border-blue-gray-800`}
+                >
+                  <td className="p-4 border-l border-r border-blue-gray-800">
+                    {rowData.CUSTOMER_PROFILE_ID}
+                  </td>
+                  <td className="p-4 border-l border-r border-blue-gray-800">
+                    {rowData.CUSTOMER_NAME}
+                  </td>
+                  <td className="p-4 border-l border-r border-blue-gray-800">
+                    {rowData.PHONE}
+                  </td>
+                  <td className="p-4 border-l border-r border-blue-gray-800">
+                    {rowData.IN_TIME ? rowData.IN_TIME.slice(11, 16) : "N/A"}
+                  </td>
+                  <td className="p-4 border-l border-r border-blue-gray-800">
+                    {rowData.OUT_TIME ? rowData.OUT_TIME.slice(11, 16) : "N/A"}
+                  </td>
+
                   <td className="p-4 border-l border-r border-blue-gray-800 w-20">
                     <button
                       className="text-gray-800 bg-green-200 px-3 py-1 rounded-md cursor-pointer hover:bg-green-300"

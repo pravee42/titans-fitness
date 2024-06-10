@@ -92,19 +92,22 @@ const Punchin = () => {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.ctrlKey && event.key === "=") {
+      if (event.ctrlKey && event.key === "a") {
+        event.preventDefault();
         handlePunchIn();
-      } else if (event.ctrlKey && event.key === "-") {
+      } else if (event.ctrlKey && event.key === "c") {
+        event.preventDefault();
         handlePunchOut();
       }
     };
-
+  
     document.addEventListener("keydown", handleKeyDown);
-
+  
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
+  
 
   const handleSignOut = () => {
     localStorage.removeItem("token");

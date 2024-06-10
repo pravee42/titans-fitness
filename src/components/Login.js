@@ -8,19 +8,21 @@ import brand from '../img/brand.png';
 import insta from '../img/insta.png';
 import whatsapp from '../img/whatsapp.png';
 import tele from '../img/location.png';
-import codeby from '../img/codebuilders.jpg'
+import codeby from '../img/codebuilders.jpg';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [token, setToken] = useState(localStorage.getItem('token'));
+  const [loading, setLoading] = useState(false); // Loading state
 
   const togglePasswordVisibility = () => {
     setPasswordVisible((prev) => !prev);
   };
 
   const handleLogin = async () => {
+    setLoading(true); // Start loading
     try {
       const response = await axios.post('https://gym-backend-apis.onrender.com/login', { email, password });
       const authToken = response.data.token;
@@ -31,6 +33,8 @@ function Login() {
     } catch (error) {
       console.error('Error logging in', error);
       toast.error('Error logging in');
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -39,7 +43,6 @@ function Login() {
       window.location.href = '/Dashboard';
     }
   }, [token]);
-
   return (
     <div>
       <ToastContainer />

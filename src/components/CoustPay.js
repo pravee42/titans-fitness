@@ -148,7 +148,7 @@ const CustomerPayment = () => {
   };
   return (
     <div>
-      <div className="fixed bottom-0 left-0 mb-3 ml-4 z-10">
+      <div className="fixed bottom-5 left-0 mb-3 ml-4 z-10">
   <ul className="flex">
     <li className="hover:text-70AB0E-800 px-1">
       <a href="/" className="block flex items-center" onClick={handleSignOut}>
@@ -158,7 +158,7 @@ const CustomerPayment = () => {
     </li>
   </ul>
 </div>
-<div className="fixed bottom-0 right-0 mb-3 pr-4">
+<div className="fixed bottom-0 left-0 mb-3 pr-4">
   <ul className="flex">
     <span className="text-sm">The Titans Fitness Studio -UniSex</span>
   </ul>

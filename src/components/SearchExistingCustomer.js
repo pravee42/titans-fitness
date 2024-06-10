@@ -79,7 +79,7 @@ const SearchExistingCoustomer = () => {
             <span className="text-70AB0E-800"> Search Existing Customer</span>
           </div>
         </div>
-        <div className="fixed bottom-0 right-0 mb-3 ml-2 z-10">
+        <div className="fixed bottom-5 left-0 mb-3 ml-2 z-10">
   <ul className="flex">
     <li className="hover:text-70AB0E-800 px-1">
       <a href="/" className="block flex items-center" onClick={handleSignOut}>
