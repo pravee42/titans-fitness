@@ -22,7 +22,7 @@ function Login() {
   };
 
   const handleLogin = async () => {
-    setLoading(true); // Start loading
+    setLoading(true); 
     try {
       const response = await axios.post('https://gym-backend-apis.onrender.com/login', { email, password });
       const authToken = response.data.token;
@@ -34,7 +34,7 @@ function Login() {
       console.error('Error logging in', error);
       toast.error('Error logging in');
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 

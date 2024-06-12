@@ -3,13 +3,25 @@ import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCircle, faPhone, faCalendarAlt, faCheckCircle, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { Chip } from "@material-tailwind/react";
+import {
+  faHourglassStart,
+  faHourglassEnd,
+  faMoneyBill,
+} from "@fortawesome/free-solid-svg-icons";
 import Axios from "axios";
 import "../../styles/sty.css";
-import Loading from '../loading';
+import Loading from "../loading";
+import '../../styles/Tabstlye.css'
 
 const Tablegym = () => {
   const [tableData, setTableData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [filter, setFilter] = useState("");
+  const [filterID, setFilterID] = useState("");
+  const [filterPhone, setFilterPhone] = useState("");
+  const [filterDOB, setFilterDOB] = useState("");
+
+  const navigate = useNavigate();
   
   const TABLE_HEAD = [
     { label: "Customer ID", icon: faUserCircle },
@@ -19,11 +31,31 @@ const Tablegym = () => {
     { label: "Status", icon: faCheckCircle },
     { label: "Action", icon: faEdit },
   ];
+  const handleScroll = (e) => {
+    const rows = e.target.getElementsByTagName('tr');
+    const scrollOffset = e.target.scrollTop;
+    const windowHeight = e.target.clientHeight;
+    
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      const rowTop = row.offsetTop;
+      const rowHeight = row.clientHeight;
+      const rowBottom = rowTop + rowHeight;
+  
+      if (rowTop >= scrollOffset && rowBottom <= scrollOffset + windowHeight) {
+        row.classList.add('row-overlay');
+      } else {
+        row.classList.remove('row-overlay');
+      }
+    }
+  };
+  
+  
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await Axios.get("https://gym-backend-apis.onrender.com/admin/user", {
+        const response = await Axios.get("https://gym-backend-apis.onrender.com/admin/dashboard", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -54,29 +86,98 @@ const Tablegym = () => {
     }
   };
 
+
   return (
-    <div className="overflow-y-auto w-full h-screen p-4 border border-black-1000">
+    <div className="overflow-y-auto w-full h-screen p-4 mb-10">
+      
+      {/* Filter input */}
+      
+      <input
+        type="text"
+        value={filterID}
+        onChange={(e) => setFilterID(e.target.value)}
+        placeholder="Filter by ID..."
+        className="p-2 border rounded mb-4"
+        style={{ marginLeft: '10px' }}
+      />
+      <input
+        type="text"
+        value={filter}
+        onChange={(e) => setFilter(e.target.value)}
+        placeholder="Filter by name..."
+        className="p-2 border rounded mb-4"
+        style={{ marginLeft: '10px' }}
+      />
+      <input
+        type="text"
+        value={filterPhone}
+        onChange={(e) => setFilterPhone(e.target.value)}
+        placeholder="Filter by Phone..."
+        className="p-2 border rounded mb-4"
+        style={{ marginLeft: '10px' }}
+      />
+      <input
+        type="text"
+        value={filterDOB}
+        onChange={(e) => setFilterDOB(e.target.value)}
+        placeholder="Filter by Dob..."
+        className="p-2 border rounded mb-4"
+        style={{ marginLeft: '10px' }}
+      />
+
       <table className="text-center w-full border-collapse">
         <thead>
-          <tr className="sticky top-0.1 bg-gray-50">
+          <tr className="sticky top-0.1">
             {TABLE_HEAD.map(({ label, icon }) => (
-              <th key={label} className="border border-black-800 p-4">
+              <th
+                key={label}
+                className="border border-black-800 bg-gray-50 p-4"
+              >
                 <div className="flex items-center justify-center gap-1">
-                  <FontAwesomeIcon icon={icon} className="text-gray-500 h-4 w-4" />
-                  <span className="font-normal leading-none opacity-70">{label}</span>
+                  <FontAwesomeIcon
+                    icon={icon}
+                    className="text-green-gray-500 h-3 w-3"
+                  />
+                  <span className="font-normal leading-none opacity-70">
+                    {label}
+                  </span>
                 </div>
               </th>
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody onScroll={(e) => handleScroll(e)}>
           {Array.isArray(tableData) && tableData.length > 0 ? (
-            tableData.map((rowData, index) => (
-              <tr key={index} className={`${index % 2 === 0 ? "bg-gray-100" : ""} border-b border-gray-300`}>
-                <td className="p-4 border-l border-r border-gray-300">{rowData.ID}</td>
-                <td className="p-4 border-l border-r border-gray-300">{rowData.NAME}</td>
-                <td className="p-4 border-l border-r border-gray-300">{rowData.PHONE}</td>
-                <td className="p-4 border-l border-r border-gray-300">{new Date(rowData.DOB).toLocaleDateString()}</td>
+            tableData
+            .filter((rowData) =>
+              rowData.NAME.toLowerCase().includes(filter.toLowerCase())
+            )
+            .filter((rowData) =>
+              rowData.ID.toString().includes(filterID)
+            )
+            .filter((rowData) =>
+              rowData.PHONE.includes(filterPhone)
+            )
+            .filter((rowData) =>
+              rowData.DOB.includes(filterDOB)
+            )
+              .map((rowData, index) => (
+                <tr
+                  key={index}
+                  className={`${
+                    index % 2 === 0 ? "bg-gray-100" : ""
+                  } border-b border-blue-gray-800`}
+                >
+                  <td className="p-4 border-l border-r border-blue-gray-800">
+                    {rowData.ID}
+                  </td>
+                  <td className="p-4 border-l border-r border-blue-gray-800">
+                    {rowData.NAME}
+                  </td>
+                  <td className="p-4 border-l border-r border-blue-gray-800">
+                    {rowData.PHONE}
+                  </td>
+                  <td className="p-4 border-l border-r border-gray-300">{new Date(rowData.DOB).toLocaleDateString()}</td>
                 <td className="p-4 border-l border-r border-gray-300">
                   <div className="relative z-10">
                     <Chip
@@ -96,8 +197,8 @@ const Tablegym = () => {
                     Open
                   </button>
                 </td>
-              </tr>
-            ))
+                </tr>
+              ))
           ) : (
             <tr>
               <td colSpan={TABLE_HEAD.length} className="p-4 text-center">

@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Card, Input, Typography } from "@material-tailwind/react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPhone, faEnvelope, faCalendarAlt, faCheckCircle, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
-import '../styles/preview.css';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPhone,
+  faEnvelope,
+  faCalendarAlt,
+  faCheckCircle,
+  faMapMarkerAlt,
+} from "@fortawesome/free-solid-svg-icons";
+import "../styles/preview.css";
 import DietPlans from "./Dietplan";
-import { ToastContainer, toast } from 'react-toastify';
-import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
-import 'react-toastify/dist/ReactToastify.css';
-import logo from './Home/img/logo-1.png';
+import { ToastContainer, toast } from "react-toastify";
+import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import "react-toastify/dist/ReactToastify.css";
+import logo from "./Home/img/logo-1.png";
 const UserInformationForm = styled.form`
   position: relative;
   height: 100%;
@@ -16,40 +22,40 @@ const UserInformationForm = styled.form`
 
 const UserInformation = () => {
   const [name, setFullName] = useState("");
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [validEmail, setValidEmail] = useState(true);
-  const [password, setPassword] = useState('');
-  const [mobile, setMobileNumber] = useState('');
-  const [dob, setDob] = useState('');
-  const [address, setAddress] = useState('');
+  const [password, setPassword] = useState("");
+  const [mobile, setMobileNumber] = useState("");
+  const [dob, setDob] = useState("");
+  const [address, setAddress] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [image, setImage] = useState(null);
   const [imageUploaded, setImageUploaded] = useState(false);
   const [selectedDietPlan, setSelectedDietPlan] = useState("");
   const notify = () => toast("Form Submitted");
   const [previewData, setPreviewData] = useState({
-    name: '',
-    email: '',
-    mobile: '',
-    dob: '',
-    address: ''
+    name: "",
+    email: "",
+    mobile: "",
+    dob: "",
+    address: "",
   });
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) {
-      window.location.href = '/login'; 
+      window.location.href = "/login";
     }
   }, []);
 
   const handleAddressChange = (event) => {
     setAddress(event.target.value);
-    setPreviewData({ ...previewData, address: event.target.value }); 
+    setPreviewData({ ...previewData, address: event.target.value });
   };
 
   const handleNameChange = (event) => {
     setFullName(event.target.value);
-    setPreviewData({ ...previewData, fullName: event.target.value }); 
+    setPreviewData({ ...previewData, fullName: event.target.value });
   };
 
   const handleDietPlanChange = (event) => {
@@ -59,19 +65,19 @@ const UserInformation = () => {
 
   const handleMobileNumberChange = (event) => {
     const input = event.target.value;
-    const validatedInput = input.replace(/\D/g, '');
+    const validatedInput = input.replace(/\D/g, "");
     setMobileNumber(validatedInput);
-    setPreviewData({ ...previewData, mobileNumber: validatedInput }); 
+    setPreviewData({ ...previewData, mobileNumber: validatedInput });
   };
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
-    setPreviewData({ ...previewData, password: event.target.value }); 
+    setPreviewData({ ...previewData, password: event.target.value });
   };
 
   const handleDobChange = (event) => {
     setDob(event.target.value);
-    setPreviewData({ ...previewData, dob: event.target.value }); 
+    setPreviewData({ ...previewData, dob: event.target.value });
   };
 
   const handleEmailChange = (event) => {
@@ -79,10 +85,10 @@ const UserInformation = () => {
     setEmail(newEmail);
     const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail);
     setValidEmail(isValid);
-    setPreviewData({ ...previewData, email: newEmail }); 
+    setPreviewData({ ...previewData, email: newEmail });
   };
 
-  const handleFileChange = (event) => { 
+  const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -91,125 +97,166 @@ const UserInformation = () => {
         setImage(base64Image);
         setImageFile(file);
         setImageUploaded(true);
-        setPreviewData({ ...previewData, imageUrl: base64Image }); 
+        setPreviewData({ ...previewData, imageUrl: base64Image });
       };
       reader.readAsDataURL(file);
     }
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     console.log("Submitted: ", {
-        name,
-        image,
-        mobile,
-        email,
-        password,
-        dob,
-        diet: selectedDietPlan,
-        address
+      name,
+      image,
+      mobile,
+      email,
+      password,
+      dob,
+      diet: selectedDietPlan,
+      address,
     });
 
     notify();
 
     try {
-        const convertImageToBase64 = (imageFile) => {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(imageFile);
-                reader.onloadend = () => resolve(reader.result);
-                reader.onerror = error => reject(error);
-            });
-        };
-
-        let base64Image = "";
-        if (imageFile) {
-            base64Image = await convertImageToBase64(imageFile);
-        }
-
-        const jsonData = {
-            name: name,
-            mobile: mobile,
-            email: email,
-            password: password,
-            diet: selectedDietPlan,
-            dob: dob,
-            address: address,
-            image: base64Image
-        };
-
-        const token = localStorage.getItem('token');
-        const response = await fetch('https://gym-backend-apis.onrender.com/admin/user/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(jsonData)
+      const convertImageToBase64 = (imageFile) => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(imageFile);
+          reader.onloadend = () => resolve(reader.result);
+          reader.onerror = (error) => reject(error);
         });
+      };
 
-        if (response.ok) {
-            console.log('Form data submitted successfully!');
-        } else {
-            console.error('Error submitting form data:', response.statusText);
+      let base64Image = "";
+      if (imageFile) {
+        base64Image = await convertImageToBase64(imageFile);
+      }
+
+      const jsonData = {
+        name: name,
+        mobile: mobile,
+        email: email,
+        password: password,
+        diet: selectedDietPlan,
+        dob: dob,
+        address: address,
+        image: base64Image,
+      };
+
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        "https://gym-backend-apis.onrender.com/admin/user/create",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(jsonData),
         }
-    } catch (error) {
-        console.error('Error submitting form data:', error);
-    }
-};
+      );
 
-  
+      if (response.ok) {
+        console.log("Form data submitted successfully!");
+      } else {
+        console.error("Error submitting form data:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error submitting form data:", error);
+    }
+  };
+
   const handleSignOut = () => {
     localStorage.removeItem("token");
     window.location.href = "/";
   };
 
   return (
-
-    <UserInformationForm className="flex flex-col justify-between" onSubmit={handleSubmit}>
+    <UserInformationForm
+      className="flex flex-col justify-between"
+      onSubmit={handleSubmit}
+    >
       <Card color="transparent" shadow={false}>
         <div className="mt-2 mb-2 h-full form max-w-screen-lg sm:w-96">
- <h2 className="font-bold mb-3">Customer ID</h2>
+          <h2 className="font-bold mb-3">Customer ID</h2>
           <h4 className="mb-3">User INFORMATION</h4>
           <div className="fixed bottom-0 left-0 mb-3 ml-4 z-10">
-  <ul className="flex">
-    <li className="hover:text-70AB0E-800 px-1">
-      <a href="/" className="block flex items-center" onClick={handleSignOut}>
-        <FontAwesomeIcon icon={faSignOutAlt} className="mr-2 text-lg" />
-        <span className="text-sm">Sign Out</span>
-      </a>
-    </li>
-  </ul>
-</div>
-<div className="fixed bottom-0 right-0 mb-3 pr-4">
-<div className="flex flex-col items-center mt-2">
-        <a href="https://www.codebuilders.in" target="_blank" rel="noopener noreferrer" className="text-black-600 underline">
-          www.codebuilders.in
-        </a>
-        <div className="flex items-center">
-          <span>Powered by</span>
-          <img src="https://www.codebuilders.in/img/code-builders-logo.svg" alt="Powered by" className="w-20 h-20 ml-2" />
-        </div>
-      </div>
-  <ul className="flex">
-    <span className="text-sm">The Titans Fitness Studio -UniSex</span>
-  </ul>
-</div>
+            <ul className="flex">
+              <li className="hover:text-70AB0E-800 px-1">
+                <a
+                  href="/"
+                  className="block flex items-center"
+                  onClick={handleSignOut}
+                >
+                  <FontAwesomeIcon
+                    icon={faSignOutAlt}
+                    className="mr-2 text-lg"
+                  />
+                  <span className="text-sm">Sign Out</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div className="fixed bottom-0 right-0 mb-3 pr-4">
+            <div className="flex flex-col items-center mt-2">
+              {/* <a
+                href="https://www.codebuilders.in"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-black-600 underline"
+              >
+                www.codebuilders.in
+              </a> */}
+              {/* <div className="flex items-center">
+                <span>Powered by</span>
+                <img
+                  src="https://www.codebuilders.in/img/code-builders-logo.svg"
+                  alt="Powered by"
+                  className="w-20 h-20 ml-2"
+                />
+              </div> */}
+            </div>
+            <ul className="flex">
+              <span className="text-sm">The Titans Fitness Studio -UniSex</span>
+            </ul>
+          </div>
           <div className="gap-5 flex flex-col overflow-auto">
             <div className="flex items-center justify-center w-32 h-32 mb-5 relative">
               {image ? (
-                <img src={image} alt="Preview" className="w-full h-full rounded-lg object-cover" />
+                <img
+                  src={image}
+                  alt="Preview"
+                  className="w-full h-full rounded-lg object-cover"
+                />
               ) : (
-                <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 dark:hover:border-gray-500">
+                <label
+                  htmlFor="dropzone-file"
+                  className="flex flex-col items-center justify-center w-full h-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 dark:hover:border-gray-500"
+                >
                   <div className="flex flex-col items-center justify-center">
-                    <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">+</span></p>
-                    <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold text-green-600">Add Image</span></p>
+                    <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                      <span className="font-semibold">+</span>
+                    </p>
+                    <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                      <span className="font-semibold text-green-600">
+                        Add Image
+                      </span>
+                    </p>
                   </div>
-                  <input id="dropzone-file" type="file" className="hidden" onChange={handleFileChange} />
+                  <input
+                    id="dropzone-file"
+                    type="file"
+                    className="hidden"
+                    onChange={handleFileChange}
+                  />
                 </label>
               )}
               {imageUploaded && (
-                <FontAwesomeIcon icon={faCheckCircle} className="absolute top-0 right-0 text-green-500" />
+                <FontAwesomeIcon
+                  icon={faCheckCircle}
+                  className="absolute top-0 right-0 text-green-500"
+                />
               )}
             </div>
 
@@ -244,7 +291,7 @@ const UserInformation = () => {
               placeholder="xyz@gmail.com"
               value={email}
               onChange={handleEmailChange}
-              className={`font-bold ${!validEmail ? 'border-red-500' : ''}`}
+              className={`font-bold ${!validEmail ? "border-red-500" : ""}`}
               label="Email"
             />
             {!validEmail && (
@@ -277,12 +324,17 @@ const UserInformation = () => {
                 label="DOB"
               />
             </div>
-            <DietPlans 
-  selectedDietPlan={selectedDietPlan} 
-  handleDietPlanChange={(e) => setSelectedDietPlan(e.target.value)} 
-/>
+            <DietPlans
+              selectedDietPlan={selectedDietPlan}
+              handleDietPlanChange={(e) => setSelectedDietPlan(e.target.value)}
+            />
             <div className="col-span-full mb-5">
-              <label htmlFor="about" className="block text-sm font-medium leading-6 text-gray-900">Address</label>
+              <label
+                htmlFor="about"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Address
+              </label>
               <div className="mt-2">
                 <textarea
                   id="about"
@@ -344,7 +396,6 @@ const UserInformation = () => {
         </div>
       </Card>
     </UserInformationForm>
-
   );
 };
 
