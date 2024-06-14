@@ -89,26 +89,15 @@ const Punchin = () => {
       console.error("Error punching out:", error);
     }
   };
-
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.ctrlKey && event.key === "a") {
-        event.preventDefault();
-        handlePunchIn();
-      } else if (event.ctrlKey && event.key === "c") {
-        event.preventDefault();
-        handlePunchOut();
-      }
-    };
-  
-    document.addEventListener("keydown", handleKeyDown);
-  
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
-  
-
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleSearchSubmit();
+    } else if (event.key === "=") {
+      handlePunchIn();
+    } else if (event.key === "-") {
+      handlePunchOut();
+    }
+  };
   const handleSignOut = () => {
     localStorage.removeItem("token");
     window.location.href = "/";
@@ -161,6 +150,7 @@ const Punchin = () => {
                 placeholder="Enter Customer ID"
                 value={searchId}
                 onChange={handleSearchChange}
+                onKeyPress={handleKeyPress}
               />
             </div>
             <div className="flex justify-between">
@@ -208,7 +198,7 @@ const Punchin = () => {
                           readOnly
                         />
                       </div>
-                      <div>
+                      {/* <div>
                         <label className="block font-bold">Email</label>
                         <input
                           type="text"
@@ -237,7 +227,7 @@ const Punchin = () => {
                           className="w-full border rounded px-2 py-1"
                           readOnly
                         />
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>

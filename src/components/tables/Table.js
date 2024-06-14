@@ -192,7 +192,7 @@ const Tablegym = () => {
                 <td className="p-4 border-l border-r border-gray-300">
                   <button
                     className="text-gray-800 bg-green-200 px-3 py-1 rounded-md cursor-pointer hover:bg-green-300"
-                    onClick={() => handleOpenClick(rowData._id)}
+                    onClick={() => handleOpenClick(rowData.ID)}
                   >
                     Open
                   </button>

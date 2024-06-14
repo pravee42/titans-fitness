@@ -163,10 +163,10 @@ const UserProfile = () => {
       address: user.ADDRESS,
       email: user.EMAIL,
       mobile: user.PHONE,
-      referenceNumber: user.REFERENCE_NUMBER,
       image: user.IMAGE,
     });
   };
+
   useEffect(() => {
     if (user) {
       setEditedInfo({
@@ -184,6 +184,7 @@ const UserProfile = () => {
     const [year, month, day] = dateStr.split("-");
     return `${year}-${month}-${day}`;
   };
+
   const handleSaveEdit = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -198,7 +199,7 @@ const UserProfile = () => {
       };
 
       let base64Image = "";
-      if (editedInfo.image) {
+      if (editedInfo.image && typeof editedInfo.image === 'object') {
         base64Image = await convertImageToBase64(editedInfo.image);
       }
 
@@ -207,17 +208,11 @@ const UserProfile = () => {
         dob: reverseDateFormat(editedInfo.dob),
         address: editedInfo.address,
         email: editedInfo.email,
-        mobile: editedInfo.phone,
-        image: base64Image,
+        mobile: editedInfo.mobile,
+        image: base64Image || "",
       };
-      console.log("Submitted: ", {
-        name: editedInfo.name,
-        dob: reverseDateFormat(editedInfo.dob),
-        address: editedInfo.address,
-        email: editedInfo.email,
-        mobile: editedInfo.phone,
-        image: base64Image,
-      });
+
+      console.log("Submitted: ", jsonData);
 
       updateUserDetails(jsonData);
     } catch (error) {
