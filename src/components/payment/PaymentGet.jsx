@@ -1,40 +1,112 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const PaymentHistory = ({ userId }) => {
   const [payments, setPayments] = useState([]);
   const [paymentDetails, setPaymentDetails] = useState([]);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [isEditingPayment, setIsEditingPayment] = useState(false);
   const [paymentToEdit, setPaymentToEdit] = useState(null);
-  
 
   useEffect(() => {
     const fetchPaymentDetails = async () => {
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem("token");
         const headers = {
           Authorization: `Bearer ${token}`,
         };
-        const paymentDetailsResponse = await axios.get(`https://gym-backend-apis.onrender.com/admin/payment/${userId}`, { headers });
+        const paymentDetailsResponse = await axios.get(
+          `https://gym-backend-apis.onrender.com/admin/payment/${userId}`,
+          { headers }
+        );
         setPaymentDetails(paymentDetailsResponse.data);
         console.log("Payment details:", paymentDetailsResponse.data);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
-  
+
     if (userId) {
       fetchPaymentDetails();
     }
   }, [userId]);
-  
+
+  const fetchPaymentDetails = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+      const paymentDetailsResponse = await axios.get(
+        `https://gym-backend-apis.onrender.com/admin/payment/${userId}`,
+        { headers }
+      );
+      setPaymentDetails(paymentDetailsResponse.data);
+      console.log("Payment details:", paymentDetailsResponse.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   const handleEditPayment = (payment) => {
     setIsEditingPayment(true);
     setPaymentToEdit(payment);
   };
-  
-  
+
+  const handleDeletePayment = async (paymentId) => {
+    try {
+      const token = localStorage.getItem("token");
+      console.log(`Deleting payment with ID: ${paymentId}`);
+      const response = await axios.delete(
+        `https://gym-backend-apis.onrender.com/admin/payment/${paymentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response);
+
+      if (response.status === 200) {
+        console.log("Payment deleted successfully!");
+        toast.success("Payment deleted successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        // Refresh payment details after deletion
+        fetchPaymentDetails();
+      } else {
+        console.error("Error deleting payment:", response.statusText);
+        toast.error("Error deleting payment. Please try again!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    } catch (error) {
+      console.error("Error deleting payment:", error);
+      toast.error("Error deleting payment. Please try again!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  };
 
   const handleSavePaymentEdit = async () => {
     try {
@@ -76,6 +148,7 @@ const PaymentHistory = ({ userId }) => {
         <thead>
           <tr>
             <th className="border px-4 py-2">Amount</th>
+            <th className="border px-4 py-2">Payment Date</th>
             <th className="border px-4 py-2">Effective Date</th>
             <th className="border px-4 py-2">End Date</th>
             <th className="border px-4 py-2">Balance</th>
@@ -163,6 +236,7 @@ const PaymentHistory = ({ userId }) => {
                 <td className="border px-4 py-2">{payment.PAYMENT_AMOUNT}</td>
                 <td className="border px-4 py-2">{new Date(payment.PAYMENT_DATE).toLocaleDateString()}</td>
                 <td className="border px-4 py-2">{new Date(payment.EFFECTIVE_DATE).toLocaleDateString()}</td>
+                <td className="border px-4 py-2">{new Date(payment.END_DATE).toLocaleDateString()}</td>
                 <td className="border px-4 py-2">{payment.PAYMENT_BALANCE}</td>
                 <td className="border px-4 py-2">{payment.PAYMENT_TYPE}</td>
                 <td className="border px-4 py-2">
@@ -171,6 +245,13 @@ const PaymentHistory = ({ userId }) => {
                     className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mr-2" style={{ backgroundColor: '#79BA0F' }}
                   >
                     Edit
+                  </button>
+                  <button
+                    onClick={() => handleDeletePayment(payment._id)}
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2"
+                    style={{ backgroundColor: '#79BA0F' }}
+                  >
+                    Delete
                   </button>
                 </td>
               </tr>

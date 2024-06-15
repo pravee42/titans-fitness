@@ -8,13 +8,14 @@ import {
   faCalendarAlt,
   faCheckCircle,
   faMapMarkerAlt,
+  faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import "../styles/preview.css";
 import DietPlans from "./Dietplan";
 import { ToastContainer, toast } from "react-toastify";
-import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import logo from "./Home/img/logo-1.png";
+
 const UserInformationForm = styled.form`
   position: relative;
   height: 100%;
@@ -29,7 +30,7 @@ const UserInformation = () => {
   const [dob, setDob] = useState("");
   const [address, setAddress] = useState("");
   const [imageFile, setImageFile] = useState(null);
-  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [imageUploaded, setImageUploaded] = useState(false);
   const [selectedDietPlan, setSelectedDietPlan] = useState("");
   const notify = () => toast("Form Submitted");
@@ -91,23 +92,23 @@ const UserInformation = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
+      setImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        const base64Image = reader.result;
-        setImage(base64Image);
-        setImageFile(file);
+        setImagePreview(reader.result);
         setImageUploaded(true);
-        setPreviewData({ ...previewData, imageUrl: base64Image });
+        setPreviewData({ ...previewData, imageUrl: reader.result });
       };
       reader.readAsDataURL(file);
     }
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     console.log("Submitted: ", {
       name,
-      image,
+      imageFile,
       mobile,
       email,
       password,
@@ -119,30 +120,17 @@ const UserInformation = () => {
     notify();
 
     try {
-      const convertImageToBase64 = (imageFile) => {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(imageFile);
-          reader.onloadend = () => resolve(reader.result);
-          reader.onerror = (error) => reject(error);
-        });
-      };
-
-      let base64Image = "";
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("mobile", mobile);
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("diet", selectedDietPlan);
+      formData.append("dob", dob);
+      formData.append("address", address);
       if (imageFile) {
-        base64Image = await convertImageToBase64(imageFile);
+        formData.append("image", imageFile);
       }
-
-      const jsonData = {
-        name: name,
-        mobile: mobile,
-        email: email,
-        password: password,
-        diet: selectedDietPlan,
-        dob: dob,
-        address: address,
-        image: base64Image,
-      };
 
       const token = localStorage.getItem("token");
       const response = await fetch(
@@ -150,10 +138,9 @@ const UserInformation = () => {
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(jsonData),
+          body: formData,
         }
       );
 
@@ -200,32 +187,18 @@ const UserInformation = () => {
           </div>
           <div className="fixed bottom-0 right-0 mb-3 pr-4">
             <div className="flex flex-col items-center mt-2">
-              {/* <a
-                href="https://www.codebuilders.in"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-black-600 underline"
-              >
-                www.codebuilders.in
-              </a> */}
-              {/* <div className="flex items-center">
-                <span>Powered by</span>
-                <img
-                  src="https://www.codebuilders.in/img/code-builders-logo.svg"
-                  alt="Powered by"
-                  className="w-20 h-20 ml-2"
-                />
-              </div> */}
+              <ul className="flex">
+                <span className="text-sm">
+                  The Titans Fitness Studio -UniSex
+                </span>
+              </ul>
             </div>
-            <ul className="flex">
-              <span className="text-sm">The Titans Fitness Studio -UniSex</span>
-            </ul>
           </div>
           <div className="gap-5 flex flex-col overflow-auto">
             <div className="flex items-center justify-center w-32 h-32 mb-5 relative">
-              {image ? (
+              {imagePreview ? (
                 <img
-                  src={image}
+                  src={imagePreview}
                   alt="Preview"
                   className="w-full h-full rounded-lg object-cover"
                 />
@@ -261,7 +234,6 @@ const UserInformation = () => {
             </div>
 
             <Input
-              // type="text"
               size="md"
               outline={false.toString()}
               placeholder="Full name"
@@ -272,7 +244,6 @@ const UserInformation = () => {
             />
 
             <Input
-              // type="text"
               size="regular"
               color="lightBlue"
               outline={false}
@@ -284,7 +255,6 @@ const UserInformation = () => {
             />
 
             <Input
-              // type="email"
               size="regular"
               color="lightBlue"
               outline={false}
@@ -301,7 +271,6 @@ const UserInformation = () => {
             )}
 
             <Input
-              // type="password"
               size="regular"
               color="lightBlue"
               outline={false}

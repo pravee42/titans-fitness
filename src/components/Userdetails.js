@@ -188,38 +188,68 @@ const UserProfile = () => {
   const handleSaveEdit = async () => {
     try {
       const token = localStorage.getItem("token");
-
-      const convertImageToBase64 = (imageFile) => {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(imageFile);
-          reader.onloadend = () => resolve(reader.result.split(",")[1]);
-          reader.onerror = (error) => reject(error);
-        });
-      };
-
-      let base64Image = "";
+  
+      const formData = new FormData();
+      formData.append("name", editedInfo.name);
+      formData.append("dob", reverseDateFormat(editedInfo.dob));
+      formData.append("address", editedInfo.address);
+      formData.append("email", editedInfo.email);
+      formData.append("mobile", editedInfo.mobile);
+      formData.append("referencenum", editedInfo.referenceNumber);
+  
       if (editedInfo.image && typeof editedInfo.image === 'object') {
-        base64Image = await convertImageToBase64(editedInfo.image);
+        formData.append("image", editedInfo.image);
       }
-
-      const jsonData = {
-        name: editedInfo.name,
-        dob: reverseDateFormat(editedInfo.dob),
-        address: editedInfo.address,
-        email: editedInfo.email,
-        mobile: editedInfo.mobile,
-        image: base64Image || "",
+  
+      const requestOptions = {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
       };
-
-      console.log("Submitted: ", jsonData);
-
-      updateUserDetails(jsonData);
+  
+      const response = await fetch(`https://gym-backend-apis.onrender.com/admin/user/edit/${id}`, requestOptions);
+  
+      if (response.ok) {
+        console.log("User details updated successfully!");
+        toast.success("User details updated successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      } else {
+        console.error("Error updating user details:", response.statusText);
+        setError("Error updating user details");
+        toast.error("Error updating user details. Please try again!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
     } catch (error) {
       console.error("Error updating user details:", error);
       setError("Error updating user details");
+      toast.error("Error updating user details. Please try again!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
+  
 
   const updateUserDetails = async (formData) => {
     try {
@@ -423,13 +453,13 @@ const UserProfile = () => {
                     />
                   </div>
                   {/* <div>
-                  <label className="text-xl font-semibold mb-2">Reference Number:</label>
+                  {/* <label className="text-xl font-semibold mb-2">Reference Number:</label>
                   <input
                     type="text"
-                    value={user.ADDRESS}
+                    value={user.referenceNumber}
                     className="w-full p-2 border rounded"
-                  />
-            </div> */}
+                  /> */}
+            {/* </div> */}
                   <div>
                     <label className="text-xl font-semibold mb-2">
                       Next Due:
