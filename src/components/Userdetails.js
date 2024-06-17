@@ -5,11 +5,13 @@ import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
 import * as XLSX from "xlsx";
 import logo from "../img/brand.png";
+import defaultImg from "../img/image.png";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import PaymentHistory from "./payment/PaymentGet";
+
 const UserProfile = () => {
   const { id } = useParams();
   const [user, setUser] = useState(null);
@@ -19,6 +21,7 @@ const UserProfile = () => {
   const [endDate, setEndDate] = useState("");
   const [balance, setBalance] = useState("");
   const [type, setType] = useState("");
+  const [imagePath, setImagePath] = useState("");
   const [error, setError] = useState(null);
   const [isActivated, setIsActivated] = useState(false);
   const notify = () => {
@@ -51,7 +54,20 @@ const UserProfile = () => {
   const [payments, setPayments] = useState([]);
   const userId = localStorage.getItem("CUSTOMER_PROFILE_ID");
   const token = localStorage.getItem("token");
+  
   useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(`https://gym-backend-apis.onrender.com/admin/user/${userId}`);
+        const data = await response.json();
+        
+        // Assuming the image path is in data.IMAGE_PATH
+        setImagePath(data.IMAGE_PATH || defaultImg);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setImagePath(defaultImg);
+      }
+    };
     const fetchUserDetails = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -81,78 +97,77 @@ const UserProfile = () => {
 
     fetchUserDetails();
   }, [id]);
-
   const activateUser = async () => {
     try {
+      const token = localStorage.getItem("token");
       const response = await Axios.post(
         "https://gym-backend-apis.onrender.com/admin/user/active",
-        { userID: id },
+        {
+          userID: user._id,
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      toast.success("User activated successfully!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
 
       console.log("Server response:", response);
+      setPaymentStatus(response.data.paymentStatus);
+      setNextDue(response.data.nextDue);
+      setRecentPayments([...recentPayments, response.data.payment]);
+      setNewPayment("");
+      setEffectiveDate("");
+      setEndDate("");
+      setBalance("");
+      setType("");
+      toast.success("ativated successfully!");
     } catch (error) {
-      console.error("Error activating user:", error);
-      setError("Error activating user");
-      toast.error("Failed to activate user. Please try again!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      console.error("Error while activating:", error);
+
+      if (error.response && error.response.headers) {
+        console.log("Redirect Location:", error.response.headers.location);
+      }
+
+      setError("Error while activating");
+      toast.error("Error while activating");
     }
   };
 
   const deactivateUser = async () => {
     try {
+      const token = localStorage.getItem("token");
       const response = await Axios.post(
         "https://gym-backend-apis.onrender.com/admin/user/non-active",
-        { userID: id },
+        {
+          userID: user._id,
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      toast.success("User deactivated successfully!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
 
       console.log("Server response:", response);
+      setPaymentStatus(response.data.paymentStatus);
+      setNextDue(response.data.nextDue);
+      setRecentPayments([...recentPayments, response.data.payment]);
+      setNewPayment("");
+      setEffectiveDate("");
+      setEndDate("");
+      setBalance("");
+      setType("");
+      toast.success("Deativated successfully!");
     } catch (error) {
-      console.error("Error deactivating user:", error);
-      setError("Error deactivating user");
-      toast.error("Failed to deactivate user. Please try again!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      console.error("Error while Deactivating:", error);
+
+      if (error.response && error.response.headers) {
+        console.log("Redirect Location:", error.response.headers.location);
+      }
+
+      setError("Error while Deactivating");
+      toast.error("Error while Deactivating");
     }
   };
   const handleEdit = () => {
@@ -188,7 +203,7 @@ const UserProfile = () => {
   const handleSaveEdit = async () => {
     try {
       const token = localStorage.getItem("token");
-  
+
       const formData = new FormData();
       formData.append("name", editedInfo.name);
       formData.append("dob", reverseDateFormat(editedInfo.dob));
@@ -196,21 +211,24 @@ const UserProfile = () => {
       formData.append("email", editedInfo.email);
       formData.append("mobile", editedInfo.mobile);
       formData.append("referencenum", editedInfo.referenceNumber);
-  
-      if (editedInfo.image && typeof editedInfo.image === 'object') {
+
+      if (editedInfo.image && typeof editedInfo.image === "object") {
         formData.append("image", editedInfo.image);
       }
-  
+
       const requestOptions = {
-        method: 'PATCH',
+        method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
         },
         body: formData,
       };
-  
-      const response = await fetch(`https://gym-backend-apis.onrender.com/admin/user/edit/${id}`, requestOptions);
-  
+
+      const response = await fetch(
+        `https://gym-backend-apis.onrender.com/admin/user/edit/${id}`,
+        requestOptions
+      );
+
       if (response.ok) {
         console.log("User details updated successfully!");
         toast.success("User details updated successfully!", {
@@ -249,7 +267,6 @@ const UserProfile = () => {
       });
     }
   };
-  
 
   const updateUserDetails = async (formData) => {
     try {
@@ -402,12 +419,14 @@ const UserProfile = () => {
                 Customer ID: {user.ID}
               </h2>
               <div className="flex justify-end">
-                <img
-                  src={user.IMAGE_PATH}
-                  alt="User"
-                  className="max-w-full h-auto rounded"
-                />
-              </div>
+      <img
+        src={imagePath}
+        alt="User"
+        className="w-16 h-16 rounded-full object-cover"
+        onError={(e) => e.target.src = defaultImg} // Fallback in case image fails to load
+      />
+    </div>
+
               <div className="grid grid-cols-2 gap-4 w-full">
                 <>
                   <div>
@@ -459,7 +478,7 @@ const UserProfile = () => {
                     value={user.referenceNumber}
                     className="w-full p-2 border rounded"
                   /> */}
-            {/* </div> */}
+                  {/* </div> */}
                   <div>
                     <label className="text-xl font-semibold mb-2">
                       Next Due:

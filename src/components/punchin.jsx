@@ -190,10 +190,10 @@ const Punchin = () => {
                         />
                       </div>
                       <div>
-                        <label className="block font-bold">Mobile Number</label>
+                        <label className="block font-bold">Member ID</label>
                         <input
                           type="text"
-                          value={userDetails.user.PHONE}
+                          value={userDetails.user.ID}
                           className="w-full border rounded px-2 py-1"
                           readOnly
                         />

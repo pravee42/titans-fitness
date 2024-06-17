@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import logo from "./img/web1.png";
 import brand from "./img/logo2.jpg";
+import bl from "./img/logo-1.png"
 import girl from "./img/girlexe.jpg";
 import Boy from "./img/trainer.jpg";
 import Boy_2 from "./img/trainer2.jpg";
@@ -99,9 +100,9 @@ const HomePage = () => {
             <img
               src={brand}
               alt="Brand"
-              className="h-10 w-10 rounded-full sm:h-12 sm:w-12"
+              className="mt-5 h-10 w-10 rounded-full sm:h-12 sm:w-12"
             />
-            <img src={logo} alt="Logo" className="h-32 w-64 ml-2 mt-[-30px]" />
+            <img src={logo} alt="Logo" className="h-48 w-96 ml-2 mt-[-30px]" />
           </div>
         </div>
         {showLoginButton && (
@@ -399,7 +400,7 @@ const HomePage = () => {
       <div className="flex flex-col md:flex-row ml-2 md:ml-20">
         <div className="md:w-1/2 mt-10 md:mt-20 justify-center">
           <p className="text-4xl">
-            <img src={logo} alt="Logo" className="h-24 w-auto" />
+            <img src={bl} alt="Logo" className="h-24 w-auto" />
           </p>
           <p className="text-xl mt-3 md:w-96">
             Unleash Your Inner Titan at Titans Fitness Gym -
