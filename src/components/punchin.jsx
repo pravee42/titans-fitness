@@ -12,19 +12,21 @@ const Punchin = () => {
   const [punchTimes, setPunchTimes] = useState([]);
   const [paymentDetails, setPaymentDetails] = useState([]);
   const [imagePath, setImagePath] = useState("");
-  
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch(`https://gym-backend-apis.onrender.com/admin/user/searching?name={{userName}}&dob={{dob}}&mobile={{mobile}}&userID=${searchId}`);
-        const data = await response.json();
-        
-        // Assuming the image path is in data.IMAGE_PATH
-        setImagePath(data.IMAGE_PATH || defaultImg);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        setImagePath(defaultImg);
-      }
-    };
+
+  const fetchUserData = async () => {
+    try {
+      const response = await fetch(
+        `https://gym-backend-apis.onrender.com/admin/user/searching?name={{userName}}&dob={{dob}}&mobile={{mobile}}&userID=${searchId}`
+      );
+      const data = await response.json();
+
+      // Assuming the image path is in data.IMAGE_PATH
+      setImagePath(data.IMAGE_PATH || defaultImg);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      setImagePath(defaultImg);
+    }
+  };
 
   const handleSearchChange = (event) => {
     setSearchId(event.target.value);
@@ -34,13 +36,13 @@ const Punchin = () => {
     try {
       const token = localStorage.getItem("token");
       const headers = { Authorization: `Bearer ${token}` };
-  
+
       const userDetailsResponse = await axios.get(
         `https://gym-backend-apis.onrender.com/admin/user/searching?name={{userName}}&dob={{dob}}&mobile={{mobile}}&userID=${searchId}`,
         { headers }
       );
       setUserDetails(userDetailsResponse.data);
-  
+
       const punchInTimesResponse = await axios.get(
         `https://gym-backend-apis.onrender.com/admin/punch/in?userId=${searchId}`,
         { headers }
@@ -54,7 +56,7 @@ const Punchin = () => {
         OUT_TIME: punchOutTimesResponse.data.timing.OUT_TIME,
       };
       setPunchTimes(punchTimesData);
-  
+
       const paymentDetailsResponse = await axios.get(
         `https://gym-backend-apis.onrender.com/admin/payment/${searchId}`,
         { headers }
@@ -106,7 +108,7 @@ const Punchin = () => {
     }
   };
   const handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       handleSearchSubmit();
     } else if (event.key === "+") {
       handlePunchIn();
@@ -149,18 +151,17 @@ const Punchin = () => {
         </ul>
       </div>
       <div className="relative z-10">
-      <header className="py-10 px-5 flex items-center justify-between bg-custom-green">
-  <div className="flex items-center justify-start flex-1">
-    <span className="text-white text-2xl font-semibold">
-      Customer Time Punch IN/OUT
-    </span>
-  </div>
-  <div className="flex justify-center flex-1">
-    <img src={logo} alt="Logo" className="w-64 h-10" />
-  </div>
-  <div className="flex-1"></div>
-</header>
-
+        <header className="py-10 px-5 flex items-center justify-between bg-custom-green">
+          <div className="flex items-center justify-start flex-1">
+            <span className="text-white text-2xl font-semibold">
+              Customer Time Punch IN/OUT
+            </span>
+          </div>
+          <div className="flex justify-center flex-1">
+            <img src={logo} alt="Logo" className="w-64 h-10" />
+          </div>
+          <div className="flex-1"></div>
+        </header>
 
         <div className="flex mt-10">
           <div className="w-1/2 bg-white p-6 rounded-lg shadow-lg mr-6">
@@ -254,54 +255,6 @@ const Punchin = () => {
                 </div>
               </div>
             )}
-            {paymentDetails &&
-              paymentDetails.payment &&
-              paymentDetails.payment.length > 0 && (
-                <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
-                  <h2 className="text-xl font-bold mb-3">Payment Status</h2>
-                  <table className="min-w-full bg-white">
-                    <thead>
-                      <tr>
-                        <th className="py-3 px-6 text-left bg-gray-200">
-                          Payment Amount
-                        </th>
-                        <th className="py-3 px-6 text-left bg-gray-200">
-                          Payment Date
-                        </th>
-                        <th className="py-3 px-6 text-left bg-gray-200">
-                          END Date
-                        </th>
-                        <th className="py-3 px-6 text-left bg-gray-200">
-                          Balance
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {paymentDetails.payment.map((payment, index) => (
-                        <tr key={index}>
-                          <td className="py-3 px-6">
-                            {payment.PAYMENT_AMOUNT}
-                          </td>
-                          <td className="py-3 px-6">
-                            {new Date(
-                              payment.PAYMENT_DATE
-                            ).toLocaleDateString()}
-                          </td>
-                          <td className="py-3 px-6">
-                            {new Date(
-                              payment.END_DATE
-                            ).toLocaleDateString()}
-                          </td>
-                          <td className="py-3 px-6">
-                            {payment.PAYMENT_BALANCE}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-
             {userDetails && (
               <div className="bg-white p-6 rounded-lg shadow-lg">
                 <h2 className="text-xl font-bold mb-3">Today's Activities</h2>
@@ -351,6 +304,52 @@ const Punchin = () => {
                 </table>
               </div>
             )}
+
+            {paymentDetails &&
+              paymentDetails.payment &&
+              paymentDetails.payment.length > 0 && (
+                <div className="bg-white p-6 rounded-lg shadow-lg mb-5">
+                  <h2 className="text-xl font-bold mb-3">Payment Status</h2>
+                  <table className="min-w-full bg-white">
+                    <thead>
+                      <tr>
+                        <th className="py-3 px-6 text-left bg-gray-200">
+                          Payment Amount
+                        </th>
+                        <th className="py-3 px-6 text-left bg-gray-200">
+                          Payment Date
+                        </th>
+                        <th className="py-3 px-6 text-left bg-gray-200">
+                          END Date
+                        </th>
+                        <th className="py-3 px-6 text-left bg-gray-200">
+                          Balance
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {paymentDetails.payment.map((payment, index) => (
+                        <tr key={index}>
+                          <td className="py-3 px-6">
+                            {payment.PAYMENT_AMOUNT}
+                          </td>
+                          <td className="py-3 px-6">
+                            {new Date(
+                              payment.PAYMENT_DATE
+                            ).toLocaleDateString()}
+                          </td>
+                          <td className="py-3 px-6">
+                            {new Date(payment.END_DATE).toLocaleDateString()}
+                          </td>
+                          <td className="py-3 px-6">
+                            {payment.PAYMENT_BALANCE}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
           </div>
           {/* Render payment details and punch times */}
 
@@ -362,17 +361,17 @@ const Punchin = () => {
               paymentDetails.payment.length > 0 && (
                 <div className="bg-white p-4 rounded-lg shadow-lg mb-6 flex items-center justify-between border-2">
                   <div className="flex items-center">
-                  <div className="mr-4">
-  <label className="block font-bold">
-    Profile Picture:
-  </label>
-  <img
-        src={imagePath}
-        alt="User"
-        className="w-16 h-16 rounded-full object-cover"
-        onError={(e) => e.target.src = defaultImg} // Fallback in case image fails to load
-      />
-</div>
+                    <div className="mr-4">
+                      <label className="block font-bold">
+                        Profile Picture:
+                      </label>
+                      <img
+                        src={imagePath}
+                        alt="User"
+                        className="w-16 h-16 rectangle-full object-cover"
+                        onError={(e) => (e.target.src = defaultImg)} // Fallback in case image fails to load
+                      />
+                    </div>
 
                     <div>
                       <p className="font-bold">Name:</p>
@@ -398,6 +397,7 @@ const Punchin = () => {
                   </div>
                 </div>
               )}
+            
 
             
           </div>

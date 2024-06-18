@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Input } from "@material-tailwind/react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import axios from 'axios';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
+import logo from "../img/logo-1.png";
 
 const SearchForm = ({ onSubmit }) => {
   const [searchResults, setSearchResults] = useState([]);
@@ -12,7 +13,8 @@ const SearchForm = ({ onSubmit }) => {
   const [mobileNumber, setMobileNumber] = useState("");
   const [dob, setDob] = useState("");
   const [address, setAddress] = useState("");
-  
+  const [activeInput, setActiveInput] = useState(null);
+
   const handleMemberIDChange = (event) => {
     setMemberID(event.target.value);
   };
@@ -41,126 +43,173 @@ const SearchForm = ({ onSubmit }) => {
       dob,
       mobile: mobileNumber,
     });
-  
+
     const url = `https://gym-backend-apis.onrender.com/admin/user/searching?${searchParams.toString()}`;
-  
+
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       const response = await axios.get(url, {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
-  
+
       if (response.status === 200) {
         const data = response.data.user;
         const firstThreeResults = data; // Get only the first three results
-  
-        setSearchResults(firstThreeResults); 
-        onSubmit(firstThreeResults); 
-  
-        console.log('First three search results:', firstThreeResults);
-        const matchingUser = firstThreeResults.find(user => user.ID === parseInt(memberID, 10));
+
+        setSearchResults(firstThreeResults);
+        onSubmit(firstThreeResults);
+
+        console.log("First three search results:", firstThreeResults);
+        const matchingUser = firstThreeResults.find(
+          (user) => user.ID === parseInt(memberID, 10)
+        );
 
         if (matchingUser) {
-          console.log('Matching user:', matchingUser);
+          console.log("Matching user:", matchingUser);
           setMatchingUser(matchingUser); // Update the state with the matching user
         } else {
-          console.log('No matching user found with ID:', memberID);
+          console.log("No matching user found with ID:", memberID);
           setMatchingUser(null); // Reset the matching user if not found
         }
       } else {
-        console.error('Error fetching search results:', response.statusText);
+        console.error("Error fetching search results:", response.statusText);
       }
     } catch (error) {
-      console.error('Error fetching search results:', error);
-    }    
+      console.error("Error fetching search results:", error);
+    }
   };
-  
+
   const handleOpenClick = async (_id) => {
     try {
-      const response = await axios.get(`https://gym-backend-apis.onrender.com/admin/user/${_id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await axios.get(
+        `https://gym-backend-apis.onrender.com/admin/user/${_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
 
       if (response.status === 200) {
         const newPageUrl = `/user/${_id}`;
         window.location.href = newPageUrl;
       } else {
-        console.error('Error fetching user details:', response.statusText);
+        console.error("Error fetching user details:", response.statusText);
       }
     } catch (error) {
-      console.error('Error fetching user details:', error);
+      console.error("Error fetching user details:", error);
     }
   };
-  
+  const handleFocus = (inputName) => {
+    setActiveInput(inputName);
+  };
+
+  const handleBlur = () => {
+    setActiveInput(null);
+  };
+
+  const inputClass = (inputName) =>
+    `px-7 w-48 bg-white border rounded-md ${
+      activeInput === inputName ? "bg-custom-green" : "border-gray-300"
+    }`;
+
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <div className="relative w-full border-2  p-6 rounded-lg" style={{
+          backgroundImage: `url(${logo})`,
+          backgroundSize: 'contain',
+          backgroundPosition: 'center',
+          opacity: 0.5, // Set the opacity of the background image
+          borderRadius: '10px', // Add rounded corners to the form
+          padding: '20px', // Add padding inside the form
+          boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)' // Add a subtle shadow
+        }}>
+      <form onSubmit={handleSubmit} className="">        
         <div className="flex justify-center gap-4">
-          {/* Input fields */}
-          <Input
-            // type="text"
-            value={memberID}
-            onChange={handleMemberIDChange}
-            placeholder="Member ID"
-            size="lg"
-            className="px-7 w-48 bg-white border border-gray-300 rounded-md"
-            label="Member ID"
-          />
-          <Input
-            // type="text"
-            value={name}
-            onChange={handleNameChange}
-            placeholder="Name"
-            size="lg"
-            className="px-7 w-48 bg-white border border-gray-300 rounded-md"
-            label="Name"
-          />
-          <Input
-            // type="text"
-            value={mobileNumber}
-            onChange={handleMobileNumberChange}
-            placeholder="Mobile Number"
-            size="lg"
-            className="w-1/4 bg-white"
-            label="Mobile Number"
-          />
-          <Input
-            type="date"
-            value={dob}
-            onChange={handleDobChange}
-            placeholder="Date of Birth"
-            size="lg"
-            className="w-1/4 bg-white"
-            label="DOB"
-          />
-        </div>
-        <div className="flex justify-end mt-5">
-          <button type="submit" className="bg-custom-green text-white py-2 px-4 rounded-md ml-auto">
-            <FontAwesomeIcon icon={faSearch} className="mr-2 text-lg px-1" />
-            Search
-          </button>
-        </div>
-      </form>
+      {/* Input fields */}
+      <Input
+          value={memberID}
+          onChange={handleMemberIDChange}
+          placeholder="Member ID"
+          size="lg"
+          className="border-2 border-green-500 p-6 rounded-lg bg-green-50"
+          label="Member ID"
+        />
+      <Input
+        value={name}
+        onChange={handleNameChange}
+        onFocus={() => handleFocus('name')}
+        onBlur={handleBlur}
+        placeholder="Name"
+        size="lg"
+        className="border-2 border-green-500 p-6 rounded-lg bg-green-50"
+        label="Name"
+      />
+      <Input
+        value={mobileNumber}
+        onChange={handleMobileNumberChange}
+        onFocus={() => handleFocus('mobileNumber')}
+        onBlur={handleBlur}
+        placeholder="Mobile Number"
+        size="lg"
+        className="border-2 border-green-500 p-6 rounded-lg bg-green-50"
+        label="Mobile Number"
+      />
+      <Input
+        type="date"
+        value={dob}
+        onChange={handleDobChange}
+        onFocus={() => handleFocus('dob')}
+        onBlur={handleBlur}
+        placeholder="Date of Birth"
+        size="lg"
+        className="border-2 border-green-500 p-6 rounded-lg bg-green-50"
+        label="DOB"
+      />
+    </div>
+    <div className="flex justify-end mt-5">
+      <button type="submit" className="bg-custom-green text-white py-2 px-4 rounded-md">
+        <FontAwesomeIcon icon={faSearch} className="mr-2 text-lg px-1" />
+        Search
+      </button>
+    </div>
+  </form>
+</div>
+
 
       {/* Display matching user details */}
       {matchingUser && (
-  <div className="mt-8">
-    <h3 className="text-lg font-medium">Matching User Details</h3>
-    <div className="bg-gray-100 p-4 rounded-md">
-      <p><strong>ID:</strong> {matchingUser.ID}</p>
-      <p><strong>Name:</strong> {matchingUser.NAME}</p>
-      <p><strong>Mobile Number:</strong> {matchingUser.PHONE}</p>
-      <p><strong>Date of Birth:</strong> {matchingUser.DOB ? matchingUser.DOB.substring(0, 10) : ''}</p>
-      <p><strong>Status:</strong> {matchingUser.STATUS === 1 ? "ACTIVE" : "NON-ACTIVE"}</p>
-      <button onClick={() => handleOpenClick(matchingUser._id)} className="text-indigo-600 hover:text-indigo-900">View</button>
-    </div>
-  </div>
-)}
-
+        <div className="mt-8">
+          <h3 className="text-lg font-medium">Matching User Details</h3>
+          <div className="bg-gray-100 p-4 rounded-md">
+            <p>
+              <strong>ID:</strong> {matchingUser.ID}
+            </p>
+            <p>
+              <strong>Name:</strong> {matchingUser.NAME}
+            </p>
+            <p>
+              <strong>Mobile Number:</strong> {matchingUser.PHONE}
+            </p>
+            <p>
+              <strong>Date of Birth:</strong>{" "}
+              {matchingUser.DOB ? matchingUser.DOB.substring(0, 10) : ""}
+            </p>
+            <p>
+              <strong>Status:</strong>{" "}
+              {matchingUser.STATUS === 1 ? "ACTIVE" : "NON-ACTIVE"}
+            </p>
+            <button
+              onClick={() => handleOpenClick(matchingUser._id)}
+              className="text-indigo-600 hover:text-indigo-900"
+            >
+              View
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Display search results */}
       {/* <div className="mt-8">

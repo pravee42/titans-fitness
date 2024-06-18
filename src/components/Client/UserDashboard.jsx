@@ -3,13 +3,37 @@ import axios from 'axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt, faWallet } from '@fortawesome/free-solid-svg-icons';
 import logo from '../../img/logo-1.png';
+import defaultImg from "../../img/image.png";
+import  './user.css';
 
 const UserDashboard = () => {
   const [userInfo, setUserInfo] = useState(null);
+  const [imagePath, setImagePath] = useState("");
   const [paymentDetails, setPaymentDetails] = useState([]);
   const [inTime, setInTime] = useState(null);
   const [outTime, setOutTime] = useState(null);
   const token = localStorage.getItem('token');
+  const gridStyle = {
+    display: 'grid',
+    gridTemplateColumns: 'auto 1fr',
+    gap: '10px', // Adjust the gap as needed
+  };
+
+  const labelStyle = {
+    fontWeight: 'bold',
+  };
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(`https://gym-backend-apis.onrender.com/admin/user/${userInfo.ID}`);
+        const data = await response.json();
+        
+        // Assuming the image path is in data.IMAGE_PATH
+        setImagePath(data.IMAGE_PATH || defaultImg);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setImagePath(defaultImg);
+      }
+    };
 
   useEffect(() => {
     const fetchUserDashboardData = async () => {
@@ -89,17 +113,23 @@ const UserDashboard = () => {
               <div className="mr-4">
                 <label className="block font-bold">Profile Picture:</label>
                 <img
-                  src={userInfo.IMAGE_PATH}
-                  alt="Profile"
-                  className="w-32 h-32"
-                />
+        src={imagePath}
+        alt="User"
+        className="w-16 h-16 rounded-full object-cover"
+        onError={(e) => e.target.src = defaultImg} // Fallback in case image fails to load
+      />
               </div>
-              <div>
-                <p className="font-bold">Name:</p>
-                <p>{userInfo.NAME}</p>
-                <p className="font-bold">User ID:</p>
-                <p>{userInfo.ID}</p>
-              </div>
+              <div style={gridStyle}>
+      <div style={labelStyle}>Name:</div>
+      <div>{userInfo.NAME}</div>
+      <div style={labelStyle}>User ID:</div>
+      <div>{userInfo.ID}</div>
+      <div style={labelStyle}>Phone:</div>
+      <div>{userInfo.PHONE}</div>
+      <div style={labelStyle}>Address:</div>
+      <div>{userInfo.ADDRESS}</div>
+    </div>
+
             </div>
             <div
               className={`px-4 py-1 rounded ${
