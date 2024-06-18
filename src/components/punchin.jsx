@@ -3,6 +3,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { ToastContainer, toast } from "react-toastify";
+import defaultImg from "../img/image.png";
 import "react-toastify/dist/ReactToastify.css";
 import logo from "./Home/img/logo-1.png";
 const Punchin = () => {
@@ -10,6 +11,20 @@ const Punchin = () => {
   const [userDetails, setUserDetails] = useState(null);
   const [punchTimes, setPunchTimes] = useState([]);
   const [paymentDetails, setPaymentDetails] = useState([]);
+  const [imagePath, setImagePath] = useState("");
+  
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(`https://gym-backend-apis.onrender.com/admin/user/searching?name={{userName}}&dob={{dob}}&mobile={{mobile}}&userID=${searchId}`);
+        const data = await response.json();
+        
+        // Assuming the image path is in data.IMAGE_PATH
+        setImagePath(data.IMAGE_PATH || defaultImg);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setImagePath(defaultImg);
+      }
+    };
 
   const handleSearchChange = (event) => {
     setSearchId(event.target.value);
@@ -19,13 +34,13 @@ const Punchin = () => {
     try {
       const token = localStorage.getItem("token");
       const headers = { Authorization: `Bearer ${token}` };
-
+  
       const userDetailsResponse = await axios.get(
         `https://gym-backend-apis.onrender.com/admin/user/searching?name={{userName}}&dob={{dob}}&mobile={{mobile}}&userID=${searchId}`,
         { headers }
       );
       setUserDetails(userDetailsResponse.data);
-
+  
       const punchInTimesResponse = await axios.get(
         `https://gym-backend-apis.onrender.com/admin/punch/in?userId=${searchId}`,
         { headers }
@@ -39,7 +54,7 @@ const Punchin = () => {
         OUT_TIME: punchOutTimesResponse.data.timing.OUT_TIME,
       };
       setPunchTimes(punchTimesData);
-
+  
       const paymentDetailsResponse = await axios.get(
         `https://gym-backend-apis.onrender.com/admin/payment/${searchId}`,
         { headers }
@@ -47,6 +62,7 @@ const Punchin = () => {
       setPaymentDetails(paymentDetailsResponse.data);
     } catch (error) {
       console.error("Error fetching data:", error);
+      toast.error("User doesn't exist");
     }
   };
 
@@ -92,7 +108,7 @@ const Punchin = () => {
   const handleKeyPress = (event) => {
     if (event.key === 'Enter') {
       handleSearchSubmit();
-    } else if (event.key === "=") {
+    } else if (event.key === "+") {
       handlePunchIn();
     } else if (event.key === "-") {
       handlePunchOut();
@@ -133,14 +149,19 @@ const Punchin = () => {
         </ul>
       </div>
       <div className="relative z-10">
-        <header className="py-4 px-5 flex items-center justify-between bg-custom-green">
-          <div className="flex items-center">
-            <img src={logo} alt="Logo" className="w-50 h-10 mr-2" />
-            <span className="text-white text-2xl font-semibold">
-              Customer Time Punch IN/OUT
-            </span>
-          </div>
-        </header>
+      <header className="py-10 px-5 flex items-center justify-between bg-custom-green">
+  <div className="flex items-center justify-start flex-1">
+    <span className="text-white text-2xl font-semibold">
+      Customer Time Punch IN/OUT
+    </span>
+  </div>
+  <div className="flex justify-center flex-1">
+    <img src={logo} alt="Logo" className="w-64 h-10" />
+  </div>
+  <div className="flex-1"></div>
+</header>
+
+
         <div className="flex mt-10">
           <div className="w-1/2 bg-white p-6 rounded-lg shadow-lg mr-6">
             <div className="mb-4">
@@ -233,52 +254,6 @@ const Punchin = () => {
                 </div>
               </div>
             )}
-          </div>
-          {/* Render payment details and punch times */}
-
-          <div className="w-1/2">
-            {/* Render payment details */}
-            {userDetails &&
-              userDetails.user &&
-              paymentDetails.payment &&
-              paymentDetails.payment.length > 0 && (
-                <div className="bg-white p-4 rounded-lg shadow-lg mb-6 flex items-center justify-between border-2">
-                  <div className="flex items-center">
-                    <div className="mr-4">
-                      <label className="block font-bold">
-                        Profile Picture:
-                      </label>
-                      <img
-                        src={userDetails.user.IMAGE_PATH}
-                        alt="Profile"
-                        className="w-32 h-32"
-                      />
-                    </div>
-                    <div>
-                      <p className="font-bold">Name:</p>
-                      <p>{userDetails.user.NAME}</p>
-                      <p className="font-bold">User ID:</p>
-                      <p>{userDetails.user.ID}</p>
-                    </div>
-                  </div>
-                  <div
-                    className={`px-4 py-1 rounded ${
-                      paymentDetails.payment[0].PAYMENT_BALANCE === 0
-                        ? "bg-green-500"
-                        : "bg-red-500"
-                    }`}
-                  >
-                    <p className="font-sans text-sm text-white">
-                      {paymentDetails.payment.every(
-                        (payment) => payment.PAYMENT_BALANCE === 0
-                      )
-                        ? "Paid"
-                        : "Unpaid"}{" "}
-                    </p>
-                  </div>
-                </div>
-              )}
-
             {paymentDetails &&
               paymentDetails.payment &&
               paymentDetails.payment.length > 0 && (
@@ -294,7 +269,7 @@ const Punchin = () => {
                           Payment Date
                         </th>
                         <th className="py-3 px-6 text-left bg-gray-200">
-                          Effective Date
+                          END Date
                         </th>
                         <th className="py-3 px-6 text-left bg-gray-200">
                           Balance
@@ -314,7 +289,7 @@ const Punchin = () => {
                           </td>
                           <td className="py-3 px-6">
                             {new Date(
-                              payment.EFFECTIVE_DATE
+                              payment.END_DATE
                             ).toLocaleDateString()}
                           </td>
                           <td className="py-3 px-6">
@@ -376,6 +351,55 @@ const Punchin = () => {
                 </table>
               </div>
             )}
+          </div>
+          {/* Render payment details and punch times */}
+
+          <div className="w-1/2">
+            {/* Render payment details */}
+            {userDetails &&
+              userDetails.user &&
+              paymentDetails.payment &&
+              paymentDetails.payment.length > 0 && (
+                <div className="bg-white p-4 rounded-lg shadow-lg mb-6 flex items-center justify-between border-2">
+                  <div className="flex items-center">
+                  <div className="mr-4">
+  <label className="block font-bold">
+    Profile Picture:
+  </label>
+  <img
+        src={imagePath}
+        alt="User"
+        className="w-16 h-16 rounded-full object-cover"
+        onError={(e) => e.target.src = defaultImg} // Fallback in case image fails to load
+      />
+</div>
+
+                    <div>
+                      <p className="font-bold">Name:</p>
+                      <p>{userDetails.user.NAME}</p>
+                      <p className="font-bold">User ID:</p>
+                      <p>{userDetails.user.ID}</p>
+                    </div>
+                  </div>
+                  <div
+                    className={`px-10 py-2 rounded ${
+                      paymentDetails.payment[0].PAYMENT_BALANCE === 0
+                        ? "bg-green-500"
+                        : "bg-red-500"
+                    }`}
+                  >
+                    <p className="font-sans text-sm text-white">
+                      {paymentDetails.payment.every(
+                        (payment) => payment.PAYMENT_BALANCE === 0
+                      )
+                        ? "Paid"
+                        : "Unpaid"}{" "}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+            
           </div>
         </div>
       </div>
