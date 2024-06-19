@@ -89,6 +89,9 @@ const SearchExistingCustomer = () => {
             <span className="text-70AB0E-800"> Search Existing Customer</span>
           </div>
         </div>
+          <div className="flex justify-center ">
+            <img src={logo} alt="Logo" className="w-64 h-10" />
+          </div>
         <div className="fixed bottom-5 left-0 mb-3 ml-2 z-10">
           <ul className="flex">
             <li className="hover:text-70AB0E-800 px-1">

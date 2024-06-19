@@ -356,47 +356,50 @@ const Punchin = () => {
           <div className="w-1/2">
             {/* Render payment details */}
             {userDetails &&
-              userDetails.user &&
-              paymentDetails.payment &&
-              paymentDetails.payment.length > 0 && (
-                <div className="bg-white p-4 rounded-lg shadow-lg mb-6 flex items-center justify-between border-2">
-                  <div className="flex items-center">
-                    <div className="mr-4">
-                      <label className="block font-bold">
-                        Profile Picture:
-                      </label>
-                      <img
-                        src={imagePath}
-                        alt="User"
-                        className="w-16 h-16 rectangle-full object-cover"
-                        onError={(e) => (e.target.src = defaultImg)} // Fallback in case image fails to load
-                      />
-                    </div>
+  userDetails.user &&
+  paymentDetails.payment &&
+  paymentDetails.payment.length > 0 && (
+    <div className="bg-white p-4 rounded-lg shadow-lg mb-6 flex flex-col items-center border-2 w-11/12 md:w-2/3 mx-auto">
+      <div className="flex flex-col md:flex-row items-center md:items-start mb-4">
+        <div className="flex flex-col items-center md:items-start mr-4">
+          <label className="block font-bold mb-2">Profile:</label>
+          <img
+            src={imagePath}
+            alt="User"
+            className="w-32 h-32 rectangle-full object-cover mb-4"
+            onError={(e) => (e.target.src = defaultImg)}
+          />
+        </div>
+        <div className="text-left">
+          <div className="flex items-center mb-2">
+            <p className="font-bold mr-2">Name:</p>
+            <p>{userDetails.user.NAME}</p>
+          </div>
+          <div className="flex items-center mb-2">
+            <p className="font-bold mr-2">Customer ID:</p>
+            <p>{userDetails.user.ID}</p>
+          </div>
+        </div>
+      </div>
+      <div
+        className={`px-10 py-2 rounded ${
+          paymentDetails.payment[0].PAYMENT_BALANCE === 0
+            ? "bg-green-500"
+            : "bg-red-500"
+        }`}
+      >
+        <p className="font-sans text-sm text-white">
+          {paymentDetails.payment.every(
+            (payment) => payment.PAYMENT_BALANCE === 0
+          )
+            ? "Paid"
+            : "Unpaid"}
+        </p>
+      </div>
+    </div>
+)}
 
-                    <div>
-                      <p className="font-bold">Name:</p>
-                      <p>{userDetails.user.NAME}</p>
-                      <p className="font-bold">User ID:</p>
-                      <p>{userDetails.user.ID}</p>
-                    </div>
-                  </div>
-                  <div
-                    className={`px-10 py-2 rounded ${
-                      paymentDetails.payment[0].PAYMENT_BALANCE === 0
-                        ? "bg-green-500"
-                        : "bg-red-500"
-                    }`}
-                  >
-                    <p className="font-sans text-sm text-white">
-                      {paymentDetails.payment.every(
-                        (payment) => payment.PAYMENT_BALANCE === 0
-                      )
-                        ? "Paid"
-                        : "Unpaid"}{" "}
-                    </p>
-                  </div>
-                </div>
-              )}
+
             
 
             
