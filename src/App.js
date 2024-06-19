@@ -26,8 +26,8 @@ function App() {
       <Router>
         <Routes>
           <Route path="/Login" element={<Login />} />
-          <Route path="/payment" element={<paymenthistry />} />
-          <Route path="/attendance" element={<Punchin />} />
+          <Route path="/payment" element={<ProtectedRoute element={paymenthistry} adminOnly />} />
+          <Route path="/attendance" element={<ProtectedRoute element={Punchin} adminOnly />} />
           <Route path="/" element={<HomePage />} />
           <Route path="/UserDashboard" element={<UserDashboard/>} />
           <Route path="/Dashboard" element={<ProtectedRoute element={DashboardLayout} adminOnly />} />
