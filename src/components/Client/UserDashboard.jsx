@@ -6,6 +6,7 @@ import logo from '../../img/logo-1.png';
 import defaultImg from "../../img/image.png";
 import  './user.css';
 
+
 const UserDashboard = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [imagePath, setImagePath] = useState("");
@@ -93,6 +94,14 @@ const UserDashboard = () => {
 
   return (
     <div className="min-h-screen bg-cover bg-center bg-no-repeat">
+      <div className="absolute inset-0 flex items-center justify-center opacity-50 z-0">
+        <img
+          src={logo}
+          alt="Logo"
+          className="sm:w-2/3 h-2/3 object-contain"
+          style={{ opacity: 0.3 }}
+        />
+      </div>
       <header className="py-4 px-5 flex flex-wrap w-full items-center justify-between bg-white shadow">
         <div className="flex items-center">
           <img src={logo} alt="Logo" className="w-40 h-10 mr-2" />
@@ -115,7 +124,7 @@ const UserDashboard = () => {
                 <img
         src={imagePath}
         alt="User"
-        className="w-16 h-16 rounded-full object-cover"
+        className="w-16 h-16 rectangle-full object-cover"
         onError={(e) => e.target.src = defaultImg} // Fallback in case image fails to load
       />
               </div>

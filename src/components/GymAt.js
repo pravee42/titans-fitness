@@ -177,9 +177,9 @@ const GymAt = () => {
             id="default-sidebar"
           />
         </div>
-        <div className="flex flex-grow flex-col mt-2">
+        <div className="flex flex-grow flex-col mt-1">
           <div className="flex flex-col">
-            <div className="flex justify-center mt-20 items-center">
+            <div className="flex justify-center mt-15 items-center">
               <SearchForm onSubmit={handleSubmit} />
             </div>
           </div>
