@@ -32,7 +32,7 @@ const Attendancetable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem("token");
+        const token = sessionStorage.getItem("token");
         const headers = { Authorization: `Bearer ${token}` };
 
         const response = await Axios.get(
@@ -57,7 +57,7 @@ const Attendancetable = () => {
         `https://gym-backend-apis.onrender.com/admin/user/${customerId}`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
           },
         }
       );

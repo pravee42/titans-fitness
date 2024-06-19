@@ -117,7 +117,7 @@ const GymAt = () => {
   );
 
   const handleSignOut = () => {
-    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
     window.location.href = "/";
   };
 

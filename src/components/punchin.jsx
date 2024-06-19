@@ -34,7 +34,7 @@ const Punchin = () => {
 
   const handleSearchSubmit = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       const headers = { Authorization: `Bearer ${token}` };
 
       const userDetailsResponse = await axios.get(
@@ -70,7 +70,7 @@ const Punchin = () => {
 
   const handlePunchIn = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       const headers = {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -90,7 +90,7 @@ const Punchin = () => {
 
   const handlePunchOut = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       const headers = {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -117,7 +117,7 @@ const Punchin = () => {
     }
   };
   const handleSignOut = () => {
-    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
     window.location.href = "/";
   };
   return (

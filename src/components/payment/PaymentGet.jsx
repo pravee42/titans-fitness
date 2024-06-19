@@ -13,7 +13,7 @@ const PaymentHistory = ({ userId }) => {
   useEffect(() => {
     const fetchPaymentDetails = async () => {
       try {
-        const token = localStorage.getItem("token");
+        const token = sessionStorage.getItem("token");
         const headers = {
           Authorization: `Bearer ${token}`,
         };
@@ -35,7 +35,7 @@ const PaymentHistory = ({ userId }) => {
 
   const fetchPaymentDetails = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       const headers = {
         Authorization: `Bearer ${token}`,
       };
@@ -57,7 +57,7 @@ const PaymentHistory = ({ userId }) => {
 
   const handleDeletePayment = async (paymentId) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       console.log(`Deleting payment with ID: ${paymentId}`);
       const response = await axios.delete(
         `https://gym-backend-apis.onrender.com/admin/payment/${paymentId}`,
@@ -110,7 +110,7 @@ const PaymentHistory = ({ userId }) => {
 
   const handleSavePaymentEdit = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = sessionStorage.getItem('token');
       const { id=userId, amount, end, balance } = paymentToEdit;
       const response = await axios.patch(
         `https://gym-backend-apis.onrender.com/admin/payment/edit`,

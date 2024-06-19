@@ -43,7 +43,7 @@ const UserInformation = () => {
   });
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     if (!token) {
       window.location.href = "/login";
     }
@@ -132,7 +132,7 @@ const UserInformation = () => {
         formData.append("image", imageFile);
       }
 
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       const response = await fetch(
         "https://gym-backend-apis.onrender.com/admin/user/create",
         {
@@ -155,7 +155,7 @@ const UserInformation = () => {
   };
 
   const handleSignOut = () => {
-    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
     window.location.href = "/";
   };
 

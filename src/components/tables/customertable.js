@@ -29,7 +29,7 @@ const TableCustomer = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem("token");
+        const token = sessionStorage.getItem("token");
         const headers = { Authorization: `Bearer ${token}` };
 
         console.log("Request Headers:", headers);
@@ -58,7 +58,7 @@ const TableCustomer = () => {
         `https://gym-backend-apis.onrender.com/admin/user/${customerId}`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
           },
         }
       );

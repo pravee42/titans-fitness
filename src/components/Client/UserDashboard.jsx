@@ -12,7 +12,7 @@ const UserDashboard = () => {
   const [paymentDetails, setPaymentDetails] = useState([]);
   const [inTime, setInTime] = useState(null);
   const [outTime, setOutTime] = useState(null);
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const gridStyle = {
     display: "grid",
     gridTemplateColumns: "auto 1fr",
@@ -97,7 +97,7 @@ const UserDashboard = () => {
   }, [token]);
 
   const handleSignOut = () => {
-    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
     window.location.href = "/";
   };
 

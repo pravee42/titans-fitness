@@ -16,7 +16,7 @@ const SearchExistingCustomer = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem("token");
+        const token = sessionStorage.getItem("token");
         const response = await Axios.get("https://gym-backend-apis.onrender.com/admin/user", {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -42,7 +42,7 @@ const SearchExistingCustomer = () => {
   };
 
   const handleSignOut = () => {
-    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
     window.location.href = "/";
   };
 

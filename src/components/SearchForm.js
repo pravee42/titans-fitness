@@ -47,7 +47,7 @@ const SearchForm = ({ onSubmit }) => {
     const url = `https://gym-backend-apis.onrender.com/admin/user/searching?${searchParams.toString()}`;
 
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -87,7 +87,7 @@ const SearchForm = ({ onSubmit }) => {
         `https://gym-backend-apis.onrender.com/admin/user/${_id}`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
           },
         }
       );

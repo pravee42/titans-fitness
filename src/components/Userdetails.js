@@ -52,8 +52,8 @@ const UserProfile = () => {
   const [isEditingPayment, setIsEditingPayment] = useState(false);
   const [paymentToEdit, setPaymentToEdit] = useState(null);
   const [payments, setPayments] = useState([]);
-  const userId = localStorage.getItem("CUSTOMER_PROFILE_ID");
-  const token = localStorage.getItem("token");
+  const userId = sessionStorage.getItem("CUSTOMER_PROFILE_ID");
+  const token = sessionStorage.getItem("token");
   
   useEffect(() => {
     const fetchUserData = async () => {
@@ -70,7 +70,7 @@ const UserProfile = () => {
     };
     const fetchUserDetails = async () => {
       try {
-        const token = localStorage.getItem("token");
+        const token = sessionStorage.getItem("token");
         const response = await Axios.get(
           `https://gym-backend-apis.onrender.com/admin/user/${id}`,
           {
@@ -99,7 +99,7 @@ const UserProfile = () => {
   }, [id]);
   const activateUser = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       const response = await Axios.post(
         "https://gym-backend-apis.onrender.com/admin/user/active",
         {
@@ -136,7 +136,7 @@ const UserProfile = () => {
 
   const deactivateUser = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       const response = await Axios.post(
         "https://gym-backend-apis.onrender.com/admin/user/non-active",
         {
@@ -202,7 +202,7 @@ const UserProfile = () => {
 
   const handleSaveEdit = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
 
       const formData = new FormData();
       formData.append("name", editedInfo.name);
@@ -270,7 +270,7 @@ const UserProfile = () => {
 
   const updateUserDetails = async (formData) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       const response = await Axios.patch(
         `https://gym-backend-apis.onrender.com/admin/user/${id}`,
         formData,
@@ -311,7 +311,7 @@ const UserProfile = () => {
 
   const handleAddPayment = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       const response = await Axios.post(
         "https://gym-backend-apis.onrender.com/admin/payment/add",
         {
@@ -364,7 +364,7 @@ const UserProfile = () => {
   };
 
   const handleSignOut = () => {
-    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
     window.location.href = "/";
   };
 

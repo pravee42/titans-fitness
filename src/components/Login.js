@@ -14,7 +14,7 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [token, setToken] = useState(sessionStorage.getItem('token'));
   const [loading, setLoading] = useState(false); // Loading state
 
   const togglePasswordVisibility = () => {
@@ -27,7 +27,7 @@ function Login() {
       const response = await axios.post('https://gym-backend-apis.onrender.com/login', { email, password });
       const authToken = response.data.token;
       setToken(authToken);
-      localStorage.setItem('token', authToken);
+      sessionStorage.setItem('token', authToken);
       toast.success('Login successful');
       window.location.href = '/Dashboard';
     } catch (error) {

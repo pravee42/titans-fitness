@@ -22,7 +22,7 @@ const Sidebar = ({ toggleSidebar }) => {
     window.location.href = "/attendance";
   };
   // const handleSignOut = () => {
-  //   localStorage.removeItem("token");
+  //   sessionStorage.removeItem("token");
   //   window.location.href = "/";
   // };
   

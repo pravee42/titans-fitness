@@ -57,7 +57,7 @@ const Tablegym = () => {
       try {
         const response = await Axios.get("https://gym-backend-apis.onrender.com/admin/dashboard", {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
           },
         });
         setTableData(response.data.users);
@@ -75,7 +75,7 @@ const Tablegym = () => {
     try {
       const response = await Axios.get(`https://gym-backend-apis.onrender.com/admin/user/${customerId}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
       });
 

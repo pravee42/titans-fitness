@@ -10,7 +10,7 @@ const SearchAndDisplayTable = () => {
     try {
       const response = await Axios.get("https://gym-backend-apis.onrender.com/admin/user", {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
         params: searchCriteria,
       });
