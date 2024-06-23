@@ -24,7 +24,7 @@ import {
 } from "@mui/material";
 import Loading from "../loading";
 
-const Attendancetable = () => {
+const Customertable = () => {
   const [tableData, setTableData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -227,4 +227,4 @@ const Attendancetable = () => {
   );
 };
 
-export default Attendancetable;
+export default Customertable;
