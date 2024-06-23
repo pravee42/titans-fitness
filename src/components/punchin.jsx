@@ -13,35 +13,39 @@ const Punchin = () => {
   const [paymentDetails, setPaymentDetails] = useState([]);
   const [imagePath, setImagePath] = useState("");
 
-  const fetchUserData = async () => {
-    try {
-      const response = await fetch(
-        `https://gym-backend-apis.onrender.com/admin/user/searching?name={{userName}}&dob={{dob}}&mobile={{mobile}}&userID=${searchId}`
-      );
-      const data = await response.json();
-
-      // Assuming the image path is in data.IMAGE_PATH
-      setImagePath(data.IMAGE_PATH || defaultImg);
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-      setImagePath(defaultImg);
-    }
-  };
-
   const handleSearchChange = (event) => {
     setSearchId(event.target.value);
   };
 
   const handleSearchSubmit = async () => {
     try {
+      console.log("handleSearchSubmit called");
+  
       const token = sessionStorage.getItem("token");
+      console.log("Token:", token);
+  
       const headers = { Authorization: `Bearer ${token}` };
-
+      console.log("Headers:", headers);
+  
       const userDetailsResponse = await axios.get(
         `https://gym-backend-apis.onrender.com/admin/user/searching?name={{userName}}&dob={{dob}}&mobile={{mobile}}&userID=${searchId}`,
         { headers }
       );
-      setUserDetails(userDetailsResponse.data);
+      console.log("userDetailsResponse:", userDetailsResponse);
+  
+      const userData = userDetailsResponse.data;
+      console.log("userData:", userData);
+  
+      setUserDetails(userData);
+  
+      if (userData.user && userData.user.IMAGE_PATH) {
+        const imagePath = `https://gym-backend-apis.onrender.com/${userData.user.IMAGE_PATH}`;
+        setImagePath(imagePath);
+        console.log("User image path set to:", imagePath);
+      } else {
+        setImagePath(defaultImg);
+        console.log("Default image set");
+      }
 
       const punchInTimesResponse = await axios.get(
         `https://gym-backend-apis.onrender.com/admin/punch/in?userId=${searchId}`,
@@ -356,53 +360,48 @@ const Punchin = () => {
           <div className="w-1/2">
             {/* Render payment details */}
             {userDetails &&
-  userDetails.user &&
-  paymentDetails.payment &&
-  paymentDetails.payment.length > 0 && (
-    <div className="bg-white p-4 rounded-lg shadow-lg mb-6 flex flex-col items-center border-2 w-11/12 md:w-2/3 mx-auto">
-      <div className="flex flex-col md:flex-row items-center md:items-start mb-4">
-        <div className="flex flex-col items-center md:items-start mr-4">
-          <label className="block font-bold mb-2">Profile:</label>
-          <img
-            src={imagePath}
-            alt="User"
-            className="w-32 h-32 rectangle-full object-cover mb-4"
-            onError={(e) => (e.target.src = defaultImg)}
-          />
-        </div>
-        <div className="text-left">
-          <div className="flex items-center mb-2">
-            <p className="font-bold mr-2">Name:</p>
-            <p>{userDetails.user.NAME}</p>
-          </div>
-          <div className="flex items-center mb-2">
-            <p className="font-bold mr-2">Customer ID:</p>
-            <p>{userDetails.user.ID}</p>
-          </div>
-        </div>
-      </div>
-      <div
-        className={`px-10 py-2 rounded ${
-          paymentDetails.payment[0].PAYMENT_BALANCE === 0
-            ? "bg-green-500"
-            : "bg-red-500"
-        }`}
-      >
-        <p className="font-sans text-sm text-white">
-          {paymentDetails.payment.every(
-            (payment) => payment.PAYMENT_BALANCE === 0
-          )
-            ? "Paid"
-            : "Unpaid"}
-        </p>
-      </div>
-    </div>
-)}
-
-
-            
-
-            
+              userDetails.user &&
+              paymentDetails.payment &&
+              paymentDetails.payment.length > 0 && (
+                <div className="bg-white p-4 rounded-lg shadow-lg mb-6 flex flex-col items-center border-2 w-11/12 md:w-2/3 mx-auto">
+                  <div className="flex flex-col md:flex-row items-center md:items-start mb-4">
+                    <div className="flex flex-col items-center md:items-start mr-4">
+                      <label className="block font-bold mb-2">Profile:</label>
+                      <img
+                        src={imagePath}
+                        alt="User"
+                        className="w-32 h-32 rounded-full object-cover mb-4"
+                        onError={(e) => (e.target.src = defaultImg)}
+                      />
+                    </div>
+                    <div className="text-left">
+                      <div className="flex items-center mb-2">
+                        <p className="font-bold mr-2">Name:</p>
+                        <p>{userDetails.user.NAME}</p>
+                      </div>
+                      <div className="flex items-center mb-2">
+                        <p className="font-bold mr-2">Customer ID:</p>
+                        <p>{userDetails.user.ID}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className={`px-10 py-2 rounded ${
+                      paymentDetails.payment[0].PAYMENT_BALANCE === 0
+                        ? "bg-green-500"
+                        : "bg-red-500"
+                    }`}
+                  >
+                    <p className="font-sans text-sm text-white">
+                      {paymentDetails.payment.every(
+                        (payment) => payment.PAYMENT_BALANCE === 0
+                      )
+                        ? "Paid"
+                        : "Unpaid"}
+                    </p>
+                  </div>
+                </div>
+              )}
           </div>
         </div>
       </div>

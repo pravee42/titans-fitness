@@ -54,20 +54,9 @@ const UserProfile = () => {
   const [payments, setPayments] = useState([]);
   const userId = sessionStorage.getItem("CUSTOMER_PROFILE_ID");
   const token = sessionStorage.getItem("token");
-  
+
+ 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch(`https://gym-backend-apis.onrender.com/admin/user/${userId}`);
-        const data = await response.json();
-        
-        // Assuming the image path is in data.IMAGE_PATH
-        setImagePath(data.IMAGE_PATH || defaultImg);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        setImagePath(defaultImg);
-      }
-    };
     const fetchUserDetails = async () => {
       try {
         const token = sessionStorage.getItem("token");
@@ -79,6 +68,8 @@ const UserProfile = () => {
             },
           }
         );
+        console.log(response);
+
         if (response.data && response.data.user) {
           const userData = response.data.user;
           setUser(userData);
@@ -86,17 +77,22 @@ const UserProfile = () => {
           setNextDue(userData.NEXTDUE);
           setIsActivated(userData.ACTIVE);
           setRecentPayments(userData.recentPayments || []);
+          setImagePath(userData.IMAGE_PATH 
+            ? `https://gym-backend-apis.onrender.com/${userData.IMAGE_PATH}` 
+            : defaultImg);
         } else {
           setError("User data not found");
         }
       } catch (error) {
-        console.error("Error fetching user details:", error);
+        console.error("Error fetching user data:", error);
+        setImagePath(defaultImg);
         setError("Error fetching user details");
       }
     };
 
     fetchUserDetails();
   }, [id]);
+
   const activateUser = async () => {
     try {
       const token = sessionStorage.getItem("token");
@@ -419,14 +415,13 @@ const UserProfile = () => {
                 Customer ID: {user.ID}
               </h2>
               <div className="flex justify-end">
-      <img
-        src={imagePath}
-        alt="User"
-        className="w-16 h-16 rounded-full object-cover"
-        onError={(e) => e.target.src = defaultImg} // Fallback in case image fails to load
-      />
-    </div>
-
+                <img
+                  src={imagePath}
+                  alt="User"
+                  className="w-16 h-16 rounded-full object-cover"
+                  onError={(e) => (e.target.src = defaultImg)}
+                />
+              </div>
               <div className="grid grid-cols-2 gap-4 w-full">
                 <>
                   <div>

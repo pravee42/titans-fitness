@@ -9,51 +9,79 @@ import {
   faMoneyBill,
 } from "@fortawesome/free-solid-svg-icons";
 import Axios from "axios";
-import "../../styles/sty.css";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  TextField,
+  Box,
+  TablePagination,
+} from "@mui/material";
 import Loading from "../loading";
 
 const Attendancetable = () => {
   const [tableData, setTableData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState("");
-  const [period, setPeriod] = useState(""); // New state for selected period
-
+  const [period, setPeriod] = useState("");
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(50);
   const navigate = useNavigate();
 
   const TABLE_HEAD = [
-    { label: "Customer ID", icon: faUserCircle },
-    { label: "Name", icon: faUserCircle },
-    { label: "Mobile No", icon: faPhone },
-    { label: "In Time", icon: faHourglassStart },
-    { label: "Out Time", icon: faHourglassEnd },
-    { label: "Status", icon: faMoneyBill },
+    { field: "ID", label: "Customer ID", icon: faUserCircle },
+    { field: "NAME", label: "Name", icon: faUserCircle },
+    { field: "PHONE", label: "Mobile No", icon: faPhone },
+    { field: "IN_TIME", label: "In Time", icon: faHourglassStart },
+    { field: "OUT_TIME", label: "Out Time", icon: faHourglassEnd },
+    { field: "STATUS", label: "Status", icon: faMoneyBill },
   ];
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = sessionStorage.getItem("token");
-        const headers = { Authorization: `Bearer ${token}` };
-
-        const response = await Axios.get(
-          "https://gym-backend-apis.onrender.com/admin/punch/out",
-          { headers }
-        );
-
-        setTableData(response.data.timing);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setIsLoading(false);
-      }
-    };
-
     fetchData();
-  }, []);
+  }, [page, rowsPerPage]);
+
+  useEffect(() => {
+    applyFilter();
+  }, [tableData, filter]);
+
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      const token = sessionStorage.getItem("token");
+      const headers = { Authorization: `Bearer ${token}` };
+
+      const url =
+        page === 0
+          ? "https://gym-backend-apis.onrender.com/admin/attendance"
+          : `https://gym-backend-apis.onrender.com/admin/attendance?page=${page }`;
+
+      const response = await Axios.get(url, { headers });
+      console.log("Fetched data:", response.data.customer);
+      setTableData(response.data.customer);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setIsLoading(false);
+    }
+  };
+
+  const applyFilter = () => {
+    const filteredResults = tableData.filter((rowData) =>
+      rowData.NAME.toLowerCase().includes(filter.toLowerCase())
+    );
+    setFilteredData(filteredResults);
+  };
 
   const handleOpenClick = async (customerId) => {
     try {
-      const response = await Axios.get(
+      await Axios.get(
         `https://gym-backend-apis.onrender.com/admin/user/${customerId}`,
         {
           headers: {
@@ -72,118 +100,129 @@ const Attendancetable = () => {
     setPeriod(selectedPeriod);
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handlePreviousPage = () => {
+    setPage((prevPage) => Math.max(prevPage - 1, 0));
+  };
+
+  const handleNextPage = () => {
+    setPage((prevPage) => prevPage + 1);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value);
+    setPage(0);
+  };
+
   return (
-    <div className="overflow-y-auto w-full h-screen p-4 mb-10">
-      {/* Period buttons */}
-      <div className="mb-4">
-        <button
+    <Box className="overflow-y-auto w-full h-screen p-4 mb-10 mr-5">
+      <Box className="mb-4">
+        <Button
           onClick={() => handlePeriodClick("morning")}
-          className="mr-4 border rounded px-4 py-2 bg-custom-green hover:bg-green-600"
+          variant="contained"
+          style={{
+            backgroundColor: "#4CAF50",
+            color: "white",
+            marginRight: "10px",
+          }}
         >
           Morning
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => handlePeriodClick("evening")}
-          className="border rounded px-4 py-2 bg-custom-green hover:bg-green-600"
+          variant="contained"
+          style={{ backgroundColor: "#4CAF50", color: "white" }}
         >
           Evening
-        </button>
-      </div>
+        </Button>
+      </Box>
 
-      {/* Filter input */}
-      <input
-        type="text"
+      <TextField
         value={filter}
-        onChange={(e) => setFilter(e.target.value)}
+        onChange={handleFilterChange}
         placeholder="Filter by name..."
-        className="p-2 border rounded mb-4"
+        variant="outlined"
+        className="mb-4"
+        fullWidth
       />
 
-      <table className="text-center w-full border-collapse">
-        <thead>
-          <tr className="sticky top-0.1">
-            {TABLE_HEAD.map(({ label, icon }) => (
-              <th
-                key={label}
-                className="border border-black-800 bg-gray-50 p-4"
-              >
-                <div className="flex items-center justify-center gap-1">
-                  <FontAwesomeIcon
-                    icon={icon}
-                    className="text-green-gray-500 h-3 w-3"
-                  />
-                  <span className="font-normal leading-none opacity-70">
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              {TABLE_HEAD.map(({ field, label, icon }) => (
+                <TableCell key={field} align="center">
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <FontAwesomeIcon icon={icon} className="mr-1" />
                     {label}
-                  </span>
-                </div>
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {Array.isArray(tableData) && tableData.length > 0 ? (
-            tableData
-              .filter((rowData) => {
-                if (!rowData.IN_TIME) {
-                  return false;
-                }
-                const hour = parseInt(rowData.IN_TIME.slice(11, 13));
-                if (period === "morning") {
-                  return hour >= 6 && hour < 12;
-                } else if (period === "evening") {
-                  return hour >= 12 && hour <= 24;
-                }
-                return true;
-              })
-
-              .filter((rowData) =>
-                rowData.CUSTOMER_NAME.toLowerCase().includes(
-                  filter.toLowerCase()
-                )
-              )
-              .map((rowData, index) => (
-                <tr
-                  key={index}
-                  className={`${
-                    index % 2 === 0 ? "bg-gray-100" : ""
-                  } border-b border-blue-gray-800`}
-                >
-                  <td className="p-4 border-l border-r border-blue-gray-800">
-                    {rowData.CUSTOMER_PROFILE_ID}
-                  </td>
-                  <td className="p-4 border-l border-r border-blue-gray-800">
-                    {rowData.CUSTOMER_NAME}
-                  </td>
-                  <td className="p-4 border-l border-r border-blue-gray-800">
-                    {rowData.PHONE}
-                  </td>
-                  <td className="p-4 border-l border-r border-blue-gray-800">
-                    {rowData.IN_TIME ? rowData.IN_TIME.slice(11, 16) : "N/A"}
-                  </td>
-                  <td className="p-4 border-l border-r border-blue-gray-800">
-                    {rowData.OUT_TIME ? rowData.OUT_TIME.slice(11, 16) : "N/A"}
-                  </td>
-
-                  <td className="p-4 border-l border-r border-blue-gray-800 w-20">
-                    <button
-                      className="text-gray-800 bg-green-200 px-3 py-1 rounded-md cursor-pointer hover:bg-green-300"
-                      onClick={() => handleOpenClick(rowData.CUSTOMER_PROFILE_ID)}
+                  </Box>
+                </TableCell>
+              ))}
+              <TableCell align="center">Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={TABLE_HEAD.length + 1} align="center">
+                  <Loading />
+                </TableCell>
+              </TableRow>
+            ) : filteredData.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={TABLE_HEAD.length + 1} align="center">
+                  No records found.
+                </TableCell>
+              </TableRow>
+            ) : (
+              filteredData.map((rowData) => (
+                <TableRow key={rowData.ID}>
+                  {TABLE_HEAD.map(({ field }) => (
+                    <TableCell key={field} align="center">
+                      {rowData[field] || "N/A"}
+                    </TableCell>
+                  ))}
+                  <TableCell align="center">
+                    <Button
+                      variant="contained"
+                      style={{ backgroundColor: "#4CAF50", color: "white" }}
+                      onClick={() => handleOpenClick(rowData.ID)}
                     >
                       Open
-                    </button>
-                  </td>
-                </tr>
+                    </Button>
+                  </TableCell>
+                </TableRow>
               ))
-          ) : (
-            <tr>
-              <td colSpan={TABLE_HEAD.length} className="p-4 text-center">
-                <Loading />
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
+            )}
+          </TableBody>
+        </Table>
+        <Box display="flex" justifyContent="space-between" p={2}>
+          <Button
+            onClick={handlePreviousPage}
+            disabled={page === 0}
+            variant="contained"
+            color="primary"
+          >
+            Previous
+          </Button>
+          <Button onClick={handleNextPage} variant="contained" color="primary">
+            Next
+          </Button>
+        </Box>
+      </TableContainer>
+    </Box>
   );
 };
 
