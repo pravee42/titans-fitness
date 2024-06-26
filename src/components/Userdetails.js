@@ -199,34 +199,43 @@ const UserProfile = () => {
   const handleSaveEdit = async () => {
     try {
       const token = sessionStorage.getItem("token");
-
+  
       const formData = new FormData();
       formData.append("name", editedInfo.name);
+      formData.append("mobile", editedInfo.mobile);
+      formData.append("email", editedInfo.email);
       formData.append("dob", reverseDateFormat(editedInfo.dob));
       formData.append("address", editedInfo.address);
-      formData.append("email", editedInfo.email);
-      formData.append("mobile", editedInfo.mobile);
       formData.append("referencenum", editedInfo.referenceNumber);
-
+  
+      // Check if the image is an object (file) and not a URL or string
       if (editedInfo.image && typeof editedInfo.image === "object") {
         formData.append("image", editedInfo.image);
+      } else {
+        formData.append("image", ""); // Ensure an empty string is sent if no image
       }
-
+  
       const requestOptions = {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
+          // Note: Do not set 'Content-Type' header to 'multipart/form-data' manually
+          // When using FormData, the browser sets it for you, including the correct boundary
         },
         body: formData,
       };
-
+  
       const response = await fetch(
         `https://gym-backend-apis.onrender.com/admin/user/edit/${id}`,
         requestOptions
       );
-
+  
+      console.log("Server response:", response); // Log the entire response object
+  
       if (response.ok) {
-        console.log("User details updated successfully!");
+        const responseData = await response.json(); // Parse the JSON response body
+        console.log("Response data:", responseData); // Log the response data
+  
         toast.success("User details updated successfully!", {
           position: "top-right",
           autoClose: 3000,
@@ -236,8 +245,11 @@ const UserProfile = () => {
           draggable: true,
           progress: undefined,
         });
+  
+        window.location.reload(); 
       } else {
-        console.error("Error updating user details:", response.statusText);
+        const errorText = await response.text(); 
+        console.error("Error updating user details:", errorText);
         setError("Error updating user details");
         toast.error("Error updating user details. Please try again!", {
           position: "top-right",
@@ -263,21 +275,23 @@ const UserProfile = () => {
       });
     }
   };
-
+  
   const updateUserDetails = async (formData) => {
     try {
       const token = sessionStorage.getItem("token");
       const response = await Axios.patch(
-        `https://gym-backend-apis.onrender.com/admin/user/${id}`,
+        `https://gym-backend-apis.onrender.com/admin/user/edit/${id}`,
         formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
+            // Do not set 'Content-Type' header here
           },
         }
       );
-
+  
+      console.log("Server response:", response); // Log the entire response object
+  
       setIsEditing(false);
       setUser(response.data.user);
       toast.success("User details updated successfully!", {
@@ -289,7 +303,6 @@ const UserProfile = () => {
         draggable: true,
         progress: undefined,
       });
-      console.log("User details updated:", response);
     } catch (error) {
       console.error("Error updating user details:", error);
       setError("Error updating user details");
@@ -304,7 +317,6 @@ const UserProfile = () => {
       });
     }
   };
-
   const handleAddPayment = async () => {
     try {
       const token = sessionStorage.getItem("token");
@@ -335,6 +347,7 @@ const UserProfile = () => {
       setBalance("");
       setType("");
       toast.success("Payment added successfully!");
+      window.location.reload();
     } catch (error) {
       console.error("Error adding payment:", error);
 
@@ -346,7 +359,6 @@ const UserProfile = () => {
       toast.error("Error adding payment");
     }
   };
-
   const handleCancelEdit = () => {
     setIsEditingPayment(false);
     setPaymentToEdit(null);
@@ -548,11 +560,11 @@ const UserProfile = () => {
                       <label className="block font-semibold mb-2">Phone:</label>
                       <input
                         type="text"
-                        value={editedInfo.phone}
+                        value={editedInfo.mobile}
                         onChange={(e) =>
                           setEditedInfo({
                             ...editedInfo,
-                            phone: e.target.value,
+                            mobile: e.target.value,
                           })
                         }
                         className="w-full p-2 border rounded"

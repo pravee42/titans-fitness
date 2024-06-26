@@ -8,30 +8,15 @@ const PaymentHistory = ({ userId }) => {
   const [paymentDetails, setPaymentDetails] = useState([]);
   const [error, setError] = useState("");
   const [isEditingPayment, setIsEditingPayment] = useState(false);
+  const [isAddingPayment, setIsAddingPayment] = useState(false);
   const [paymentToEdit, setPaymentToEdit] = useState(null);
-
-  useEffect(() => {
-    const fetchPaymentDetails = async () => {
-      try {
-        const token = sessionStorage.getItem("token");
-        const headers = {
-          Authorization: `Bearer ${token}`,
-        };
-        const paymentDetailsResponse = await axios.get(
-          `https://gym-backend-apis.onrender.com/admin/payment/${userId}`,
-          { headers }
-        );
-        setPaymentDetails(paymentDetailsResponse.data);
-        console.log("Payment details:", paymentDetailsResponse.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    if (userId) {
-      fetchPaymentDetails();
-    }
-  }, [userId]);
+  const [newPayment, setNewPayment] = useState({
+    amount: '',
+    effective: '',
+    end: '',
+    balance: '',
+    type: '',
+  });
 
   const fetchPaymentDetails = async () => {
     try {
@@ -50,9 +35,20 @@ const PaymentHistory = ({ userId }) => {
     }
   };
 
+  useEffect(() => {
+    if (userId) {
+      fetchPaymentDetails();
+    }
+  }, [userId]);
+
   const handleEditPayment = (payment) => {
     setIsEditingPayment(true);
-    setPaymentToEdit(payment);
+    setPaymentToEdit({
+      id:payment.CUSTOMER_PROFILE_ID ,
+      amount: payment.PAYMENT_AMOUNT,
+      end: payment.END_DATE,
+      balance: payment.PAYMENT_BALANCE,
+    });
   };
 
   const handleDeletePayment = async (paymentId) => {
@@ -80,7 +76,6 @@ const PaymentHistory = ({ userId }) => {
           draggable: true,
           progress: undefined,
         });
-        // Refresh payment details after deletion
         fetchPaymentDetails();
       } else {
         console.error("Error deleting payment:", response.statusText);
@@ -110,11 +105,22 @@ const PaymentHistory = ({ userId }) => {
 
   const handleSavePaymentEdit = async () => {
     try {
-      const token = sessionStorage.getItem('token');
-      const { id=userId, amount, end, balance } = paymentToEdit;
+      const token = sessionStorage.getItem("token");
+      const { id, amount, end, balance } = paymentToEdit;
+
+      // Ensure the end date is in the correct format
+      const formattedEnd = new Date(end).toISOString().split("T")[0];
+      const requestData = { id, amount, end: formattedEnd, balance };
+      console.log("Submitted request data:", requestData);
+
       const response = await axios.patch(
         `https://gym-backend-apis.onrender.com/admin/payment/edit`,
-        { id, amount, end, balance },
+        {
+          id, 
+          amount, 
+          end: formattedEnd, 
+          balance
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -123,17 +129,43 @@ const PaymentHistory = ({ userId }) => {
       );
 
       if (response.status === 200) {
-        setPayments(payments.map(payment =>
-          payment.id === id ? response.data.payment : payment
-        ));
+        fetchPaymentDetails();
         setIsEditingPayment(false);
         setPaymentToEdit(null);
-      } else {
-        console.error('Error updating payment:', response.statusText);
+        toast.success("Payment updated successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      } 
+      else {
+        console.error("Error updating payment:", response.statusText);
+        toast.error("Error updating payment. Please try again!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
-    } catch (error) {
-      console.error('Error updating payment:', error);
-      setError('Error updating payment');
+    } 
+    catch (error) {
+      console.error("Error updating payment:", error);
+      toast.error("Error updating payment. Please try again!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 
@@ -142,28 +174,164 @@ const PaymentHistory = ({ userId }) => {
     setPaymentToEdit(null);
   };
 
+  const handleAddPayment = () => {
+    setIsAddingPayment(true);
+  };
+
+  const handleSaveNewPayment = async () => {
+    try {
+      const token = sessionStorage.getItem("token");
+      const { amount, effective, end, balance, type } = newPayment;
+
+      // Ensure the dates are in the correct format
+      const formattedEffective = new Date(effective).toISOString().split("T")[0];
+      const formattedEnd = new Date(end).toISOString().split("T")[0];
+
+      const response = await axios.post(
+        `https://gym-backend-apis.onrender.com/admin/payment`,
+        { userId, amount, effective: formattedEffective, end: formattedEnd, balance, type },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        fetchPaymentDetails();
+        setIsAddingPayment(false);
+        setNewPayment({ amount: '', effective: '', end: '', balance: '', type: '' });
+        toast.success("Payment added successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      } else {
+        console.error("Error adding payment:", response.statusText);
+        toast.error("Error adding payment. Please try again!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    } catch (error) {
+      console.error("Error adding payment:", error);
+      toast.error("Error adding payment. Please try again!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  };
+
+  const handleCancelAddPayment = () => {
+    setIsAddingPayment(false);
+    setNewPayment({ amount: '', effective: '', end: '', balance: '', type: '' });
+  };
+
   return (
     <div>
-      <table className="w-full table-auto">
+      <ToastContainer />
+      <h2 className="text-2xl font-bold mb-4">Payment History</h2>
+      <table className="min-w-full bg-white border border-gray-300">
         <thead>
           <tr>
-            <th className="border px-4 py-2">Amount</th>
-            <th className="border px-4 py-2">Payment Date</th>
-            <th className="border px-4 py-2">Effective Date</th>
-            <th className="border px-4 py-2">End Date</th>
-            <th className="border px-4 py-2">Balance</th>
-            <th className="border px-4 py-2">Type</th>
-            <th className="border px-4 py-2">Actions</th>
+            <th className="py-2 px-4 border-b">Amount</th>
+            <th className="py-2 px-4 border-b">Date</th>
+            <th className="py-2 px-4 border-b">Effective Date</th>
+            <th className="py-2 px-4 border-b">End Date</th>
+            <th className="py-2 px-4 border-b">Balance</th>
+            <th className="py-2 px-4 border-b">Type</th>
+            <th className="py-2 px-4 border-b">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {/* Editing payment section */}
+          {isAddingPayment && (
+            <tr>
+              <td colSpan="7">
+                <div className="p-4 rounded shadow-md mb-4" style={{ backgroundColor: '#70AB0E' }}>
+                  <h3 className="text-xl font-bold mb-4">Add Payment</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block font-semibold mb-2">Payment Amount:</label>
+                      <input
+                        type="text"
+                        value={newPayment.amount}
+                        onChange={(e) => setNewPayment({ ...newPayment, amount: e.target.value })}
+                        className="w-full p-2 border rounded"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-semibold mb-2">Effective Date:</label>
+                      <input
+                        type="date"
+                        value={newPayment.effective}
+                        onChange={(e) => setNewPayment({ ...newPayment, effective: e.target.value })}
+                        className="w-full p-2 border rounded"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-semibold mb-2">End Date:</label>
+                      <input
+                        type="date"
+                        value={newPayment.end}
+                        onChange={(e) => setNewPayment({ ...newPayment, end: e.target.value })}
+                        className="w-full p-2 border rounded"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-semibold mb-2">Balance:</label>
+                      <input
+                        type="text"
+                        value={newPayment.balance}
+                        onChange={(e) => setNewPayment({ ...newPayment, balance: e.target.value })}
+                        className="w-full p-2 border rounded"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-semibold mb-2">Type:</label>
+                      <input
+                        type="text"
+                        value={newPayment.type}
+                        onChange={(e) => setNewPayment({ ...newPayment, type: e.target.value })}
+                        className="w-full p-2 border rounded"
+                      />
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleSaveNewPayment}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+                    style={{ backgroundColor: '#79BA0F' }}
+                  >
+                    Save Payment
+                  </button>
+                  <button
+                    onClick={handleCancelAddPayment}
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4 ml-2"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </td>
+            </tr>
+          )}
+
           {isEditingPayment && paymentToEdit && (
             <tr>
-              
-              <td colSpan="6">
-                
-              <div style={{ backgroundColor: '#70AB0E' }} className="p-4 rounded shadow-md mb-4" >
+              <td colSpan="7">
+                <div className="p-4 rounded shadow-md mb-4" style={{ backgroundColor: '#70AB0E' }}>
                   <h3 className="text-xl font-bold mb-4">Edit Payment</h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -176,19 +344,10 @@ const PaymentHistory = ({ userId }) => {
                       />
                     </div>
                     <div>
-                      <label className="block font-semibold mb-2">Effective Date:</label>
-                      <input
-                        type="date"
-                        value={paymentToEdit.effective}
-                        onChange={(e) => setPaymentToEdit({ ...paymentToEdit, effective: e.target.value })}
-                        className="w-full p-2 border rounded"
-                      />
-                    </div>
-                    <div>
                       <label className="block font-semibold mb-2">End Date:</label>
                       <input
                         type="date"
-                        value={paymentToEdit.end}
+                        value={paymentToEdit.end ? paymentToEdit.end.split("T")[0] : ""}
                         onChange={(e) => setPaymentToEdit({ ...paymentToEdit, end: e.target.value })}
                         className="w-full p-2 border rounded"
                       />
@@ -202,37 +361,29 @@ const PaymentHistory = ({ userId }) => {
                         className="w-full p-2 border rounded"
                       />
                     </div>
-                    <div>
-                      <label className="block font-semibold mb-2">Type:</label>
-                      <input
-                        type="text"
-                        value={paymentToEdit.type}
-                        onChange={(e) => setPaymentToEdit({ ...paymentToEdit, type: e.target.value })}
-                        className="w-full p-2 border rounded"
-                      />
-                    </div>
                   </div>
                   <button
                     onClick={handleSavePaymentEdit}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"style={{ backgroundColor: '#79BA0F' }}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+                    style={{ backgroundColor: '#79BA0F' }}
                   >
                     Save Payment
                   </button>
                   <button
                     onClick={handleCancelEditPayment}
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4 ml-4"
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4 ml-2"
                   >
                     Cancel
                   </button>
                 </div>
               </td>
-             
             </tr>
           )}
-          {/* Displaying payment history */}
-          {paymentDetails && paymentDetails.payment && paymentDetails.payment.length > 0 ? (
-            paymentDetails.payment.map((payment, index) => (
-              <tr key={index}>
+
+          {/* Existing payment details */}
+          {paymentDetails.payment &&
+            paymentDetails.payment.map((payment) => (
+              <tr key={payment._id}>
                 <td className="border px-4 py-2">{payment.PAYMENT_AMOUNT}</td>
                 <td className="border px-4 py-2">{new Date(payment.PAYMENT_DATE).toLocaleDateString()}</td>
                 <td className="border px-4 py-2">{new Date(payment.EFFECTIVE_DATE).toLocaleDateString()}</td>
@@ -242,28 +393,21 @@ const PaymentHistory = ({ userId }) => {
                 <td className="border px-4 py-2">
                   <button
                     onClick={() => handleEditPayment(payment)}
-                    className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mr-2" style={{ backgroundColor: '#79BA0F' }}
+                    className="bg-custom-green -500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded mr-2"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => handleDeletePayment(payment._id)}
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2"
-                    style={{ backgroundColor: '#79BA0F' }}
+                    className="bg-custom-green -500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded"
                   >
                     Delete
                   </button>
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="6" className="px-4 py-2 text-center">No payment history found</td>
-            </tr>
-          )}
+            ))}
         </tbody>
       </table>
-
     </div>
   );
 };

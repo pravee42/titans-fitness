@@ -6,6 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import defaultImg from "../img/image.png";
 import "react-toastify/dist/ReactToastify.css";
 import logo from "./Home/img/logo-1.png";
+import com from "../img/codebuilders.jpg"
 const Punchin = () => {
   const [searchId, setSearchId] = useState("");
   const [userDetails, setUserDetails] = useState(null);
@@ -85,6 +86,9 @@ const Punchin = () => {
         { headers }
       );
       toast.success("Checked in successfully!");
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);      
       handleSearchSubmit();
     } catch (error) {
       toast.error("Error punching in");
@@ -105,7 +109,10 @@ const Punchin = () => {
         { headers }
       );
       toast.success("Checked out successfully!");
-      handleSearchSubmit();
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+            handleSearchSubmit();
     } catch (error) {
       toast.error("Error punching out");
       console.error("Error punching out:", error);
@@ -150,6 +157,7 @@ const Punchin = () => {
         </ul>
       </div>
       <div className="fixed bottom-0 right-0 mb-1 pr-4">
+      <img src={com} alt="Company Logo" className="mb-1 "style={{ width: '80px', height: 'auto' }} />
         <ul className="flex">
           <span className="text-sm">The Titans Fitness Studio -UniSex</span>
         </ul>
