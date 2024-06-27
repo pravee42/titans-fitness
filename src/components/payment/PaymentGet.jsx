@@ -29,7 +29,6 @@ const PaymentHistory = ({ userId }) => {
         { headers }
       );
       setPaymentDetails(paymentDetailsResponse.data);
-      console.log("Payment details:", paymentDetailsResponse.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -54,7 +53,6 @@ const PaymentHistory = ({ userId }) => {
   const handleDeletePayment = async (paymentId) => {
     try {
       const token = sessionStorage.getItem("token");
-      console.log(`Deleting payment with ID: ${paymentId}`);
       const response = await axios.delete(
         `https://gym-backend-apis.onrender.com/admin/payment/${paymentId}`,
         {
@@ -63,10 +61,8 @@ const PaymentHistory = ({ userId }) => {
           },
         }
       );
-      console.log(response);
 
       if (response.status === 200) {
-        console.log("Payment deleted successfully!");
         toast.success("Payment deleted successfully!", {
           position: "top-right",
           autoClose: 3000,
@@ -111,7 +107,6 @@ const PaymentHistory = ({ userId }) => {
       // Ensure the end date is in the correct format
       const formattedEnd = new Date(end).toISOString().split("T")[0];
       const requestData = { id, amount, end: formattedEnd, balance };
-      console.log("Submitted request data:", requestData);
 
       const response = await axios.patch(
         `https://gym-backend-apis.onrender.com/admin/payment/edit`,

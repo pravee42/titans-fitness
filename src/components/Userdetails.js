@@ -68,7 +68,7 @@ const UserProfile = () => {
             },
           }
         );
-        console.log(response);
+        sessionStorage(response);
 
         if (response.data && response.data.user) {
           const userData = response.data.user;

@@ -20,32 +20,25 @@ const Punchin = () => {
 
   const handleSearchSubmit = async () => {
     try {
-      console.log("handleSearchSubmit called");
   
       const token = sessionStorage.getItem("token");
-      console.log("Token:", token);
   
       const headers = { Authorization: `Bearer ${token}` };
-      console.log("Headers:", headers);
   
       const userDetailsResponse = await axios.get(
         `https://gym-backend-apis.onrender.com/admin/user/searching?name={{userName}}&dob={{dob}}&mobile={{mobile}}&userID=${searchId}`,
         { headers }
       );
-      console.log("userDetailsResponse:", userDetailsResponse);
   
       const userData = userDetailsResponse.data;
-      console.log("userData:", userData);
   
       setUserDetails(userData);
   
       if (userData.user && userData.user.IMAGE_PATH) {
         const imagePath = `https://gym-backend-apis.onrender.com/${userData.user.IMAGE_PATH}`;
         setImagePath(imagePath);
-        console.log("User image path set to:", imagePath);
       } else {
         setImagePath(defaultImg);
-        console.log("Default image set");
       }
 
       const punchInTimesResponse = await axios.get(

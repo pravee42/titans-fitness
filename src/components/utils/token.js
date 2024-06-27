@@ -7,6 +7,7 @@ export const getTokenData = () => {
   try {
     const decoded = jwtDecode(token);
     return {
+      id: decoded.id,
       username: decoded.username,
       role: decoded.role,
     };
