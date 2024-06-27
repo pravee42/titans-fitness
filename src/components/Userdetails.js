@@ -285,12 +285,11 @@ const UserProfile = () => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            // Do not set 'Content-Type' header here
           },
         }
       );
   
-      console.log("Server response:", response); // Log the entire response object
+      console.log("Server response:", response); 
   
       setIsEditing(false);
       setUser(response.data.user);
