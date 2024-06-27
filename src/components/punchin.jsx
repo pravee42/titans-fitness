@@ -235,36 +235,7 @@ const Punchin = () => {
                           readOnly
                         />
                       </div>
-                      {/* <div>
-                        <label className="block font-bold">Email</label>
-                        <input
-                          type="text"
-                          value={userDetails.user.EMAIL}
-                          className="w-full border rounded px-2 py-1"
-                          readOnly
-                        />
-                      </div>
-                      <div>
-                        <label className="block font-bold">DOB</label>
-                        <input
-                          type="text"
-                          value={
-                            userDetails.user.DOB &&
-                            userDetails.user.DOB.slice(0, 10)
-                          }
-                          className="w-full border rounded px-2 py-1"
-                          readOnly
-                        />
-                      </div>
-                      <div className="col-span-2">
-                        <label className="block font-bold">Address</label>
-                        <input
-                          type="text"
-                          value={userDetails.user.ADDRESS}
-                          className="w-full border rounded px-2 py-1"
-                          readOnly
-                        />
-                      </div> */}
+                      
                     </div>
                   </div>
                 </div>
