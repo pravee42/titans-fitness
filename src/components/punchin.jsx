@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
@@ -13,6 +13,11 @@ const Punchin = () => {
   const [punchTimes, setPunchTimes] = useState([]);
   const [paymentDetails, setPaymentDetails] = useState([]);
   const [imagePath, setImagePath] = useState("");
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
 
   const handleSearchChange = (event) => {
     setSearchId(event.target.value);
@@ -176,6 +181,7 @@ const Punchin = () => {
             <div className="mb-4">
               <input
                 type="text"
+                ref={inputRef}
                 className="w-full p-2 border border-gray-300 rounded-lg"
                 placeholder="Enter Customer ID"
                 value={searchId}
