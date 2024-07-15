@@ -258,34 +258,34 @@ const Punchin = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {punchTimes && punchTimes.IN_TIME ? (
-                      <tr>
-                        <td className="py-3 px-6">
-                          {new Date(punchTimes.IN_TIME).toLocaleTimeString()}
-                        </td>
-                        <td className="py-3 px-6">
-                          {punchTimes.OUT_TIME
-                            ? new Date(punchTimes.OUT_TIME).toLocaleTimeString()
-                            : "N/A"}
-                        </td>
-                        <td className="py-3 px-6">
-                          {punchTimes.OUT_TIME
-                            ? `${Math.floor(
-                                (new Date(punchTimes.OUT_TIME) -
-                                  new Date(punchTimes.IN_TIME)) /
-                                  (1000 * 60)
-                              )} minutes`
-                            : "N/A"}
-                        </td>
-                      </tr>
-                    ) : (
-                      <tr>
-                        <td className="py-3 px-6" colSpan="3">
-                          No punch times available for today.
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
+  {punchTimes && punchTimes.IN_TIME ? (
+    <tr>
+      <td className="py-3 px-6">
+        {new Date(punchTimes.IN_TIME).toLocaleTimeString()}
+      </td>
+      <td className="py-3 px-6">
+        {punchTimes.OUT_TIME
+          ? new Date(punchTimes.OUT_TIME).toLocaleTimeString()
+          : "N/A"}
+      </td>
+      <td className="py-3 px-6">
+        {punchTimes.OUT_TIME ? (() => {
+          const diffMs = new Date(punchTimes.OUT_TIME) - new Date(punchTimes.IN_TIME);
+          const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+          const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+          return `${diffHrs} hour(s) and ${diffMins} minute(s)`;
+        })() : "N/A"}
+      </td>
+    </tr>
+  ) : (
+    <tr>
+      <td className="py-3 px-6" colSpan="3">
+        No punch times available for today.
+      </td>
+    </tr>
+  )}
+</tbody>
+
                 </table>
               </div>
             )}
