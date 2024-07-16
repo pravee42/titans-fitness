@@ -68,7 +68,7 @@ const UserProfile = () => {
             },
           }
         );
-        sessionStorage(response);
+        // sessionStorage(response);
 
         if (response.data && response.data.user) {
           const userData = response.data.user;
@@ -108,7 +108,6 @@ const UserProfile = () => {
         }
       );
 
-      console.log("Server response:", response);
       setPaymentStatus(response.data.paymentStatus);
       setNextDue(response.data.nextDue);
       setRecentPayments([...recentPayments, response.data.payment]);
@@ -122,7 +121,6 @@ const UserProfile = () => {
       console.error("Error while activating:", error);
 
       if (error.response && error.response.headers) {
-        console.log("Redirect Location:", error.response.headers.location);
       }
 
       setError("Error while activating");
@@ -145,7 +143,6 @@ const UserProfile = () => {
         }
       );
 
-      console.log("Server response:", response);
       setPaymentStatus(response.data.paymentStatus);
       setNextDue(response.data.nextDue);
       setRecentPayments([...recentPayments, response.data.payment]);
@@ -159,7 +156,6 @@ const UserProfile = () => {
       console.error("Error while Deactivating:", error);
 
       if (error.response && error.response.headers) {
-        console.log("Redirect Location:", error.response.headers.location);
       }
 
       setError("Error while Deactivating");
@@ -230,11 +226,9 @@ const UserProfile = () => {
         requestOptions
       );
   
-      console.log("Server response:", response); // Log the entire response object
   
       if (response.ok) {
         const responseData = await response.json(); // Parse the JSON response body
-        console.log("Response data:", responseData); // Log the response data
   
         toast.success("User details updated successfully!", {
           position: "top-right",
@@ -289,7 +283,6 @@ const UserProfile = () => {
         }
       );
   
-      console.log("Server response:", response); 
   
       setIsEditing(false);
       setUser(response.data.user);
@@ -336,7 +329,6 @@ const UserProfile = () => {
         }
       );
 
-      console.log("Server response:", response);
       setPaymentStatus(response.data.paymentStatus);
       setNextDue(response.data.nextDue);
       setRecentPayments([...recentPayments, response.data.payment]);
@@ -351,7 +343,6 @@ const UserProfile = () => {
       console.error("Error adding payment:", error);
 
       if (error.response && error.response.headers) {
-        console.log("Redirect Location:", error.response.headers.location);
       }
 
       setError("Error adding payment");

@@ -3,15 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCircle, faPhone, faCalendarAlt, faCheckCircle, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { Chip } from "@material-tailwind/react";
-import {
-  faHourglassStart,
-  faHourglassEnd,
-  faMoneyBill,
-} from "@fortawesome/free-solid-svg-icons";
 import Axios from "axios";
 import "../../styles/sty.css";
 import Loading from "../loading";
-import '../../styles/Tabstlye.css'
+import '../../styles/Tabstlye.css';
 
 const Tablegym = () => {
   const [tableData, setTableData] = useState([]);
@@ -22,7 +17,7 @@ const Tablegym = () => {
   const [filterDOB, setFilterDOB] = useState("");
 
   const navigate = useNavigate();
-  
+
   const TABLE_HEAD = [
     { label: "Customer ID", icon: faUserCircle },
     { label: "Name", icon: faUserCircle },
@@ -31,6 +26,7 @@ const Tablegym = () => {
     { label: "Status", icon: faCheckCircle },
     { label: "Action", icon: faEdit },
   ];
+
   const handleScroll = (e) => {
     const rows = e.target.getElementsByTagName('tr');
     const scrollOffset = e.target.scrollTop;
@@ -49,8 +45,6 @@ const Tablegym = () => {
       }
     }
   };
-  
-  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -86,12 +80,9 @@ const Tablegym = () => {
     }
   };
 
-
   return (
     <div className="overflow-y-auto w-full h-screen p-4 mb-10">
-      
       {/* Filter input */}
-      
       <input
         type="text"
         value={filterID}
@@ -147,67 +138,67 @@ const Tablegym = () => {
           </tr>
         </thead>
         <tbody onScroll={(e) => handleScroll(e)}>
-  {Array.isArray(tableData) && tableData.length > 0 ? (
-    tableData
-      .filter((rowData) =>
-        rowData.NAME && rowData.NAME.toLowerCase().includes(filter.toLowerCase())
-      )
-      .filter((rowData) =>
-        rowData.ID && rowData.ID.toString().includes(filterID)
-      )
-      .filter((rowData) =>
-        rowData.PHONE && rowData.PHONE.includes(filterPhone)
-      )
-      .filter((rowData) =>
-        rowData.DOB && rowData.DOB.includes(filterDOB)
-      )
-      .map((rowData, index) => (
-        <tr
-          key={index}
-          className={`${
-            index % 2 === 0 ? "bg-gray-100" : ""
-          } border-b border-blue-gray-800`}
-        >
-          <td className="p-4 border-l border-r border-blue-gray-800">
-            {rowData.ID}
-          </td>
-          <td className="p-4 border-l border-r border-blue-gray-800">
-            {rowData.NAME}
-          </td>
-          <td className="p-4 border-l border-r border-blue-gray-800">
-            {rowData.PHONE}
-          </td>
-          <td className="p-4 border-l border-r border-gray-300">{new Date(rowData.DOB).toLocaleDateString()}</td>
-          <td className="p-4 border-l border-r border-gray-300">
-            <div className="relative z-10">
-              <Chip
-                variant="ghost"
-                size="sm"
-                value={rowData.STATUS === 1 ? "Active" : "Non-Active"}
-                color={rowData.STATUS === 1 ? "green" : "blue-gray"}
-                className="text-gray-800"
-              />
-            </div>
-          </td>
-          <td className="p-4 border-l border-r border-gray-300">
-            <button
-              className="text-gray-800 bg-green-200 px-3 py-1 rounded-md cursor-pointer hover:bg-green-300"
-              onClick={() => handleOpenClick(rowData.ID)}
-            >
-              Open
-            </button>
-          </td>
-        </tr>
-      ))
-  ) : (
-    <tr>
-      <td colSpan={TABLE_HEAD.length} className="p-4 text-center">
-        <Loading />
-      </td>
-    </tr>
-  )}
-</tbody>
-
+          {Array.isArray(tableData) && tableData.length > 0 ? (
+            tableData
+              .sort((a, b) => b.ID - a.ID) // Sort in descending order by ID
+              .filter((rowData) =>
+                rowData.NAME && rowData.NAME.toLowerCase().includes(filter.toLowerCase())
+              )
+              .filter((rowData) =>
+                rowData.ID && rowData.ID.toString().includes(filterID)
+              )
+              .filter((rowData) =>
+                rowData.PHONE && rowData.PHONE.includes(filterPhone)
+              )
+              .filter((rowData) =>
+                rowData.DOB && rowData.DOB.includes(filterDOB)
+              )
+              .map((rowData, index) => (
+                <tr
+                  key={index}
+                  className={`${
+                    index % 2 === 0 ? "bg-gray-100" : ""
+                  } border-b border-blue-gray-800`}
+                >
+                  <td className="p-4 border-l border-r border-blue-gray-800">
+                    {rowData.ID}
+                  </td>
+                  <td className="p-4 border-l border-r border-blue-gray-800">
+                    {rowData.NAME}
+                  </td>
+                  <td className="p-4 border-l border-r border-blue-gray-800">
+                    {rowData.PHONE}
+                  </td>
+                  <td className="p-4 border-l border-r border-gray-300">{new Date(rowData.DOB).toLocaleDateString()}</td>
+                  <td className="p-4 border-l border-r border-gray-300">
+                    <div className="relative z-10">
+                      <Chip
+                        variant="ghost"
+                        size="sm"
+                        value={rowData.STATUS === 1 ? "Active" : "Non-Active"}
+                        color={rowData.STATUS === 1 ? "green" : "blue-gray"}
+                        className="text-gray-800"
+                      />
+                    </div>
+                  </td>
+                  <td className="p-4 border-l border-r border-gray-300">
+                    <button
+                      className="text-gray-800 bg-green-200 px-3 py-1 rounded-md cursor-pointer hover:bg-green-300"
+                      onClick={() => handleOpenClick(rowData.ID)}
+                    >
+                      Open
+                    </button>
+                  </td>
+                </tr>
+              ))
+          ) : (
+            <tr>
+              <td colSpan={TABLE_HEAD.length} className="p-4 text-center">
+                <Loading />
+              </td>
+            </tr>
+          )}
+        </tbody>
       </table>
     </div>
   );
