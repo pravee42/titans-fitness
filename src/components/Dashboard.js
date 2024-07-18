@@ -20,7 +20,6 @@ const DashboardLayout = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Submitted: ", user);
   };
 
   const updateForm = (name, value) => {

@@ -85,7 +85,6 @@ const UserDashboard = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        console.log(response);
         const paymentData = response.data.payment;
         setPaymentDetails(paymentData);
       } catch (error) {

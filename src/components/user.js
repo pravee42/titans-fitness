@@ -106,16 +106,7 @@ const UserInformation = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("Submitted: ", {
-      name,
-      imageFile,
-      mobile,
-      email,
-      password,
-      dob,
-      diet: selectedDietPlan,
-      address,
-    });
+ 
 
     notify();
 
@@ -145,7 +136,6 @@ const UserInformation = () => {
       );
 
       if (response.ok) {
-        console.log("Form data submitted successfully!");
       } else {
         console.error("Error submitting form data:", response.statusText);
       }

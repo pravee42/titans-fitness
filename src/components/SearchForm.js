@@ -61,16 +61,13 @@ const SearchForm = ({ onSubmit }) => {
         setSearchResults(firstThreeResults);
         onSubmit(firstThreeResults);
 
-        console.log("First three search results:", firstThreeResults);
         const matchingUser = firstThreeResults.find(
           (user) => user.ID === parseInt(memberID, 10)
         );
 
         if (matchingUser) {
-          console.log("Matching user:", matchingUser);
           setMatchingUser(matchingUser); // Update the state with the matching user
         } else {
-          console.log("No matching user found with ID:", memberID);
           setMatchingUser(null); // Reset the matching user if not found
         }
       } else {

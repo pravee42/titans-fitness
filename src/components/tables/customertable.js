@@ -63,7 +63,6 @@ const Customertable = () => {
           : `https://gym-backend-apis.onrender.com/admin/attendance?page=${page }`;
 
       const response = await Axios.get(url, { headers });
-      console.log("Fetched data:", response.data.customer);
       setTableData(response.data.customer);
       setIsLoading(false);
     } catch (error) {

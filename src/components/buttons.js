@@ -35,13 +35,7 @@ const Buttons = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Submitted: ", {
-      memberID,
-      name,
-      mobileNumber,
-      dob,
-      address,
-    });
+   
 
     // Add your form submission logic here
   };

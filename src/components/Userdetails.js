@@ -5,7 +5,7 @@ import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
 import * as XLSX from "xlsx";
 import logo from "../img/brand.png";
-import defaultImg from "../img/image.png";
+import defaultImg from "./Home/img/logo2.jpg";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DatePicker from "react-datepicker";

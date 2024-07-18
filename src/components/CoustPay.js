@@ -48,7 +48,7 @@ const CustomerPayment = () => {
 
   const handleSubmit = (e) => {
     
-    console.log("Submitted: ", user);
+    
   };
 
   const updateForm = (name, value) => {

@@ -3,7 +3,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { ToastContainer, toast } from "react-toastify";
-import defaultImg from "../img/image.png";
+import defaultImg from "./Home/img/logo2.jpg";
 import "react-toastify/dist/ReactToastify.css";
 import logo from "./Home/img/logo-1.png";
 import com from "../img/foot.png"
@@ -84,9 +84,7 @@ const Punchin = () => {
         { headers }
       );
       toast.success("Checked in successfully!");
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);      
+           
       handleSearchSubmit();
     } catch (error) {
       toast.error("Error punching in");
@@ -107,9 +105,7 @@ const Punchin = () => {
         { headers }
       );
       toast.success("Checked out successfully!");
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+      
             handleSearchSubmit();
     } catch (error) {
       toast.error("Error punching out");
@@ -120,9 +116,13 @@ const Punchin = () => {
     if (event.key === "Enter") {
       handleSearchSubmit();
     } else if (event.key === "+") {
+      event.preventDefault();
       handlePunchIn();
+      setSearchId('');
     } else if (event.key === "-") {
+      event.preventDefault();
       handlePunchOut();
+      setSearchId('');
     }
   };
   const handleSignOut = () => {
@@ -258,34 +258,34 @@ const Punchin = () => {
                     </tr>
                   </thead>
                   <tbody>
-  {punchTimes && punchTimes.IN_TIME ? (
-    <tr>
-      <td className="py-3 px-6">
-        {new Date(punchTimes.IN_TIME).toLocaleTimeString()}
-      </td>
-      <td className="py-3 px-6">
-        {punchTimes.OUT_TIME
-          ? new Date(punchTimes.OUT_TIME).toLocaleTimeString()
-          : "N/A"}
-      </td>
-      <td className="py-3 px-6">
-        {punchTimes.OUT_TIME ? (() => {
-          const diffMs = new Date(punchTimes.OUT_TIME) - new Date(punchTimes.IN_TIME);
-          const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
-          const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-          return `${diffHrs} hour(s) and ${diffMins} minute(s)`;
-        })() : "N/A"}
-      </td>
-    </tr>
-  ) : (
-    <tr>
-      <td className="py-3 px-6" colSpan="3">
-        No punch times available for today.
-      </td>
-    </tr>
-  )}
-</tbody>
-
+                    {punchTimes && punchTimes.IN_TIME ? (
+                      <tr>
+                        <td className="py-3 px-6">
+                          {new Date(punchTimes.IN_TIME).toLocaleTimeString()}
+                        </td>
+                        <td className="py-3 px-6">
+                          {punchTimes.OUT_TIME
+                            ? new Date(punchTimes.OUT_TIME).toLocaleTimeString()
+                            : "N/A"}
+                        </td>
+                        <td className="py-3 px-6">
+                          {punchTimes.OUT_TIME
+                            ? `${Math.floor(
+                                (new Date(punchTimes.OUT_TIME) -
+                                  new Date(punchTimes.IN_TIME)) /
+                                  (1000 * 60)
+                              )} minutes`
+                            : "N/A"}
+                        </td>
+                      </tr>
+                    ) : (
+                      <tr>
+                        <td className="py-3 px-6" colSpan="3">
+                          No punch times available for today.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
                 </table>
               </div>
             )}

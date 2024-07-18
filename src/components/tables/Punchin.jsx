@@ -31,16 +31,13 @@ const Punchinform = () => {
         const data = response.data.user;
         const firstThreeResults = data; // Get only the first three results
   
-        console.log('First three search results:', firstThreeResults);
   
         // Find the user with the specified memberID
         const matchingUser = firstThreeResults.find(user => user.ID === parseInt(searchId, 10));
   
         if (matchingUser) {
-          console.log('Matching user:', matchingUser);
           setMatchingUser(matchingUser); // Update the state with the matching user
         } else {
-          console.log('No matching user found with ID:', searchId);
           setMatchingUser(null); // Reset the matching user if not found
         }
       } else {

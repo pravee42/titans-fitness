@@ -103,7 +103,6 @@ const UserProfile = () => {
         progress: undefined,
       });
 
-      console.log("Server response:", response);
     } catch (error) {
       console.error("Error activating user:", error);
       setError("Error activating user");
@@ -140,7 +139,6 @@ const UserProfile = () => {
         progress: undefined,
       });
 
-      console.log("Server response:", response);
     } catch (error) {
       console.error("Error deactivating user:", error);
       setError("Error deactivating user");
@@ -210,14 +208,7 @@ const UserProfile = () => {
         mobile: editedInfo.phone,
         image: base64Image,
       };
-      console.log("Submitted: ", {
-        name: editedInfo.name,
-        dob: reverseDateFormat(editedInfo.dob),
-        address: editedInfo.address,
-        email: editedInfo.email,
-        mobile: editedInfo.phone,
-        image: base64Image,
-      });
+      
 
       updateUserDetails(jsonData);
     } catch (error) {
@@ -251,7 +242,6 @@ const UserProfile = () => {
         draggable: true,
         progress: undefined,
       });
-      console.log("User details updated:", response);
     } catch (error) {
       console.error("Error updating user details:", error);
       setError("Error updating user details");
@@ -287,7 +277,6 @@ const UserProfile = () => {
         }
       );
 
-      console.log("Server response:", response);
       setPaymentStatus(response.data.paymentStatus);
       setNextDue(response.data.nextDue);
       setRecentPayments([...recentPayments, response.data.payment]);
@@ -301,7 +290,6 @@ const UserProfile = () => {
       console.error("Error adding payment:", error);
 
       if (error.response && error.response.headers) {
-        console.log("Redirect Location:", error.response.headers.location);
       }
 
       setError("Error adding payment");

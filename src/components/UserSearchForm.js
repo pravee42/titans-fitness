@@ -38,7 +38,6 @@ const UserSearchForm = ({ onSubmit }) => {
         const firstThreeResults = data.slice(0, 3); 
         setSearchResults(firstThreeResults); 
         onSubmit(firstThreeResults); 
-        console.log('First three search results:', firstThreeResults);
         
       } else {
         console.error('Error fetching search results:', response.statusText);
