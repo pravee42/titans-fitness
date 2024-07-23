@@ -6,7 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import defaultImg from "./Home/img/logo2.jpg";
 import "react-toastify/dist/ReactToastify.css";
 import logo from "./Home/img/logo-1.png";
-import com from "../img/foot.png"
+import com from "../img/codebuilders.jpg"
 const Punchin = () => {
   const [searchId, setSearchId] = useState("");
   const [userDetails, setUserDetails] = useState(null);
@@ -161,7 +161,7 @@ const Punchin = () => {
 </div>
 
       <div className="fixed bottom-2 right-0 mb-1 pr-4">
-      <img src={com} alt="Company Logo" className="mb-1 "style={{ width: '500px', height: '80px' }} />
+      <img src={com} alt="Company Logo" className="mb-1 "style={{ width: '100px', height: '70px' }} />
       </div>
       <div className="relative z-10">
         <header className="py-10 px-5 flex items-center justify-between bg-custom-green">
