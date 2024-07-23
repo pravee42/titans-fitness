@@ -160,9 +160,18 @@ const Punchin = () => {
   </ul>
 </div>
 
-      <div className="fixed bottom-2 right-0 mb-1 pr-4">
-      <img src={com} alt="Company Logo" className="mb-1 "style={{ width: '100px', height: '70px' }} />
-      </div>
+<div className="fixed bottom-2 right-0 mb-1 pr-4 flex flex-col items-center space-y-1">
+  <div className="flex items-center space-x-2 text-xs text-gray-500 text-center">
+    <img src={com} alt="Vps Codebuilders Pvt Ltd Logo" className="w-20 h-12" />
+    <div className="flex flex-col items-start">
+      <div>Powered by</div>
+      <div className="text-sm mt-1">IT Solutions @ EdTech</div>
+    </div>
+  </div>
+</div>
+
+
+
       <div className="relative z-10">
         <header className="py-10 px-5 flex items-center justify-between bg-custom-green">
           <div className="flex items-center justify-start flex-1">
