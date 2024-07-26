@@ -161,12 +161,13 @@ const Punchin = () => {
 </div>
 
 <div className="fixed bottom-2 right-0 mb-1 pr-4 flex flex-col items-center space-y-1">
+<div>Powered by</div>
   <div className="flex items-center space-x-2 text-xs text-gray-500 text-center">
     <img src={com} alt="Vps Codebuilders Pvt Ltd Logo" className="w-22 h-8" />
     <div className="flex flex-col items-start">
-      <div>Powered by</div>
-      <div className="text-sm mt-1">Vps Codebuilders Pvt Ltd 
-      IT solution &ed tech</div>
+      {/* <div>Powered by</div> */}
+      {/* <div className="text-sm mt-1">Vps Codebuilders Pvt Ltd 
+      IT solution &ed tech</div> */}
     </div>
   </div>
 </div>
