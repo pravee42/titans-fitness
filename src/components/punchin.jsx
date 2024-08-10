@@ -382,9 +382,7 @@ const Punchin = () => {
                   <div
                     className={`px-10 py-2 rounded ${
                       paymentDetails.payment[0].PAYMENT_BALANCE === 0 &&
-                      new Date(
-                        paymentDetails.payment[0].END_DATE
-                      ).toDateString() !== new Date().toDateString()
+                      new Date(paymentDetails.payment[0].END_DATE) > new Date()
                         ? "bg-green-500"
                         : "bg-red-500"
                     }`}
@@ -393,8 +391,7 @@ const Punchin = () => {
                       {paymentDetails.payment.every(
                         (payment) =>
                           payment.PAYMENT_BALANCE === 0 &&
-                          new Date(payment.END_DATE).toDateString() !==
-                            new Date().toDateString()
+                          new Date(payment.END_DATE) > new Date()
                       )
                         ? "Paid"
                         : "Unpaid"}
