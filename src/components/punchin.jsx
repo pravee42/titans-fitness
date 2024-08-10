@@ -283,11 +283,17 @@ const Punchin = () => {
                         </td>
                         <td className="py-3 px-6">
                           {punchTimes.OUT_TIME
-                            ? `${Math.floor(
-                                (new Date(punchTimes.OUT_TIME) -
-                                  new Date(punchTimes.IN_TIME)) /
-                                  (1000 * 60)
-                              )} minutes`
+                            ? (() => {
+                                const diffInMs =
+                                  new Date(punchTimes.OUT_TIME) -
+                                  new Date(punchTimes.IN_TIME);
+                                const diffInMinutes = Math.floor(
+                                  diffInMs / (1000 * 60)
+                                );
+                                const hours = Math.floor(diffInMinutes / 60);
+                                const minutes = diffInMinutes % 60;
+                                return `${hours} hr ${minutes} min`;
+                              })()
                             : "N/A"}
                         </td>
                       </tr>
