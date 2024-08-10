@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
@@ -6,7 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import defaultImg from "./Home/img/logo2.jpg";
 import "react-toastify/dist/ReactToastify.css";
 import logo from "./Home/img/logo-1.png";
-import com from "./Home/img/cd.jpg"
+import com from "./Home/img/cd.jpg";
 const Punchin = () => {
   const [searchId, setSearchId] = useState("");
   const [userDetails, setUserDetails] = useState(null);
@@ -25,20 +25,19 @@ const Punchin = () => {
 
   const handleSearchSubmit = async () => {
     try {
-  
       const token = sessionStorage.getItem("token");
-  
+
       const headers = { Authorization: `Bearer ${token}` };
-  
+
       const userDetailsResponse = await axios.get(
         `https://gym-backend-apis.onrender.com/admin/user/searching?name={{userName}}&dob={{dob}}&mobile={{mobile}}&userID=${searchId}`,
         { headers }
       );
-  
+
       const userData = userDetailsResponse.data;
-  
+
       setUserDetails(userData);
-  
+
       if (userData.user && userData.user.IMAGE_PATH) {
         const imagePath = `https://gym-backend-apis.onrender.com/${userData.user.IMAGE_PATH}`;
         setImagePath(imagePath);
@@ -84,7 +83,7 @@ const Punchin = () => {
         { headers }
       );
       toast.success("Checked in successfully!");
-           
+
       handleSearchSubmit();
     } catch (error) {
       toast.error("Error punching in");
@@ -105,8 +104,8 @@ const Punchin = () => {
         { headers }
       );
       toast.success("Checked out successfully!");
-      
-            handleSearchSubmit();
+
+      handleSearchSubmit();
     } catch (error) {
       toast.error("Error punching out");
       console.error("Error punching out:", error);
@@ -118,11 +117,11 @@ const Punchin = () => {
     } else if (event.key === "+") {
       event.preventDefault();
       handlePunchIn();
-      setSearchId('');
+      setSearchId("");
     } else if (event.key === "-") {
       event.preventDefault();
       handlePunchOut();
-      setSearchId('');
+      setSearchId("");
     }
   };
   const handleSignOut = () => {
@@ -155,24 +154,28 @@ const Punchin = () => {
         </ul>
       </div>
       <div className="fixed bottom-20 right-0 mb-1 pr-4">
-  <ul className="flex">
-    <span className="text-lg font-bold">The Titans Fitness Studio - UniSex</span>
-  </ul>
-</div>
+        <ul className="flex">
+          <span className="text-lg font-bold">
+            The Titans Fitness Studio - UniSex
+          </span>
+        </ul>
+      </div>
 
-<div className="fixed bottom-2 right-0 mb-1 pr-4 flex flex-col items-center space-y-1">
-<div>Powered by</div>
-  <div className="flex items-center space-x-2 text-xs text-gray-500 text-center">
-    <img src={com} alt="Vps Codebuilders Pvt Ltd Logo" className="w-22 h-8" />
-    <div className="flex flex-col items-start">
-      {/* <div>Powered by</div> */}
-      {/* <div className="text-sm mt-1">Vps Codebuilders Pvt Ltd 
+      <div className="fixed bottom-2 right-0 mb-1 pr-4 flex flex-col items-center space-y-1">
+        <div>Powered by</div>
+        <div className="flex items-center space-x-2 text-xs text-gray-500 text-center">
+          <img
+            src={com}
+            alt="Vps Codebuilders Pvt Ltd Logo"
+            className="w-22 h-8"
+          />
+          <div className="flex flex-col items-start">
+            {/* <div>Powered by</div> */}
+            {/* <div className="text-sm mt-1">Vps Codebuilders Pvt Ltd 
       IT solution &ed tech</div> */}
-    </div>
-  </div>
-</div>
-
-
+          </div>
+        </div>
+      </div>
 
       <div className="relative z-10">
         <header className="py-10 px-5 flex items-center justify-between bg-custom-green">
@@ -245,7 +248,6 @@ const Punchin = () => {
                           readOnly
                         />
                       </div>
-                      
                     </div>
                   </div>
                 </div>
@@ -379,14 +381,20 @@ const Punchin = () => {
                   </div>
                   <div
                     className={`px-10 py-2 rounded ${
-                      paymentDetails.payment[0].PAYMENT_BALANCE === 0
+                      paymentDetails.payment[0].PAYMENT_BALANCE === 0 &&
+                      new Date(
+                        paymentDetails.payment[0].END_DATE
+                      ).toDateString() !== new Date().toDateString()
                         ? "bg-green-500"
                         : "bg-red-500"
                     }`}
                   >
                     <p className="font-sans text-sm text-white">
                       {paymentDetails.payment.every(
-                        (payment) => payment.PAYMENT_BALANCE === 0
+                        (payment) =>
+                          payment.PAYMENT_BALANCE === 0 &&
+                          new Date(payment.END_DATE).toDateString() !==
+                            new Date().toDateString()
                       )
                         ? "Paid"
                         : "Unpaid"}
