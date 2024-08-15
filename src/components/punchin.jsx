@@ -383,11 +383,13 @@ const Punchin = () => {
                         <p className="font-bold mr-2">Customer ID:</p>
                         <p>{userDetails.user.ID}</p>
                       </div>
-                      <div className="flex items-center mb-2">
-                        <p className="font-bold mr-2">NextDue:</p>
-                        <p>{paymentDetails.payment[0].EFFECTIVE_DATE.slice(0, 10)}</p>
-                      </div>
                     </div>
+                  </div>
+                  <div className="flex items-center mb-2">
+                    <p className="font-bold mr-2">NextDue:</p>
+                    <p className="text-red-900 font-bold animate-pulse text-lg">
+                      {paymentDetails.payment[0].EFFECTIVE_DATE.slice(0, 10)}
+                    </p>
                   </div>
                   <div
                     className={`px-10 py-2 rounded ${
