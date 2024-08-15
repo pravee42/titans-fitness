@@ -245,7 +245,7 @@ const PaymentHistory = ({ userId }) => {
           <tr>
             <th className="py-2 px-4 border-b">Amount</th>
             <th className="py-2 px-4 border-b">Date</th>
-            <th className="py-2 px-4 border-b">Effective Date</th>
+            <th className="py-2 px-4 border-b">NextDue Date</th>
             <th className="py-2 px-4 border-b">End Date</th>
             <th className="py-2 px-4 border-b">Balance</th>
             <th className="py-2 px-4 border-b">Type</th>
@@ -269,7 +269,7 @@ const PaymentHistory = ({ userId }) => {
                       />
                     </div>
                     <div>
-                      <label className="block font-semibold mb-2">Effective Date:</label>
+                      <label className="block font-semibold mb-2">NextDue Date:</label>
                       <input
                         type="date"
                         value={newPayment.effective}

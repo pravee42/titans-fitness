@@ -24,6 +24,13 @@ import {
 } from "@mui/material";
 import Loading from "../loading";
 
+// Utility function to format time
+const formatTime = (isoTime) => {
+  if (!isoTime) return "N/A";
+  const date = new Date(isoTime);
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+};
+
 const Attendancetable = () => {
   const [tableData, setTableData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -49,7 +56,7 @@ const Attendancetable = () => {
 
   useEffect(() => {
     applyFilter();
-  }, [tableData, filter]);
+  }, [tableData, filter, period]);
 
   const fetchData = async () => {
     try {
@@ -60,7 +67,7 @@ const Attendancetable = () => {
       const url =
         page === 0
           ? "https://gym-backend-apis.onrender.com/admin/attendance"
-          : `https://gym-backend-apis.onrender.com/admin/attendance?page=${page }`;
+          : `https://gym-backend-apis.onrender.com/admin/attendance?page=${page}`;
 
       const response = await Axios.get(url, { headers });
       setTableData(response.data.customer);
@@ -72,9 +79,23 @@ const Attendancetable = () => {
   };
 
   const applyFilter = () => {
-    const filteredResults = tableData.filter((rowData) =>
-      rowData.NAME.toLowerCase().includes(filter.toLowerCase())
+    let filteredResults = tableData.filter((rowData) =>
+      rowData.NAME.toLowerCase().includes(filter.toLowerCase()) ||
+      rowData.ID.toString().includes(filter)
     );
+
+    if (period === "morning") {
+      filteredResults = filteredResults.filter(rowData => {
+        const inTime = new Date(rowData.IN_TIME).getHours();
+        return inTime >= 0 && inTime < 12; // Morning session
+      });
+    } else if (period === "evening") {
+      filteredResults = filteredResults.filter(rowData => {
+        const inTime = new Date(rowData.IN_TIME).getHours();
+        return inTime >= 12; // Evening session
+      });
+    }
+
     setFilteredData(filteredResults);
   };
 
@@ -147,7 +168,7 @@ const Attendancetable = () => {
       <TextField
         value={filter}
         onChange={handleFilterChange}
-        placeholder="Filter by name..."
+        placeholder="Filter by name or ID..."
         variant="outlined"
         className="mb-4"
         fullWidth
@@ -190,7 +211,9 @@ const Attendancetable = () => {
                 <TableRow key={rowData.ID}>
                   {TABLE_HEAD.map(({ field }) => (
                     <TableCell key={field} align="center">
-                      {rowData[field] || "N/A"}
+                      {field === "IN_TIME" || field === "OUT_TIME"
+                        ? formatTime(rowData[field])
+                        : rowData[field] || "N/A"}
                     </TableCell>
                   ))}
                   <TableCell align="center">

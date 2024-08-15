@@ -482,7 +482,7 @@ const UserProfile = () => {
                     </label>
                     <input
                       type="text"
-                      value={user.nextDue}
+                      value={user.endDate}
                       className="w-full p-2 border rounded"
                     />
                   </div>
@@ -646,7 +646,7 @@ const UserProfile = () => {
                   </div>
                   <div>
                     <label className="block font-semibold mb-2">
-                      Effective Date:
+                      NextDue Date:
                     </label>
                     <input
                       type="date"
