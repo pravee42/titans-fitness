@@ -7,6 +7,7 @@ import defaultImg from "./Home/img/logo2.jpg";
 import "react-toastify/dist/ReactToastify.css";
 import logo from "./Home/img/logo-1.png";
 import com from "./Home/img/cd.jpg";
+import "../components/scroll.css";
 const Punchin = () => {
   const [searchId, setSearchId] = useState("");
   const [userDetails, setUserDetails] = useState(null);
@@ -22,6 +23,17 @@ const Punchin = () => {
   const handleSearchChange = (event) => {
     setSearchId(event.target.value);
   };
+  const scrollingTextStyle = {
+    display: 'flex',
+    whiteSpace: 'nowrap',
+    animation: 'scroll 15s linear infinite',
+  };
+  const scrollAnimation = `
+    @keyframes scroll {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+  `;
 
   const handleSearchSubmit = async () => {
     try {
@@ -178,14 +190,17 @@ const Punchin = () => {
       </div>
 
       <div className="relative z-10">
-        <header className="py-10 px-5 flex items-center justify-between bg-custom-green">
+        <header
+          className="py-12 px-8 flex items-center justify-between"
+          style={{ backgroundColor: "#03C03C" }}
+        >
           <div className="flex items-center justify-start flex-1">
             <span className="text-white text-2xl font-semibold">
               Customer Time Punch IN/OUT
             </span>
           </div>
           <div className="flex justify-center flex-1">
-            <img src={logo} alt="Logo" className="w-64 h-10" />
+            <img src={logo} alt="Logo" className="w-97 h-24" />
           </div>
           <div className="flex-1"></div>
         </header>
@@ -385,12 +400,19 @@ const Punchin = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center mb-2">
-                    <p className="font-bold mr-2">NextDue:</p>
-                    <p className="text-red-900 font-bold animate-pulse text-lg">
-                      {paymentDetails.payment[0].EFFECTIVE_DATE.slice(0, 10)}
-                    </p>
-                  </div>
+                  <style>{scrollAnimation}</style>
+                  <div className="overflow-auto max-h-40 mb-4 relative">
+            {/* Scrollable container */}
+            <div className="whitespace-nowrap" style={scrollingTextStyle}>
+              <p className="text-red-900 font-bold text-lg mr-6">
+                END DATE: {paymentDetails.payment[0].END_DATE.slice(0, 10)}
+              </p>
+              <p className="text-red-900 font-bold text-lg">
+                NEXT DUE DATE: {paymentDetails.payment[0].EFFECTIVE_DATE.slice(0, 10)}
+              </p>
+            </div>
+          </div>
+
                   <div
                     className={`px-10 py-2 rounded ${
                       paymentDetails.payment[0].PAYMENT_BALANCE === 0 &&
