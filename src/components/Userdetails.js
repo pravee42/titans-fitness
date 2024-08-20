@@ -646,7 +646,7 @@ const UserProfile = () => {
                   </div>
                   <div>
                     <label className="block font-semibold mb-2">
-                      NextDue Date:
+                      Effective Date:
                     </label>
                     <input
                       type="date"

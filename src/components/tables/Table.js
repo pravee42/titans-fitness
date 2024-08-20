@@ -54,7 +54,22 @@ const Tablegym = () => {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
           },
         });
-        setTableData(response.data.users);
+        
+        const data = response.data.users;
+
+        // Create a map to store the latest entry for each ID
+        const uniqueDataMap = new Map();
+
+        data.forEach((entry) => {
+          if (!uniqueDataMap.has(entry.ID) || new Date(entry.updatedAt) > new Date(uniqueDataMap.get(entry.ID).updatedAt)) {
+            uniqueDataMap.set(entry.ID, entry);
+          }
+        });
+
+        // Convert the map back to an array
+        const uniqueData = Array.from(uniqueDataMap.values());
+
+        setTableData(uniqueData);
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
