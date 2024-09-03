@@ -55,7 +55,6 @@ const UserProfile = () => {
   const userId = sessionStorage.getItem("CUSTOMER_PROFILE_ID");
   const token = sessionStorage.getItem("token");
 
- 
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
@@ -77,9 +76,11 @@ const UserProfile = () => {
           setNextDue(userData.NEXTDUE);
           setIsActivated(userData.ACTIVE);
           setRecentPayments(userData.recentPayments || []);
-          setImagePath(userData.IMAGE_PATH 
-            ? `https://gym-backend-apis.onrender.com/${userData.IMAGE_PATH}` 
-            : defaultImg);
+          setImagePath(
+            userData.IMAGE_PATH
+              ? `https://gym-backend-apis.onrender.com/${userData.IMAGE_PATH}`
+              : defaultImg
+          );
         } else {
           setError("User data not found");
         }
@@ -195,7 +196,7 @@ const UserProfile = () => {
   const handleSaveEdit = async () => {
     try {
       const token = sessionStorage.getItem("token");
-  
+
       const formData = new FormData();
       formData.append("name", editedInfo.name);
       formData.append("mobile", editedInfo.mobile);
@@ -203,14 +204,14 @@ const UserProfile = () => {
       formData.append("dob", reverseDateFormat(editedInfo.dob));
       formData.append("address", editedInfo.address);
       formData.append("referencenum", editedInfo.referenceNumber);
-  
+
       // Check if the image is an object (file) and not a URL or string
       if (editedInfo.image && typeof editedInfo.image === "object") {
         formData.append("image", editedInfo.image);
       } else {
         formData.append("image", ""); // Ensure an empty string is sent if no image
       }
-  
+
       const requestOptions = {
         method: "PATCH",
         headers: {
@@ -220,16 +221,15 @@ const UserProfile = () => {
         },
         body: formData,
       };
-  
+
       const response = await fetch(
         `https://gym-backend-apis.onrender.com/admin/user/edit/${id}`,
         requestOptions
       );
-  
-  
+
       if (response.ok) {
         const responseData = await response.json(); // Parse the JSON response body
-  
+
         toast.success("User details updated successfully!", {
           position: "top-right",
           autoClose: 3000,
@@ -239,10 +239,10 @@ const UserProfile = () => {
           draggable: true,
           progress: undefined,
         });
-  
-        window.location.reload(); 
+
+        window.location.reload();
       } else {
-        const errorText = await response.text(); 
+        const errorText = await response.text();
         console.error("Error updating user details:", errorText);
         setError("Error updating user details");
         toast.error("Error updating user details. Please try again!", {
@@ -269,7 +269,7 @@ const UserProfile = () => {
       });
     }
   };
-  
+
   const updateUserDetails = async (formData) => {
     try {
       const token = sessionStorage.getItem("token");
@@ -282,8 +282,7 @@ const UserProfile = () => {
           },
         }
       );
-  
-  
+
       setIsEditing(false);
       setUser(response.data.user);
       toast.success("User details updated successfully!", {
@@ -354,11 +353,36 @@ const UserProfile = () => {
     setPaymentToEdit(null);
   };
 
-  const handleDownload = () => {
-    const ws = XLSX.utils.json_to_sheet(recentPayments);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Payments");
-    XLSX.writeFile(wb, "payments.xlsx");
+  const handleDownload = async () => {
+    try {
+      // Fetch the payment history for the specific user
+      const response = await Axios.get(
+        `https://gym-backend-apis.onrender.com/admin/payment/${user.ID}`,
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      // Log the full response and the extracted payment history
+      console.log("Full Response:", response);
+      console.log("Response Data:", response.data);
+      console.log("Extracted Payment History:", response.data.payment);
+
+      // Extract the payment array
+      const paymentHistory = response.data.payment;
+
+      // Convert the payment history to Excel sheet
+      const ws = XLSX.utils.json_to_sheet(paymentHistory);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Payments");
+
+      // Generate and download the Excel file
+      XLSX.writeFile(wb, "payments.xlsx");
+    } catch (error) {
+      console.error("Error fetching payment history:", error);
+    }
   };
 
   const handleSignOut = () => {
@@ -677,12 +701,16 @@ const UserProfile = () => {
                   </div>
                   <div>
                     <label className="block font-semibold mb-2">Type:</label>
-                    <input
-                      type="text"
+                    <select
                       value={type}
                       onChange={(e) => setType(e.target.value)}
                       className="w-full p-2 border rounded"
-                    />
+                    >
+                      <option value="">Select payment type</option>
+                      <option value="upi">UPI</option>
+                      <option value="cards">Cards</option>
+                      <option value="cash">Cash</option>
+                    </select>
                   </div>
                 </div>
                 <button

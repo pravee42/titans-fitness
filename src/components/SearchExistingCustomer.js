@@ -112,9 +112,9 @@ const SearchExistingCustomer = () => {
             <h6 className="bg-transparent block font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-inherit">
               admin
             </h6>
-            <p className="bg-transparent block font-sans text-sm antialiased font-normal leading-normal text-gray-700">
+            {/* <p className="bg-transparent block font-sans text-sm antialiased font-normal leading-normal text-gray-700">
               admin
-            </p>
+            </p> */}
           </div>
         </div>
         <div className="fixed bottom-0 left-0 mb-3 pr-4">

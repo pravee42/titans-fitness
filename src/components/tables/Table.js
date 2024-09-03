@@ -56,8 +56,6 @@ const Tablegym = () => {
         });
         
         const data = response.data.users;
-
-        // Create a map to store the latest entry for each ID
         const uniqueDataMap = new Map();
 
         data.forEach((entry) => {
@@ -65,8 +63,6 @@ const Tablegym = () => {
             uniqueDataMap.set(entry.ID, entry);
           }
         });
-
-        // Convert the map back to an array
         const uniqueData = Array.from(uniqueDataMap.values());
 
         setTableData(uniqueData);
@@ -165,9 +161,15 @@ const Tablegym = () => {
               .filter((rowData) =>
                 rowData.PHONE && rowData.PHONE.includes(filterPhone)
               )
-              .filter((rowData) =>
-                rowData.DOB && rowData.DOB.includes(filterDOB)
-              )
+              .filter((rowData) => {
+                // Check if the DOB exists and convert it to 'DD/MM/YYYY' format
+                if (rowData.DOB) {
+                  const formattedDOB = new Date(rowData.DOB).toLocaleDateString("en-GB");
+                  return formattedDOB.includes(filterDOB);
+                }
+                return false;
+              })
+              
               .map((rowData, index) => (
                 <tr
                   key={index}

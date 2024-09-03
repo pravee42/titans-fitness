@@ -17,6 +17,8 @@ import Tablegym from './components/tables/Table';
 import UserDetails from './components/Userdetails';
 import Punchin from './components/punchin';
 import paymenthistry from './components/payment/PaymentGet';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 library.add(fas);
 

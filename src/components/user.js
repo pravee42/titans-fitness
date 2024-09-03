@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPhone,
   faEnvelope,
+  faTimesCircle,
   faCalendarAlt,
   faCheckCircle,
   faMapMarkerAlt,
@@ -89,40 +90,43 @@ const UserInformation = () => {
     setPreviewData({ ...previewData, email: newEmail });
   };
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setImageFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-        setImageUploaded(true);
-        setPreviewData({ ...previewData, imageUrl: reader.result });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  // const handleFileChange = (event) => {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     setImageFile(file);
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setImagePreview(reader.result);
+  //       setImageUploaded(true);
+  //       setPreviewData({ ...previewData, imageUrl: reader.result });
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
- 
-
+  
+    // Validate required fields
+    if (!name || !email || !mobile || !dob || !address) {
+      toast.error("Please fill out all required fields.");
+      return;
+    }
+  
     notify();
-
+  
     try {
       const formData = new FormData();
       formData.append("name", name);
       formData.append("mobile", mobile);
       formData.append("email", email);
-      formData.append("password", password);
       formData.append("diet", selectedDietPlan);
       formData.append("dob", dob);
       formData.append("address", address);
       if (imageFile) {
         formData.append("image", imageFile);
       }
-
+  
       const token = sessionStorage.getItem("token");
       const response = await fetch(
         "https://gym-backend-apis.onrender.com/admin/user/create",
@@ -134,8 +138,10 @@ const UserInformation = () => {
           body: formData,
         }
       );
-
+  
       if (response.ok) {
+        window.location.reload();
+        // Handle successful submission
       } else {
         console.error("Error submitting form data:", response.statusText);
       }
@@ -143,10 +149,26 @@ const UserInformation = () => {
       console.error("Error submitting form data:", error);
     }
   };
+  
 
   const handleSignOut = () => {
     sessionStorage.removeItem("token");
     window.location.href = "/";
+  };
+  const handleRemoveImage = () => {
+    setImagePreview(null);
+    setImageUploaded(false);
+  };
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+        setImageUploaded(true);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -185,43 +207,49 @@ const UserInformation = () => {
             </div>
           </div>
           <div className="gap-5 flex flex-col overflow-auto">
-            <div className="flex items-center justify-center w-32 h-32 mb-5 relative">
-              {imagePreview ? (
-                <img
-                  src={imagePreview}
-                  alt="Preview"
-                  className="w-full h-full rounded-lg object-cover"
-                />
-              ) : (
-                <label
-                  htmlFor="dropzone-file"
-                  className="flex flex-col items-center justify-center w-full h-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 dark:hover:border-gray-500"
-                >
-                  <div className="flex flex-col items-center justify-center">
-                    <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                      <span className="font-semibold">+</span>
-                    </p>
-                    <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                      <span className="font-semibold text-green-600">
-                        Add Image
-                      </span>
-                    </p>
-                  </div>
-                  <input
-                    id="dropzone-file"
-                    type="file"
-                    className="hidden"
-                    onChange={handleFileChange}
-                  />
-                </label>
-              )}
-              {imageUploaded && (
-                <FontAwesomeIcon
-                  icon={faCheckCircle}
-                  className="absolute top-0 right-0 text-green-500"
-                />
-              )}
-            </div>
+          <div className="flex items-center justify-center w-32 h-32 mb-5 relative">
+      {imagePreview ? (
+        <div className="w-full h-full relative">
+          <img
+            src={imagePreview}
+            alt="Preview"
+            className="w-full h-full rounded-lg object-cover"
+          />
+          <button
+            onClick={handleRemoveImage}
+            className="absolute top-0 right-0 bg-red-500 rounded-full text-white p-1"
+          >
+            <FontAwesomeIcon icon={faTimesCircle} />
+          </button>
+        </div>
+      ) : (
+        <label
+          htmlFor="dropzone-file"
+          className="flex flex-col items-center justify-center w-full h-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 dark:hover:border-gray-500"
+        >
+          <div className="flex flex-col items-center justify-center">
+            <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+              <span className="font-semibold">+</span>
+            </p>
+            <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+              <span className="font-semibold text-green-600">Add Image</span>
+            </p>
+          </div>
+          <input
+            id="dropzone-file"
+            type="file"
+            className="hidden"
+            onChange={handleFileChange}
+          />
+        </label>
+      )}
+      {imageUploaded && (
+        <FontAwesomeIcon
+          // icon={faCheckCircle}
+          className="absolute top-0 right-0 text-green-500"
+        />
+      )}
+    </div>
 
             <Input
               size="md"
@@ -237,11 +265,12 @@ const UserInformation = () => {
               size="regular"
               color="lightBlue"
               outline={false}
-              placeholder="+91 00000 00000"
+              placeholder="00000123"
               value={mobile}
               onChange={handleMobileNumberChange}
               className="font-bold"
               label="Mobile Number"
+              maxLength={10}
             />
 
             <Input
@@ -260,7 +289,7 @@ const UserInformation = () => {
               </Typography>
             )}
 
-            <Input
+            {/* <Input
               size="regular"
               color="lightBlue"
               outline={false}
@@ -269,7 +298,7 @@ const UserInformation = () => {
               onChange={handlePasswordChange}
               className="font-bold"
               label="Password"
-            />
+            /> */}
 
             <div className="mb-4">
               <Input
