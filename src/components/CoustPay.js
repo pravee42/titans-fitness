@@ -135,9 +135,9 @@ const CustomerPayment = () => {
           <h6 className=" bg-transparent block font-sans text-base antialiased font-semibold leading-relaxed tracking-normal text-inherit">
             admin
           </h6>
-          <p className=" bg-transparent block font-sans text-sm antialiased font-normal leading-normal text-gray-700">
+          {/* <p className=" bg-transparent block font-sans text-sm antialiased font-normal leading-normal text-gray-700">
             admin
-          </p>
+          </p> */}
         </div>
       </div>
     </>
@@ -178,7 +178,7 @@ const CustomerPayment = () => {
   
         {/* Test icon */}
         <div>
-          <svg
+          {/* <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
@@ -187,7 +187,7 @@ const CustomerPayment = () => {
           >
             <path d="M0 0h24v24H0z" fill="none" />
             <path d="M17.65 11c0-3.89-3.29-7-7.35-7-3.96 0-7.15 3.11-7.15 7s3.19 7 7.15 7c1.35 0 2.58-.39 3.62-1.05l1.17 1.17C14.69 17.61 11.97 19 9.5 19 5.41 19 2 15.59 2 11.5S5.41 4 9.5 4c4.08 0 7.5 3.41 7.5 7.5H17.65zM9.5 6C7.57 6 6 7.57 6 9.5s1.57 3.5 3.5 3.5c1.02 0 1.92-.44 2.55-1.14l1.06 1.06c-.92 1.04-2.26 1.69-3.77 1.69-2.48 0-4.5-2.02-4.5-4.5S7.02 5 9.5 5c1.81 0 3.32 1.08 3.98 2.63l-1.06 1.06c-.61-.97-1.73-1.63-2.92-1.63z" />
-          </svg>
+          </svg> */}
         </div>
       </div>
     </header>

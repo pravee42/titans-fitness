@@ -145,24 +145,7 @@ const Customertable = () => {
   return (
     <Box className="overflow-y-auto w-full h-screen p-4 mb-10 mr-5">
       <Box className="mb-4">
-        <Button
-          onClick={() => handlePeriodClick("morning")}
-          variant="contained"
-          style={{
-            backgroundColor: "#4CAF50",
-            color: "white",
-            marginRight: "10px",
-          }}
-        >
-          Morning
-        </Button>
-        <Button
-          onClick={() => handlePeriodClick("evening")}
-          variant="contained"
-          style={{ backgroundColor: "#4CAF50", color: "white" }}
-        >
-          Evening
-        </Button>
+        
       </Box>
 
       <TextField
@@ -173,6 +156,19 @@ const Customertable = () => {
         className="mb-4"
         fullWidth
       />
+       <Box display="flex" justifyContent="space-between" p={2}>
+          <Button
+            onClick={handlePreviousPage}
+            disabled={page === 0}
+            variant="contained"
+            color="primary"
+          >
+            Previous
+          </Button>
+          <Button onClick={handleNextPage} variant="contained" color="primary">
+            Next
+          </Button>
+        </Box>
 
       <TableContainer component={Paper}>
         <Table>
@@ -230,19 +226,7 @@ const Customertable = () => {
             )}
           </TableBody>
         </Table>
-        <Box display="flex" justifyContent="space-between" p={2}>
-          <Button
-            onClick={handlePreviousPage}
-            disabled={page === 0}
-            variant="contained"
-            color="primary"
-          >
-            Previous
-          </Button>
-          <Button onClick={handleNextPage} variant="contained" color="primary">
-            Next
-          </Button>
-        </Box>
+       
       </TableContainer>
     </Box>
   );

@@ -173,6 +173,19 @@ const Attendancetable = () => {
         className="mb-4"
         fullWidth
       />
+      <Box display="flex" justifyContent="space-between" p={2}>
+          <Button
+            onClick={handlePreviousPage}
+            disabled={page === 0}
+            variant="contained"
+            color="primary"
+          >
+            Previous
+          </Button>
+          <Button onClick={handleNextPage} variant="contained" color="primary">
+            Next
+          </Button>
+        </Box>
 
       <TableContainer component={Paper}>
         <Table>
@@ -230,19 +243,7 @@ const Attendancetable = () => {
             )}
           </TableBody>
         </Table>
-        <Box display="flex" justifyContent="space-between" p={2}>
-          <Button
-            onClick={handlePreviousPage}
-            disabled={page === 0}
-            variant="contained"
-            color="primary"
-          >
-            Previous
-          </Button>
-          <Button onClick={handleNextPage} variant="contained" color="primary">
-            Next
-          </Button>
-        </Box>
+        
       </TableContainer>
     </Box>
   );
