@@ -273,7 +273,7 @@ const Attendancetable = () => {
             Next
           </Button>
         </Box>
-      <TableContainer component={Paper} className="table-container" style={{ maxHeight: "calc(100vh - 200px)", overflowY: "auto" }}>
+      <TableContainer component={Paper} className="table-container" style={{ maxHeight: "calc(100vh - 250px)", overflowY: "auto" }}>
         <Table>
           <TableHead>
             <TableRow>
