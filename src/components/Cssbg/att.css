@@ -1,0 +1,9 @@
+.table-container {
+    max-height: 600px; /* Set max height for scroll */
+    overflow-y: auto; /* Enable vertical scrolling */
+  }
+  
+  .table-row:hover {
+    background-color: rgba(76, 175, 80, 0.3); /* Light green overlay on hover */
+  }
+  

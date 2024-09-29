@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faUserCircle,
-  faPhone,
-  faHourglassStart,
-  faHourglassEnd,
-  faMoneyBill,
-} from "@fortawesome/free-solid-svg-icons";
+import * as XLSX from "xlsx";
+import user from "../fi_user.png";
+import mobile from "../mobile.png";
+import timer from "../timer.png";
+import intime from "../time-quarter-pass.png";
+import out from "../time-quarter.png";
+import vector from "../Vector.png";
 import Axios from "axios";
+import CustomDatePicker from "../custompicker";
 import {
   Table,
   TableBody,
@@ -18,17 +18,16 @@ import {
   TableRow,
   Paper,
   Button,
-  TextField,
   Box,
-  TablePagination,
+  TextField,
 } from "@mui/material";
 import Loading from "../loading";
-
-// Utility function to format time
+import document from "../document.png";
+import "../Cssbg/att.css";
 const formatTime = (isoTime) => {
   if (!isoTime) return "N/A";
   const date = new Date(isoTime);
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 };
 
 const Attendancetable = () => {
@@ -39,20 +38,33 @@ const Attendancetable = () => {
   const [period, setPeriod] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(50);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const navigate = useNavigate();
 
   const TABLE_HEAD = [
-    { field: "ID", label: "Customer ID", icon: faUserCircle },
-    { field: "NAME", label: "Name", icon: faUserCircle },
-    { field: "PHONE", label: "Mobile No", icon: faPhone },
-    { field: "IN_TIME", label: "In Time", icon: faHourglassStart },
-    { field: "OUT_TIME", label: "Out Time", icon: faHourglassEnd },
-    { field: "STATUS", label: "Status", icon: faMoneyBill },
+    { field: "ID", label: "Customer ID", img: <img src={user} alt="User" /> },
+    { field: "NAME", label: "Name", img: <img src={vector} alt="User" /> },
+    {
+      field: "PHONE",
+      label: "Mobile No",
+      img: <img src={mobile} alt="User" />,
+    },
+    {
+      field: "IN_TIME",
+      label: "In Time",
+      img: <img src={intime} alt="User" />,
+    },
+    { field: "OUT_TIME", label: "Out Time", img: <img src={out} alt="User" /> },
+    {
+      field: "Duration",
+      label: "Duration",
+      img: <img src={timer} alt="User" />,
+    },
   ];
 
   useEffect(() => {
     fetchData();
-  }, [page, rowsPerPage]);
+  }, [page, rowsPerPage, selectedDate]);
 
   useEffect(() => {
     applyFilter();
@@ -63,12 +75,10 @@ const Attendancetable = () => {
       setIsLoading(true);
       const token = sessionStorage.getItem("token");
       const headers = { Authorization: `Bearer ${token}` };
-
       const url =
         page === 0
           ? "https://gym-backend-apis.onrender.com/admin/attendance"
           : `https://gym-backend-apis.onrender.com/admin/attendance?page=${page}`;
-
       const response = await Axios.get(url, { headers });
       setTableData(response.data.customer);
       setIsLoading(false);
@@ -78,19 +88,27 @@ const Attendancetable = () => {
     }
   };
 
+  const handleDownloadExcel = (tableData) => {
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(tableData);
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    XLSX.writeFile(wb, "table_data.xlsx");
+  };
+
   const applyFilter = () => {
-    let filteredResults = tableData.filter((rowData) =>
-      rowData.NAME.toLowerCase().includes(filter.toLowerCase()) ||
-      rowData.ID.toString().includes(filter)
+    let filteredResults = tableData.filter(
+      (rowData) =>
+        rowData.NAME.toLowerCase().includes(filter.toLowerCase()) ||
+        rowData.ID.toString().includes(filter)
     );
 
     if (period === "morning") {
-      filteredResults = filteredResults.filter(rowData => {
+      filteredResults = filteredResults.filter((rowData) => {
         const inTime = new Date(rowData.IN_TIME).getHours();
         return inTime >= 0 && inTime < 12; // Morning session
       });
     } else if (period === "evening") {
-      filteredResults = filteredResults.filter(rowData => {
+      filteredResults = filteredResults.filter((rowData) => {
         const inTime = new Date(rowData.IN_TIME).getHours();
         return inTime >= 12; // Evening session
       });
@@ -123,7 +141,6 @@ const Attendancetable = () => {
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-
   const handlePreviousPage = () => {
     setPage((prevPage) => Math.max(prevPage - 1, 0));
   };
@@ -142,68 +159,146 @@ const Attendancetable = () => {
     setPage(0);
   };
 
+  const calculateDuration = (inTime, outTime) => {
+    if (!inTime || !outTime) return "N/A";
+
+    const inDate = new Date(inTime);
+    const outDate = new Date(outTime);
+
+    const duration = Math.abs(outDate - inDate);
+
+    const minutes = Math.floor((duration / 1000 / 60) % 60);
+    const hours = Math.floor(duration / (1000 * 60 * 60));
+
+    const hoursPart = hours > 0 ? `${hours}hr` : "";
+    const minutesPart = minutes > 0 ? `${minutes}mins` : "";
+
+    return `${hoursPart} ${minutesPart}`.trim() || "N/A";
+  };
+
   return (
-    <Box className="overflow-y-auto w-full h-screen p-4 mb-10 mr-5">
-      <Box className="mb-4">
-        <Button
-          onClick={() => handlePeriodClick("morning")}
-          variant="contained"
+    <Box className="overflow-hidden w-full h-screen p-4 mb-10 mr-5 mt-0">
+      <Box className="mb-4 flex justify-between items-center">
+      <CustomDatePicker 
+          
+        />
+        <Box className="flex gap-2">
+          <Button
+            onClick={() => handlePeriodClick("morning")}
+            variant="contained"
+            style={{
+              backgroundColor: "white",
+              borderRadius: "100px",
+              boxShadow:
+                "rgba(44, 187, 99, .2) 0 -25px 18px -14px inset, rgba(44, 187, 99, .15) 0 1px 2px, rgba(44, 187, 99, .15) 0 2px 4px, rgba(44, 187, 99, .15) 0 4px 8px, rgba(44, 187, 99, .15) 0 8px 16px, rgba(44, 187, 99, .15) 0 16px 32px",
+              color: "green",
+              cursor: "pointer",
+              padding: "7px 20px",
+            }}
+          >
+            Morning
+          </Button>
+          <Button
+            onClick={() => handlePeriodClick("evening")}
+            variant="contained"
+            style={{
+              backgroundColor: "white",
+              borderRadius: "100px",
+              boxShadow:
+                "rgba(44, 187, 99, .2) 0 -25px 18px -14px inset, rgba(44, 187, 99, .15) 0 1px 2px, rgba(44, 187, 99, .15) 0 2px 4px, rgba(44, 187, 99, .15) 0 4px 8px, rgba(44, 187, 99, .15) 0 8px 16px, rgba(44, 187, 99, .15) 0 16px 32px",
+              color: "green",
+              cursor: "pointer",
+              padding: "7px 20px",
+            }}
+          >
+            Evening
+          </Button>
+        </Box>
+      </Box>
+      <div className="flex justify-between items-center mb-4">
+        <p className="text-70AB0E-800">Active log</p>
+        <button
+          onClick={() => handleDownloadExcel(tableData)}
           style={{
-            backgroundColor: "#4CAF50",
-            color: "white",
-            marginRight: "10px",
+            backgroundColor: "white",
+            borderRadius: "100px",
+            boxShadow:
+              "rgba(44, 187, 99, .2) 0 -25px 18px -14px inset, rgba(44, 187, 99, .15) 0 1px 2px, rgba(44, 187, 99, .15) 0 2px 4px, rgba(44, 187, 99, .15) 0 4px 8px, rgba(44, 187, 99, .15) 0 8px 16px, rgba(44, 187, 99, .15) 0 16px 32px",
+            color: "green",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            padding: "7px 20px",
+            fontSize: "16px",
           }}
         >
-          Morning
-        </Button>
-        <Button
-          onClick={() => handlePeriodClick("evening")}
-          variant="contained"
-          style={{ backgroundColor: "#4CAF50", color: "white" }}
-        >
-          Evening
-        </Button>
-      </Box>
-
-      <TextField
-        value={filter}
-        onChange={handleFilterChange}
-        placeholder="Filter by name or ID..."
-        variant="outlined"
-        className="mb-4"
-        fullWidth
-      />
+          <img srcSet={document} className="mr-1 w-5 h-5" alt="Excel Icon" />
+          <span>Excel</span>
+        </button>
+      </div>
       <Box display="flex" justifyContent="space-between" p={2}>
           <Button
             onClick={handlePreviousPage}
             disabled={page === 0}
             variant="contained"
             color="primary"
+            style={{
+              backgroundColor: "white",
+              borderRadius: "100px",
+              boxShadow:
+                "rgba(44, 187, 99, .2) 0 -25px 18px -14px inset, rgba(44, 187, 99, .15) 0 1px 2px, rgba(44, 187, 99, .15) 0 2px 4px, rgba(44, 187, 99, .15) 0 4px 8px, rgba(44, 187, 99, .15) 0 8px 16px, rgba(44, 187, 99, .15) 0 16px 32px",
+              color: "green",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              padding: "7px 20px",
+              fontSize: "16px",
+            }}
           >
             Previous
           </Button>
-          <Button onClick={handleNextPage} variant="contained" color="primary">
+          <Button onClick={handleNextPage} variant="contained" color="primary"
+          style={{
+            backgroundColor: "white",
+            borderRadius: "100px",
+            boxShadow:
+              "rgba(44, 187, 99, .2) 0 -25px 18px -14px inset, rgba(44, 187, 99, .15) 0 1px 2px, rgba(44, 187, 99, .15) 0 2px 4px, rgba(44, 187, 99, .15) 0 4px 8px, rgba(44, 187, 99, .15) 0 8px 16px, rgba(44, 187, 99, .15) 0 16px 32px",
+            color: "green",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            padding: "7px 20px",
+            fontSize: "16px",
+          }}>
             Next
           </Button>
         </Box>
-
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} className="table-container" style={{ maxHeight: "calc(100vh - 200px)", overflowY: "auto" }}>
         <Table>
           <TableHead>
             <TableRow>
-              {TABLE_HEAD.map(({ field, label, icon }) => (
-                <TableCell key={field} align="center">
+              {TABLE_HEAD.map(({ field, label, img }) => (
+                <TableCell
+                  key={field}
+                  align="center"
+                  sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}
+                >
                   <Box
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
                   >
-                    <FontAwesomeIcon icon={icon} className="mr-1" />
+                    <img src={img.props.src} className="mr-1" alt={label} />
                     {label}
                   </Box>
                 </TableCell>
               ))}
-              <TableCell align="center">Actions</TableCell>
+              <TableCell
+                align="center"
+                sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}
+              >
+                Actions
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -221,19 +316,50 @@ const Attendancetable = () => {
               </TableRow>
             ) : (
               filteredData.map((rowData) => (
-                <TableRow key={rowData.ID}>
+                <TableRow key={rowData.ID} className="table-row">
                   {TABLE_HEAD.map(({ field }) => (
-                    <TableCell key={field} align="center">
-                      {field === "IN_TIME" || field === "OUT_TIME"
-                        ? formatTime(rowData[field])
-                        : rowData[field] || "N/A"}
+                    <TableCell
+                      key={field}
+                      align="center"
+                      sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}
+                    >
+                      {field === "IN_TIME" || field === "OUT_TIME" ? (
+                        formatTime(rowData[field])
+                      ) : field === "Duration" ? (
+                        <Box
+                          sx={{
+                            backgroundColor: "#FFF0BB",
+                            padding: "5px 10px",
+                            borderRadius: "4px",
+                            textAlign: "center",
+                          }}
+                        >
+                          {calculateDuration(rowData.IN_TIME, rowData.OUT_TIME)}
+                        </Box>
+                      ) : (
+                        rowData[field] || "N/A"
+                      )}
                     </TableCell>
                   ))}
-                  <TableCell align="center">
+                  <TableCell
+                    align="center"
+                    sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}
+                  >
                     <Button
                       variant="contained"
-                      style={{ backgroundColor: "#4CAF50", color: "white" }}
                       onClick={() => handleOpenClick(rowData.ID)}
+                      style={{
+                        backgroundColor: "white",
+                        borderRadius: "100px",
+                        boxShadow:
+                          "rgba(44, 187, 99, .2) 0 -25px 18px -14px inset, rgba(44, 187, 99, .15) 0 1px 2px, rgba(44, 187, 99, .15) 0 2px 4px, rgba(44, 187, 99, .15) 0 4px 8px, rgba(44, 187, 99, .15) 0 8px 16px, rgba(44, 187, 99, .15) 0 16px 32px",
+                        color: "green",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        padding: "7px 20px",
+                        fontSize: "16px",
+                      }}
                     >
                       Open
                     </Button>
@@ -243,7 +369,6 @@ const Attendancetable = () => {
             )}
           </TableBody>
         </Table>
-        
       </TableContainer>
     </Box>
   );

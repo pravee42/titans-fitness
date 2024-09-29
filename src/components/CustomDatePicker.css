@@ -1,0 +1,46 @@
+.datepicker-container {
+    position: relative;
+    width: 250px; 
+  }
+  
+  .datepicker-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+  
+  .datepicker-input-wrapper {
+    position: relative;
+  }
+  
+  .datepicker-input {
+    width: 100%;
+    padding: 10px 40px 10px 10px; 
+    border: 1px solid green; 
+    border-radius: 4px; 
+    font-size: 16px; 
+    outline: none;
+  }
+  
+  .datepicker-input::placeholder {
+    color: #888; 
+  }
+  
+  .datepicker-input:focus {
+    border-color: #007bff; 
+  }
+  
+  .calendar-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: black; 
+    z-index: 10; 
+  }
+  
+  .datepicker-input.selected {
+    background-color: #f0f8ff; 
+  }
+  
