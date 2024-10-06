@@ -11,6 +11,7 @@ const CustSearch = () => {
   const [unpaidCount, setUnpaidCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [searchPerformed, setSearchPerformed] = useState(false); // New state
   const navigate = useNavigate();
 
   const fetchPaymentCount = async () => {
@@ -44,6 +45,7 @@ const CustSearch = () => {
   };
 
   const fetchPaymentDetails = async () => {
+    setSearchPerformed(true); // Mark that a search was performed
     try {
       const token = sessionStorage.getItem("token");
       const headers = { Authorization: `Bearer ${token}` };
@@ -75,7 +77,6 @@ const CustSearch = () => {
     fetchPaymentCount();
   }, []);
 
-  // Function to filter unique payment history entries
   const getUniquePayments = (payments) => {
     const uniquePayments = {};
     payments.forEach(payment => {
@@ -171,39 +172,43 @@ const CustSearch = () => {
             </div>
           </div>
 
-          <button
-            style={{
-              backgroundColor: "white",
-              borderRadius: "100px",
-              boxShadow: "rgba(44, 187, 99, .2) 0 -25px 18px -14px inset, rgba(44, 187, 99, .15) 0 1px 2px, rgba(44, 187, 99, .15) 0 2px 4px, rgba(44, 187, 99, .15) 0 4px 8px, rgba(44, 187, 99, .15) 0 8px 16px, rgba(44, 187, 99, .15) 0 16px 32px",
-              color: "green",
-              cursor: "pointer",
-              padding: "7px 20px",
-              transition: "background-color 0.3s",
-            }}
-            onClick={() => handleOpenClick(paymentData.USER.ID)}
-          >
-            Open
-          </button>
+          {searchPerformed && ( // Conditional rendering of the Open button
+            <button
+              style={{
+                backgroundColor: "white",
+                borderRadius: "100px",
+                boxShadow: "rgba(44, 187, 99, .2) 0 -25px 18px -14px inset, rgba(44, 187, 99, .15) 0 1px 2px, rgba(44, 187, 99, .15) 0 2px 4px, rgba(44, 187, 99, .15) 0 4px 8px, rgba(44, 187, 99, .15) 0 8px 16px, rgba(44, 187, 99, .15) 0 16px 32px",
+                color: "green",
+                cursor: "pointer",
+                padding: "7px 20px",
+                transition: "background-color 0.3s",
+              }}
+              onClick={() => handleOpenClick(paymentData.USER.ID)}
+            >
+              Open
+            </button>
+          )}
         </div>
       ) : (
-        <div>
-          <p>No payment information available.</p>
-          <button
-            style={{
-              backgroundColor: "white",
-              borderRadius: "100px",
-              boxShadow: "rgba(44, 187, 99, .2) 0 -25px 18px -14px inset, rgba(44, 187, 99, .15) 0 1px 2px, rgba(44, 187, 99, .15) 0 2px 4px, rgba(44, 187, 99, .15) 0 4px 8px, rgba(44, 187, 99, .15) 0 8px 16px, rgba(44, 187, 99, .15) 0 16px 32px",
-              color: "green",
-              cursor: "pointer",
-              padding: "7px 20px",
-              transition: "background-color 0.3s",
-            }}
-            onClick={() => handleOpenClick(userId)} // Using userId for navigation
-          >
-            Open
-          </button>
-        </div>
+        searchPerformed && ( // Check if search was performed to show this message
+          <div>
+            <p>No payment information available.</p>
+            <button
+              style={{
+                backgroundColor: "white",
+                borderRadius: "100px",
+                boxShadow: "rgba(44, 187, 99, .2) 0 -25px 18px -14px inset, rgba(44, 187, 99, .15) 0 1px 2px, rgba(44, 187, 99, .15) 0 2px 4px, rgba(44, 187, 99, .15) 0 4px 8px, rgba(44, 187, 99, .15) 0 8px 16px, rgba(44, 187, 99, .15) 0 16px 32px",
+                color: "green",
+                cursor: "pointer",
+                padding: "7px 20px",
+                transition: "background-color 0.3s",
+              }}
+              onClick={() => handleOpenClick(userId)} // Using userId for navigation
+            >
+              Open
+            </button>
+          </div>
+        )
       )}
     </div>
   );
