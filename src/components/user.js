@@ -129,7 +129,7 @@ const UserInformation = () => {
   
       const token = sessionStorage.getItem("token");
       const response = await fetch(
-        "https://gym-backend-apis.onrender.com/admin/user/create",
+        "https://titan-api-v2uu.onrender.com/admin/user/create",
         {
           method: "POST",
           headers: {

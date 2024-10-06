@@ -60,7 +60,7 @@ const UserProfile = () => {
       try {
         const token = sessionStorage.getItem("token");
         const response = await Axios.get(
-          `https://gym-backend-apis.onrender.com/admin/user/${id}`,
+          `https://titan-api-v2uu.onrender.com/admin/user/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -78,7 +78,7 @@ const UserProfile = () => {
           setRecentPayments(userData.recentPayments || []);
           setImagePath(
             userData.IMAGE_PATH
-              ? `https://gym-backend-apis.onrender.com/${userData.IMAGE_PATH}`
+              ? `https://titan-api-v2uu.onrender.com/${userData.IMAGE_PATH}`
               : defaultImg
           );
         } else {
@@ -98,7 +98,7 @@ const UserProfile = () => {
     try {
       const token = sessionStorage.getItem("token");
       const response = await Axios.post(
-        "https://gym-backend-apis.onrender.com/admin/user/active",
+        "https://titan-api-v2uu.onrender.com/admin/user/active",
         {
           userID: user._id,
         },
@@ -133,7 +133,7 @@ const UserProfile = () => {
     try {
       const token = sessionStorage.getItem("token");
       const response = await Axios.post(
-        "https://gym-backend-apis.onrender.com/admin/user/non-active",
+        "https://titan-api-v2uu.onrender.com/admin/user/non-active",
         {
           userID: user._id,
         },
@@ -223,7 +223,7 @@ const UserProfile = () => {
       };
 
       const response = await fetch(
-        `https://gym-backend-apis.onrender.com/admin/user/edit/${id}`,
+        `https://titan-api-v2uu.onrender.com/admin/user/edit/${id}`,
         requestOptions
       );
 
@@ -274,7 +274,7 @@ const UserProfile = () => {
     try {
       const token = sessionStorage.getItem("token");
       const response = await Axios.patch(
-        `https://gym-backend-apis.onrender.com/admin/user/edit/${id}`,
+        `https://titan-api-v2uu.onrender.com/admin/user/edit/${id}`,
         formData,
         {
           headers: {
@@ -312,7 +312,7 @@ const UserProfile = () => {
     try {
       const token = sessionStorage.getItem("token");
       const response = await Axios.post(
-        "https://gym-backend-apis.onrender.com/admin/payment/add",
+        "https://titan-api-v2uu.onrender.com/admin/payment/add",
         {
           id: user.ID,
           type,
@@ -357,7 +357,7 @@ const UserProfile = () => {
     try {
       // Fetch the payment history for the specific user
       const response = await Axios.get(
-        `https://gym-backend-apis.onrender.com/admin/payment/${user.ID}`,
+        `https://titan-api-v2uu.onrender.com/admin/payment/${user.ID}`,
         {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,

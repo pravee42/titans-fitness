@@ -17,7 +17,7 @@ const Punchinform = () => {
       searchId: searchId,
     });
   
-    const url = `https://gym-backend-apis.onrender.com/admin/user/searching?${searchParams.toString()}`;
+    const url = `https://titan-api-v2uu.onrender.com/admin/user/searching?${searchParams.toString()}`;
   
     try {
       const token = sessionStorage.getItem('token');

@@ -25,7 +25,7 @@ const PaymentHistory = ({ userId }) => {
         Authorization: `Bearer ${token}`,
       };
       const paymentDetailsResponse = await axios.get(
-        `https://gym-backend-apis.onrender.com/admin/payment/${userId}`,
+        `https://titan-api-v2uu.onrender.com/admin/payment/${userId}`,
         { headers }
       );
       setPaymentDetails(paymentDetailsResponse.data);
@@ -54,7 +54,7 @@ const PaymentHistory = ({ userId }) => {
     try {
       const token = sessionStorage.getItem("token");
       const response = await axios.delete(
-        `https://gym-backend-apis.onrender.com/admin/payment/${paymentId}`,
+        `https://titan-api-v2uu.onrender.com/admin/payment/${paymentId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -109,7 +109,7 @@ const PaymentHistory = ({ userId }) => {
       const requestData = { id, amount, end: formattedEnd, balance };
 
       const response = await axios.patch(
-        `https://gym-backend-apis.onrender.com/admin/payment/edit`,
+        `https://titan-api-v2uu.onrender.com/admin/payment/edit`,
         {
           id, 
           amount, 
@@ -183,7 +183,7 @@ const PaymentHistory = ({ userId }) => {
       const formattedEnd = new Date(end).toISOString().split("T")[0];
 
       const response = await axios.post(
-        `https://gym-backend-apis.onrender.com/admin/payment`,
+        `https://titan-api-v2uu.onrender.com/admin/payment`,
         { userId, amount, effective: formattedEffective, end: formattedEnd, balance, type },
         {
           headers: {

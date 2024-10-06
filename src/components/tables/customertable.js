@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faUserCircle,
-  faPhone,
-  faHourglassStart,
-  faHourglassEnd,
-  faMoneyBill,
-} from "@fortawesome/free-solid-svg-icons";
+import * as XLSX from "xlsx";
+import user from "../fi_user.png";
+import mobile from "../mobile.png";
+import timer from "../fi_calendar.png";
+import intime from "../fi_calendar.png";
+import out from "../fi_calendar.png";
+import vector from "../Vector.png";
 import Axios from "axios";
+import CustomDatePicker from "../custompicker";
 import {
   Table,
   TableBody,
@@ -18,17 +18,17 @@ import {
   TableRow,
   Paper,
   Button,
-  TextField,
   Box,
-  TablePagination,
+  TextField,
 } from "@mui/material";
 import Loading from "../loading";
-
-// Utility function to format time
+import moneys from "../moneys.png";
+import document from "../document.png";
+import "../Cssbg/att.css";
 const formatTime = (isoTime) => {
   if (!isoTime) return "N/A";
   const date = new Date(isoTime);
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 };
 
 const Customertable = () => {
@@ -39,20 +39,47 @@ const Customertable = () => {
   const [period, setPeriod] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(50);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const navigate = useNavigate();
 
   const TABLE_HEAD = [
-    { field: "ID", label: "Customer ID", icon: faUserCircle },
-    { field: "NAME", label: "Name", icon: faUserCircle },
-    { field: "PHONE", label: "Mobile No", icon: faPhone },
-    { field: "IN_TIME", label: "In Time", icon: faHourglassStart },
-    { field: "OUT_TIME", label: "Out Time", icon: faHourglassEnd },
-    { field: "STATUS", label: "Status", icon: faMoneyBill },
+    { field: "ID", label: "Customer ID", img: <img src={user} alt="User" /> },
+    { field: "NAME", label: "Name", img: <img src={vector} alt="User" /> },
+    {
+      field: "PAYMENT_AMOUNT",
+      label: "Payment Amount",
+      img: <img src={moneys} alt="Payment Amount" />,
+    },
+    {
+      field: "PAYMENT_DATE",
+      label: "Payment Date",
+      img: <img src={timer} alt="Payment Date" />,
+    },
+    {
+      field: "PAYMENT_TYPE",
+      label: "Payment type",
+      img: <img src={intime} alt="Payment TYPE" />,
+    },
+    {
+      field: "END_DATE",
+      label: "End Date",
+      img: <img src={out} alt="End Date" />,
+    },
+    {
+      field: "PAYMENT_STATUS",
+      label: "Payment Status",
+      img: <img src={timer} alt="Payment Status" />,
+    },
+    {
+      field: "MOBILE_NUM",
+      label: "Mobile Num",
+      img: <img src={timer} alt="MOBILE NUM" />,
+    },
   ];
 
   useEffect(() => {
     fetchData();
-  }, [page, rowsPerPage]);
+  }, [page, rowsPerPage, selectedDate]);
 
   useEffect(() => {
     applyFilter();
@@ -63,14 +90,22 @@ const Customertable = () => {
       setIsLoading(true);
       const token = sessionStorage.getItem("token");
       const headers = { Authorization: `Bearer ${token}` };
-
-      const url =
-        page === 0
-          ? "https://gym-backend-apis.onrender.com/admin/attendance"
-          : `https://gym-backend-apis.onrender.com/admin/attendance?page=${page}`;
-
+      const baseUrl = `https://titan-api-v2uu.onrender.com/admin/payment`;
+      const url = page === 0 ? baseUrl : `${baseUrl}?page=${page + 0}`;
       const response = await Axios.get(url, { headers });
-      setTableData(response.data.customer);
+      const transformedData = response.data.customer.map((customer) => ({
+        ...customer,
+        PAYMENT_DATE: customer.PAYMENT_DATE
+          ? new Date(customer.PAYMENT_DATE).toISOString().slice(0, 10)
+          : "N/A",
+        END_DATE: customer.END_DATE
+          ? new Date(customer.END_DATE).toISOString().slice(0, 10)
+          : "N/A",
+        // PAYMENT_TYPE: customer.PAYMENT_TYPE,
+        MOBILE_NUM: customer.PHONE,
+      }));
+
+      setTableData(transformedData);
       setIsLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -78,19 +113,38 @@ const Customertable = () => {
     }
   };
 
+  const handlePeriodClick = (selectedPeriod) => {
+    setPeriod(selectedPeriod);
+    setPage(0);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [page, rowsPerPage, selectedDate, period]);
+
+  const handleDownloadExcel = (tableData) => {
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(tableData);
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    XLSX.writeFile(wb, "table_data.xlsx");
+  };
+
   const applyFilter = () => {
-    let filteredResults = tableData.filter((rowData) =>
-      rowData.NAME.toLowerCase().includes(filter.toLowerCase()) ||
-      rowData.ID.toString().includes(filter)
+    if (!tableData || !Array.isArray(tableData)) return;
+
+    let filteredResults = tableData.filter(
+      (rowData) =>
+        rowData.NAME.toLowerCase().includes(filter.toLowerCase()) ||
+        rowData.ID.toString().includes(filter)
     );
 
     if (period === "morning") {
-      filteredResults = filteredResults.filter(rowData => {
+      filteredResults = filteredResults.filter((rowData) => {
         const inTime = new Date(rowData.IN_TIME).getHours();
         return inTime >= 0 && inTime < 12; // Morning session
       });
     } else if (period === "evening") {
-      filteredResults = filteredResults.filter(rowData => {
+      filteredResults = filteredResults.filter((rowData) => {
         const inTime = new Date(rowData.IN_TIME).getHours();
         return inTime >= 12; // Evening session
       });
@@ -102,7 +156,7 @@ const Customertable = () => {
   const handleOpenClick = async (customerId) => {
     try {
       await Axios.get(
-        `https://gym-backend-apis.onrender.com/admin/user/${customerId}`,
+        `https://titan-api-v2uu.onrender.com/admin/user/${customerId}`,
         {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -116,14 +170,9 @@ const Customertable = () => {
     }
   };
 
-  const handlePeriodClick = (selectedPeriod) => {
-    setPeriod(selectedPeriod);
-  };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-
   const handlePreviousPage = () => {
     setPage((prevPage) => Math.max(prevPage - 1, 0));
   };
@@ -141,93 +190,184 @@ const Customertable = () => {
     setFilter(event.target.value);
     setPage(0);
   };
-
   return (
-    <Box className="overflow-y-auto w-full h-screen p-4 mb-10 mr-5">
-      <Box className="mb-4">
-        
+    <Box className="overflow-hidden w-full h-screen p-4 mb-10 mr-5 mt-0 overflowX: 'auto'">
+      <Box className="mb-4 flex justify-between items-center">
+        {/* <CustomDatePicker /> */}
+        <Box className="flex gap-2"></Box>
       </Box>
-
-      <TextField
-        value={filter}
-        onChange={handleFilterChange}
-        placeholder="Filter by name or ID..."
-        variant="outlined"
-        className="mb-4"
-        fullWidth
-      />
-       <Box display="flex" justifyContent="space-between" p={2}>
-          <Button
-            onClick={handlePreviousPage}
-            disabled={page === 0}
-            variant="contained"
-            color="primary"
-          >
-            Previous
-          </Button>
-          <Button onClick={handleNextPage} variant="contained" color="primary">
-            Next
-          </Button>
-        </Box>
-
-      <TableContainer component={Paper}>
-        <Table>
+      <div className="flex justify-between items-center mb-4">
+        <p className="text-70AB0E-800">Active log</p>
+        <button
+          onClick={() => handleDownloadExcel(tableData)}
+          style={{
+            backgroundColor: "white",
+            borderRadius: "100px",
+            boxShadow:
+              "rgba(44, 187, 99, .2) 0 -25px 18px -14px inset, rgba(44, 187, 99, .15) 0 1px 2px, rgba(44, 187, 99, .15) 0 2px 4px, rgba(44, 187, 99, .15) 0 4px 8px, rgba(44, 187, 99, .15) 0 8px 16px, rgba(44, 187, 99, .15) 0 16px 32px",
+            color: "green",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            padding: "7px 20px",
+            fontSize: "16px",
+          }}
+        >
+          <img srcSet={document} className="mr-1 w-5 h-5" alt="Excel Icon" />
+          <span>Excel</span>
+        </button>
+      </div>
+      <Box display="flex" justifyContent="space-between" p={2}>
+        <Button
+          onClick={handlePreviousPage}
+          disabled={page === 0}
+          variant="contained"
+          color="primary"
+          style={{
+            backgroundColor: "white",
+            borderRadius: "100px",
+            boxShadow:
+              "rgba(44, 187, 99, .2) 0 -25px 18px -14px inset, rgba(44, 187, 99, .15) 0 1px 2px, rgba(44, 187, 99, .15) 0 2px 4px, rgba(44, 187, 99, .15) 0 4px 8px, rgba(44, 187, 99, .15) 0 8px 16px, rgba(44, 187, 99, .15) 0 16px 32px",
+            color: "green",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            padding: "7px 20px",
+            fontSize: "16px",
+          }}
+        >
+          Previous
+        </Button>
+        <Button
+          onClick={handleNextPage}
+          variant="contained"
+          color="primary"
+          style={{
+            backgroundColor: "white",
+            borderRadius: "100px",
+            boxShadow:
+              "rgba(44, 187, 99, .2) 0 -25px 18px -14px inset, rgba(44, 187, 99, .15) 0 1px 2px, rgba(44, 187, 99, .15) 0 2px 4px, rgba(44, 187, 99, .15) 0 4px 8px, rgba(44, 187, 99, .15) 0 8px 16px, rgba(44, 187, 99, .15) 0 16px 32px",
+            color: "green",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            padding: "7px 20px",
+            fontSize: "16px",
+          }}
+        >
+          Next
+        </Button>
+      </Box>
+      <Box style={{ overflowX: "auto" ,overflowY:"auto"}}>
+        <TableContainer
+          component={Paper}
+          className="table-container"
+          style={{
+            width: "100%",
+          }}
+        >
+          <Table>
           <TableHead>
-            <TableRow>
-              {TABLE_HEAD.map(({ field, label, icon }) => (
-                <TableCell key={field} align="center">
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                  >
-                    <FontAwesomeIcon icon={icon} className="mr-1" />
-                    {label}
-                  </Box>
-                </TableCell>
-              ))}
-              <TableCell align="center">Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={TABLE_HEAD.length + 1} align="center">
-                  <Loading />
-                </TableCell>
-              </TableRow>
-            ) : filteredData.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={TABLE_HEAD.length + 1} align="center">
-                  No records found.
-                </TableCell>
-              </TableRow>
-            ) : (
-              filteredData.map((rowData) => (
-                <TableRow key={rowData.ID}>
-                  {TABLE_HEAD.map(({ field }) => (
-                    <TableCell key={field} align="center">
-                      {field === "IN_TIME" || field === "OUT_TIME"
-                        ? formatTime(rowData[field])
-                        : rowData[field] || "N/A"}
-                    </TableCell>
-                  ))}
-                  <TableCell align="center">
-                    <Button
-                      variant="contained"
-                      style={{ backgroundColor: "#4CAF50", color: "white" }}
-                      onClick={() => handleOpenClick(rowData.ID)}
-                    >
-                      Open
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-       
-      </TableContainer>
+  <TableRow>
+    {TABLE_HEAD.map(({ field, label, img }) => (
+      <TableCell
+        key={field}
+        align="center"
+        sx={{
+          border: "1px solid rgba(224, 224, 224, 1)",
+          width: "120px",
+          whiteSpace: 'nowrap', 
+          overflow: 'hidden', 
+          textOverflow: 'ellipsis' 
+        }}
+      >
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <img src={img.props.src} className="mr-1" alt={label} />
+          {label}
+        </Box>
+      </TableCell>
+    ))}
+    <TableCell
+      align="center"
+      sx={{ 
+        border: "1px solid rgba(224, 224, 224, 1)",
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis' 
+      }}
+    >
+      Actions
+    </TableCell>
+  </TableRow>
+</TableHead>
+
+            <TableBody>
+  {isLoading ? (
+    <TableRow>
+      <TableCell colSpan={TABLE_HEAD.length + 1} align="center">
+        <Loading />
+      </TableCell>
+    </TableRow>
+  ) : filteredData.length === 0 ? (
+    <TableRow>
+      <TableCell colSpan={TABLE_HEAD.length + 1} align="center">
+        No records found.
+      </TableCell>
+    </TableRow>
+  ) : (
+    filteredData.map((rowData) => (
+      <TableRow key={rowData.ID} className="table-row">
+        {TABLE_HEAD.map(({ field }) => (
+          <TableCell
+            key={field}
+            align="center"
+            sx={{ 
+              border: "1px solid rgba(224, 224, 224, 1)",
+              whiteSpace: 'nowrap', // Prevent wrapping
+              overflow: 'hidden', // Hide overflow
+              textOverflow: 'ellipsis' // Add ellipsis if the text is too long
+            }}
+          >
+            {field === "PAYMENT_DATE" || field === "END_DATE"
+              ? rowData[field]
+              : rowData[field] || "N/A"}
+          </TableCell>
+        ))}
+        <TableCell
+          align="center"
+          sx={{ border: "1px solid rgba(224, 224, 224, 1)" }}
+        >
+          <Button
+            variant="contained"
+            onClick={() => handleOpenClick(rowData.ID)}
+            style={{
+              backgroundColor: "white",
+              borderRadius: "100px",
+              boxShadow:
+                "rgba(44, 187, 99, .2) 0 -25px 18px -14px inset, rgba(44, 187, 99, .15) 0 1px 2px, rgba(44, 187, 99, .15) 0 2px 4px, rgba(44, 187, 99, .15) 0 4px 8px, rgba(44, 187, 99, .15) 0 8px 16px, rgba(44, 187, 99, .15) 0 16px 32px",
+              color: "green",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              padding: "7px 20px",
+              fontSize: "16px",
+            }}
+          >
+            Open
+          </Button>
+        </TableCell>
+      </TableRow>
+    ))
+  )}
+</TableBody>
+
+          </Table>
+        </TableContainer>
+      </Box>
     </Box>
   );
 };

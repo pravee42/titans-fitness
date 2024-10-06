@@ -17,7 +17,7 @@ const SearchExistingCustomer = () => {
     const fetchData = async () => {
       try {
         const token = sessionStorage.getItem("token");
-        const response = await Axios.get("https://gym-backend-apis.onrender.com/admin/user", {
+        const response = await Axios.get("https://titan-api-v2uu.onrender.com/admin/user", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

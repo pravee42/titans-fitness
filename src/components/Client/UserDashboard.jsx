@@ -26,7 +26,7 @@ const UserDashboard = () => {
   const fetchUserData = async () => {
     try {
       const response = await fetch(
-        `https://gym-backend-apis.onrender.com/admin/user/${userInfo.ID}`
+        `https://titan-api-v2uu.onrender.com/admin/user/${userInfo.ID}`
       );
       const data = await response.json();
       // Assuming the image path is in data.IMAGE_PATH
@@ -41,7 +41,7 @@ const UserDashboard = () => {
     const fetchUserDashboardData = async () => {
       try {
         const response = await axios.get(
-          `https://gym-backend-apis.onrender.com/customer/dashboard`,
+          `https://titan-api-v2uu.onrender.com/customer/dashboard`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -60,7 +60,7 @@ const UserDashboard = () => {
     const fetchInOutTime = async () => {
       try {
         const response = await axios.get(
-          `https://gym-backend-apis.onrender.com/customer/punch`,
+          `https://titan-api-v2uu.onrender.com/customer/punch`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -80,7 +80,7 @@ const UserDashboard = () => {
     const fetchPaymentDetails = async () => {
       try {
         const response = await axios.get(
-          `https://gym-backend-apis.onrender.com/customer/payment`,
+          `https://titan-api-v2uu.onrender.com/customer/payment`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }

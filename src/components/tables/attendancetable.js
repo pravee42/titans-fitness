@@ -75,10 +75,11 @@ const Attendancetable = () => {
       setIsLoading(true);
       const token = sessionStorage.getItem("token");
       const headers = { Authorization: `Bearer ${token}` };
-      const url =
-        page === 0
-          ? "https://gym-backend-apis.onrender.com/admin/attendance"
-          : `https://gym-backend-apis.onrender.com/admin/attendance?page=${page}`;
+      
+      // Determine the base URL based on the selected period
+      const baseUrl = `https://titan-api-v2uu.onrender.com/admin/attendance${period ? `/${period}` : ''}`;
+      const url = page === 0 ? baseUrl : `${baseUrl}?page=${page + 1}`;
+  
       const response = await Axios.get(url, { headers });
       setTableData(response.data.customer);
       setIsLoading(false);
@@ -87,6 +88,16 @@ const Attendancetable = () => {
       setIsLoading(false);
     }
   };
+  
+  const handlePeriodClick = (selectedPeriod) => {
+    setPeriod(selectedPeriod);
+    setPage(0);
+  };
+  
+  useEffect(() => {
+    fetchData();
+  }, [page, rowsPerPage, selectedDate, period]);
+  
 
   const handleDownloadExcel = (tableData) => {
     const wb = XLSX.utils.book_new();
@@ -95,32 +106,35 @@ const Attendancetable = () => {
     XLSX.writeFile(wb, "table_data.xlsx");
   };
 
-  const applyFilter = () => {
-    let filteredResults = tableData.filter(
-      (rowData) =>
-        rowData.NAME.toLowerCase().includes(filter.toLowerCase()) ||
-        rowData.ID.toString().includes(filter)
-    );
+const applyFilter = () => {
+  if (!tableData || !Array.isArray(tableData)) return;
+  
+  let filteredResults = tableData.filter(
+    (rowData) =>
+      rowData.NAME.toLowerCase().includes(filter.toLowerCase()) ||
+      rowData.ID.toString().includes(filter)
+  );
 
-    if (period === "morning") {
-      filteredResults = filteredResults.filter((rowData) => {
-        const inTime = new Date(rowData.IN_TIME).getHours();
-        return inTime >= 0 && inTime < 12; // Morning session
-      });
-    } else if (period === "evening") {
-      filteredResults = filteredResults.filter((rowData) => {
-        const inTime = new Date(rowData.IN_TIME).getHours();
-        return inTime >= 12; // Evening session
-      });
-    }
+  if (period === "morning") {
+    filteredResults = filteredResults.filter((rowData) => {
+      const inTime = new Date(rowData.IN_TIME).getHours();
+      return inTime >= 0 && inTime < 12; // Morning session
+    });
+  } else if (period === "evening") {
+    filteredResults = filteredResults.filter((rowData) => {
+      const inTime = new Date(rowData.IN_TIME).getHours();
+      return inTime >= 12; // Evening session
+    });
+  }
 
-    setFilteredData(filteredResults);
-  };
+  setFilteredData(filteredResults);
+};
+
 
   const handleOpenClick = async (customerId) => {
     try {
       await Axios.get(
-        `https://gym-backend-apis.onrender.com/admin/user/${customerId}`,
+        `https://titan-api-v2uu.onrender.com/admin/user/${customerId}`,
         {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -132,10 +146,6 @@ const Attendancetable = () => {
     } catch (error) {
       console.error("Error fetching user details:", error);
     }
-  };
-
-  const handlePeriodClick = (selectedPeriod) => {
-    setPeriod(selectedPeriod);
   };
 
   const handleChangePage = (event, newPage) => {

@@ -1,0 +1,18 @@
+.table-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    width: 100%;
+  }
+  
+  .table-container table {
+    width: 100%;
+    min-width: 800px; /* adjust this value to fit your table content */
+  }
+  
+  .table-container thead th {
+    position: sticky;
+    left: 0;
+    background-color: #fff;
+    z-index: 1;
+  }
+  

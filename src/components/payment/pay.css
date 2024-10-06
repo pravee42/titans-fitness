@@ -1,0 +1,120 @@
+.cust-search-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; 
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.search-container {
+  flex: 1;
+  max-width: 400px;
+  margin-right: 20px;
+}
+
+.search-container label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.search-container input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: calc(100% - 110px);
+}
+
+.search-container button {
+  padding: 10px 15px;
+  background-color: #70AB0E;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.search-container button:hover {
+  background-color: #609A0D;
+}
+
+.stats-container {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.box {
+  flex: 1;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  background-color: lightgray;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 100%; 
+  height: 150px; 
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center; 
+  align-items: center; 
+}
+.payment-history-scroll {
+  max-height: 200px; /* Set to desired height */
+  overflow-y: auto; /* Enable vertical scrolling */
+  border: 1px solid #ddd; /* Optional: add a border for better visibility */
+  padding: 10px; /* Optional: add some padding */
+  margin-top: 10px; /* Optional: add some margin above */
+}
+
+
+
+.paid-box {
+  background-color: #70AB0E80;
+}
+
+.unpaid-box {
+  background-color: #E9BEBE;
+}
+
+.payment-info, .no-payment {
+  margin-top: 20px;
+  background-color: #F2F2F2;
+  padding: 15px;
+  border-radius: 8px;
+  width: 100%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.payment-info h2, .no-payment p {
+  margin: 0;
+  font-weight: bold;
+}
+
+.payment-details {
+  display: flex; 
+  align-items: stretch; 
+}
+
+.separator {
+  width: 2px; 
+  background-color: #79BA0F; 
+  height: 100%; 
+  margin: 0 20px; 
+}
+
+.history {
+  display: flex;
+  flex-direction: column; 
+}

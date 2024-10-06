@@ -23,7 +23,7 @@ const UserSearchForm = ({ onSubmit }) => {
       name: name.toLowerCase(),
     });
 
-    const url = `https://gym-backend-apis.onrender.com/admin/user/searching?${searchParams.toString()}`;
+    const url = `https://titan-api-v2uu.onrender.com/admin/user/searching?${searchParams.toString()}`;
 
     try {
       const token = sessionStorage.getItem('token');
@@ -48,7 +48,7 @@ const UserSearchForm = ({ onSubmit }) => {
   };
   const handleOpenClick = async (_id) => {
     try {
-      const response = await axios.get(`https://gym-backend-apis.onrender.com/admin/user/${_id}`, {
+      const response = await axios.get(`https://titan-api-v2uu.onrender.com/admin/user/${_id}`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -101,7 +101,7 @@ const UserSearchForm = ({ onSubmit }) => {
 
       {/* Display search results */}
       <div className="mt-8">
-        {/* <table className="min-w-full divide-y divide-gray-200">
+        <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer ID</th>
@@ -127,7 +127,7 @@ const UserSearchForm = ({ onSubmit }) => {
   )}
 </tbody>
 
-        </table> */}
+        </table>
       </div>
     </div>
   );

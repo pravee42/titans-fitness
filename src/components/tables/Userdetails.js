@@ -56,7 +56,7 @@ const UserProfile = () => {
       try {
         const token = sessionStorage.getItem("token");
         const response = await Axios.get(
-          `https://gym-backend-apis.onrender.com/admin/user/${id}`,
+          `https://titan-api-v2uu.onrender.com/admin/user/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -85,7 +85,7 @@ const UserProfile = () => {
   const activateUser = async () => {
     try {
       const response = await Axios.post(
-        "https://gym-backend-apis.onrender.com/admin/user/active",
+        "https://titan-api-v2uu.onrender.com/admin/user/active",
         { userID: id },
         {
           headers: {
@@ -121,7 +121,7 @@ const UserProfile = () => {
   const deactivateUser = async () => {
     try {
       const response = await Axios.post(
-        "https://gym-backend-apis.onrender.com/admin/user/non-active",
+        "https://titan-api-v2uu.onrender.com/admin/user/non-active",
         { userID: id },
         {
           headers: {
@@ -221,7 +221,7 @@ const UserProfile = () => {
     try {
       const token = sessionStorage.getItem("token");
       const response = await Axios.patch(
-        `https://gym-backend-apis.onrender.com/admin/user/${id}`,
+        `https://titan-api-v2uu.onrender.com/admin/user/${id}`,
         formData,
         {
           headers: {
@@ -261,7 +261,7 @@ const UserProfile = () => {
     try {
       const token = sessionStorage.getItem("token");
       const response = await Axios.post(
-        "https://gym-backend-apis.onrender.com/admin/payment/add",
+        "https://titan-api-v2uu.onrender.com/admin/payment/add",
         {
           id: user.ID,
           type,
