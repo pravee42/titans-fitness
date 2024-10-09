@@ -12,6 +12,16 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import PaymentHistory from "./payment/PaymentGet";
 
+const HOSTURL = `https://titan-api-v2uu.onrender.com`
+// https://titan-api-v2uu.onrender.com
+// https://titan-api-v2uu.onrender.com
+// https://titan-api-v2uu.onrender.com
+// https://titan-api-v2uu.onrender.com
+// https://titan-api-v2uu.onrender.com
+// https://titan-api-v2uu.onrender.com
+// https://titan-api-v2uu.onrender.com
+// https://titan-api-v2uu.onrender.com
+
 const UserProfile = () => {
   const { id } = useParams();
   const [user, setUser] = useState(null);
@@ -54,13 +64,22 @@ const UserProfile = () => {
   const [payments, setPayments] = useState([]);
   const userId = sessionStorage.getItem("CUSTOMER_PROFILE_ID");
   const token = sessionStorage.getItem("token");
+  const [measurements, setMeasurements] = useState({
+    userID: "",
+    height: "",
+    chest: "",
+    weight: "",
+    waist: "",
+    bodyfat: "",
+    hip: ""
+  })
 
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
         const token = sessionStorage.getItem("token");
         const response = await Axios.get(
-          `https://titan-api-v2uu.onrender.com/admin/user/${id}`,
+          `${HOSTURL}/admin/user/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -78,7 +97,7 @@ const UserProfile = () => {
           setRecentPayments(userData.recentPayments || []);
           setImagePath(
             userData.IMAGE_PATH
-              ? `https://titan-api-v2uu.onrender.com/${userData.IMAGE_PATH}`
+              ? `${HOSTURL}/${userData.IMAGE_PATH}`
               : defaultImg
           );
         } else {
@@ -98,7 +117,7 @@ const UserProfile = () => {
     try {
       const token = sessionStorage.getItem("token");
       const response = await Axios.post(
-        "https://titan-api-v2uu.onrender.com/admin/user/active",
+        `${HOSTURL}/admin/user/active`,
         {
           userID: user._id,
         },
@@ -133,7 +152,7 @@ const UserProfile = () => {
     try {
       const token = sessionStorage.getItem("token");
       const response = await Axios.post(
-        "https://titan-api-v2uu.onrender.com/admin/user/non-active",
+        `${HOSTURL}/admin/user/non-active`,
         {
           userID: user._id,
         },
@@ -223,7 +242,7 @@ const UserProfile = () => {
       };
 
       const response = await fetch(
-        `https://titan-api-v2uu.onrender.com/admin/user/edit/${id}`,
+        `${HOSTURL}/admin/user/edit/${id}`,
         requestOptions
       );
 
@@ -274,7 +293,7 @@ const UserProfile = () => {
     try {
       const token = sessionStorage.getItem("token");
       const response = await Axios.patch(
-        `https://titan-api-v2uu.onrender.com/admin/user/edit/${id}`,
+        `${HOSTURL}/admin/user/edit/${id}`,
         formData,
         {
           headers: {
@@ -312,7 +331,7 @@ const UserProfile = () => {
     try {
       const token = sessionStorage.getItem("token");
       const response = await Axios.post(
-        "https://titan-api-v2uu.onrender.com/admin/payment/add",
+        `${HOSTURL}/admin/payment/add`,
         {
           id: user.ID,
           type,
@@ -350,6 +369,7 @@ const UserProfile = () => {
   };
   const handleCancelEdit = () => {
     setIsEditingPayment(false);
+    setIsEditing(false);
     setPaymentToEdit(null);
   };
 
@@ -357,7 +377,7 @@ const UserProfile = () => {
     try {
       // Fetch the payment history for the specific user
       const response = await Axios.get(
-        `https://titan-api-v2uu.onrender.com/admin/payment/${user.ID}`,
+        `${HOSTURL}/admin/payment/${user.ID}`,
         {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -389,6 +409,39 @@ const UserProfile = () => {
     sessionStorage.removeItem("token");
     window.location.href = "/";
   };
+
+  const saveMeasurements = async () => {
+      const response = await Axios.post(
+        `${HOSTURL}/measurement`, {...measurements, userID: id},
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        toast.success("Measurements saved successfully!");
+        getMeasurements()
+      } else {
+        toast.error("Failed to save measurements. Please try again!");
+      }
+  }
+
+  const getMeasurements = async () => {
+    const response = await Axios.get(
+      `${HOSTURL}/measurement/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
+    setMeasurements({...response.data.data[response.data.data.length-1]});
+  }
+
+  useEffect(() => {
+    getMeasurements()
+  }, [id])
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -425,33 +478,66 @@ const UserProfile = () => {
       <div className="relative z-10">
         <header
           className="py-4 px-5 flex items-center justify-between"
-          style={{ backgroundColor: "#70AB0E" }}
         >
           <div className="flex items-center">
             <img src={logo} alt="Logo" className="w-50 h-10 mr-2" />
-            <span className="text-white text-2xl font-semibold">
-              Customer Details
-            </span>
           </div>
+          <span className="text-green-500 text-2xl font-semibold">
+            Customer Info
+          </span>
+          <div className="flex flex-row gap-2 items-center p-2">
+            <button
+              onClick={activateUser}
+              className="text-white bg-[#2F2F2F] py-2 px-4 rounded mt-2 mr-2"
+            >
+              Activate User
+            </button>
+            <button
+              onClick={deactivateUser}
+              className="bg-[#2F2F2F] text-white py-2 px-4 rounded mt-2 mr-2"
+            >
+              Deactivate User
+            </button>
+          </div>
+
         </header>
-        <div className="container mx-auto p-4 bg-custom-green">
+        <div className="container mx-auto p-4">
           {user ? (
-            <div className="bg-white p-4 rounded shadow-md w-full">
-              <h2 className="text-2xl font-bold mb-4 text-right">
-                Customer ID: {user.ID}
-              </h2>
-              <div className="flex justify-end">
-                <img
-                  src={imagePath}
-                  alt="User"
-                  className="w-16 h-16 rounded-full object-cover"
-                  onError={(e) => (e.target.src = defaultImg)}
-                />
+           <div className="flex flex-row items-start gap-10 w-full">
+            <div className="flex flex-col items-center gap-2">
+              <img
+                src={imagePath}
+                alt="User"
+                className="w-[150px] h-[250px] rounded"
+                onError={(e) => (e.target.src = defaultImg)}
+              />
+              <div className="border border-black p-4 rounded mt-2 w-[150px] text-sm">
+                 Customer ID: {user.ID}
               </div>
+
+              <div className="flex flex-row items-center gap-2">
+                <button
+                  onClick={handleEdit}
+                  className=" text-black border hover:bg-black hover:text-white border-black py-2 px-4 rounded mt-2 mr-2"
+                >
+                  <FontAwesomeIcon icon="fa-solid fa-pen-to-square" />
+                </button>
+                {/* <button
+                  onClick={handleDownload}
+                  className="text-black border-2 border-black py-2 px-4 rounded mt-2 mr-2"
+                >
+                  <FontAwesomeIcon icon="fa-solid fa-download" />
+                </button> */}
+              </div>
+
+            </div>
+            <div className="flex flex-col w-full items-start">
+            <div className="bg-white p-4 rounded-xl shadow-md w-full">
+              <h1 className="text-green-400 text-2xl mb-5">Basic Info</h1>
               <div className="grid grid-cols-2 gap-4 w-full">
                 <>
                   <div>
-                    <label className="text-xl font-semibold mb-2">Name:</label>
+                    <label className="text-xl  mb-2">Name:</label>
                     <input
                       type="text"
                       value={user.NAME}
@@ -459,7 +545,7 @@ const UserProfile = () => {
                     />
                   </div>
                   <div>
-                    <label className="text-xl font-semibold mb-2">Email:</label>
+                    <label className="text-xl  mb-2">Email:</label>
                     <input
                       type="text"
                       value={user.EMAIL}
@@ -467,7 +553,7 @@ const UserProfile = () => {
                     />
                   </div>
                   <div>
-                    <label className="text-xl font-semibold mb-2">Phone:</label>
+                    <label className="text-xl  mb-2">Phone:</label>
                     <input
                       type="text"
                       value={user.PHONE}
@@ -475,7 +561,7 @@ const UserProfile = () => {
                     />
                   </div>
                   <div>
-                    <label className="text-xl font-semibold mb-2">DOB:</label>
+                    <label className="text-xl  mb-2">DOB:</label>
                     <input
                       type="date"
                       value={user.DOB && user.DOB.slice(0, 10)}
@@ -483,7 +569,7 @@ const UserProfile = () => {
                     />
                   </div>
                   <div>
-                    <label className="text-xl font-semibold mb-2">
+                    <label className="text-xl  mb-2">
                       Address:
                     </label>
                     <input
@@ -493,7 +579,7 @@ const UserProfile = () => {
                     />
                   </div>
                   {/* <div>
-                  {/* <label className="text-xl font-semibold mb-2">Reference Number:</label>
+                  {/* <label className="text-xl  mb-2">Reference Number:</label>
                   <input
                     type="text"
                     value={user.referenceNumber}
@@ -501,7 +587,7 @@ const UserProfile = () => {
                   /> */}
                   {/* </div> */}
                   <div>
-                    <label className="text-xl font-semibold mb-2">
+                    <label className="text-xl  mb-2">
                       Next Due:
                     </label>
                     <input
@@ -511,38 +597,79 @@ const UserProfile = () => {
                     />
                   </div>
 
-                  <button
-                    onClick={activateUser}
-                    className="bg-custom-green hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-2 mr-2"
-                    style={{ backgroundColor: "#79BA0F" }}
-                  >
-                    Activate User
-                  </button>
-                  <button
-                    onClick={deactivateUser}
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-2 mr-2"
-                    style={{ backgroundColor: "#79BA0F" }}
-                  >
-                    Deactivate User
-                  </button>
-                  <button
-                    onClick={handleEdit}
-                    className="bg-custom-green hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-2 mr-2"
-                    style={{ backgroundColor: "#79BA0F" }}
-                  >
-                    Edit Info
-                  </button>
-                  <button
-                    onClick={handleDownload}
-                    className="bg-custom-green hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-2"
-                    style={{ backgroundColor: "#79BA0F" }}
-                  >
-                    Download Payments
-                  </button>
+                 
                 </>
               </div>
+              <h1 className="mt-4 text-2xl text-green-400 mb-4">Measurements</h1>
+              <div className="grid grid-cols-2 gap-4 w-full mt-2">
+                <>
+                  <div>
+                    <label className="text-xl  mb-2">Height:</label>
+                    <input
+                      type="text"
+                      value={measurements.height}
+                      placeholder="Height"
+                      onChange={e => setMeasurements({...measurements, height: e.target.value})}
+                      className="w-full p-2 border rounded"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xl  mb-2">Chest</label>
+                    <input
+                      type="text"
+                      value={measurements.chest}
+                      placeholder="Chest/Bust Size"
+                      onChange={e => setMeasurements({...measurements, chest: e.target.value})}
+                      className="w-full p-2 border rounded"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xl  mb-2">Wight:</label>
+                    <input
+                      type="text"
+                      value={measurements.weight}
+                      placeholder="Weight"
+                      onChange={e => setMeasurements({...measurements, weight: e.target.value})}
+                      className="w-full p-2 border rounded"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xl  mb-2">Waist:</label>
+                    <input
+                      type="text"
+                      value={measurements.waist}
+                      placeholder="Waist"
+                      onChange={e => setMeasurements({...measurements, waist: e.target.value})}
+                      className="w-full p-2 border rounded"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xl  mb-2">Body Fat:</label>
+                    <input
+                      type="text"
+                      value={measurements.bodyfat}
+                      placeholder="Body Fat"
+                      onChange={e => setMeasurements({...measurements, bodyfat: e.target.value})}
+                      className="w-full p-2 border rounded"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xl  mb-2">Hip:</label>
+                    <input
+                      type="text"
+                      value={measurements.hip}
+                      placeholder="Hip"
+                      onChange={e => setMeasurements({...measurements, hip: e.target.value})}
+                      className="w-full p-2 border rounded"
+                    />
+                  </div>
+                </>
+              </div>
+              <button className="text-white bg-[#2F2F2F] py-2 px-4 rounded mt-2 mr-2" onClick={saveMeasurements}>Save Measurements</button>
+              </div>
+              <div className="mt-5 p-4 rounded-xl shadow bg-white w-full">
               {isEditing && (
-                <div className="bg-gray-100 p-4 rounded shadow-md mb-4">
+                <div className="bg-gray-100 p-4 rounded shadow-md mb-4 mt-4">
                   <h3 className="text-xl font-bold mb-4">Edit Information</h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -654,11 +781,11 @@ const UserProfile = () => {
                   </button>
                 </div>
               )}
-              <div className="bg-gray-100 p-4 rounded shadow-md mb-4">
+              <div className="bg-gray-100 p-4 rounded shadow-md mb-4 mt-4">
                 <h3 className="text-xl font-bold mb-4">Add Payment</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block font-semibold mb-2">
+                    <label className="block mb-2">
                       Payment Amount:
                     </label>
                     <input
@@ -669,7 +796,7 @@ const UserProfile = () => {
                     />
                   </div>
                   <div>
-                    <label className="block font-semibold mb-2">
+                    <label className="block mb-2">
                       Effective Date:
                     </label>
                     <input
@@ -680,7 +807,7 @@ const UserProfile = () => {
                     />
                   </div>
                   <div>
-                    <label className="block font-semibold mb-2">
+                    <label className="block mb-2">
                       End Date:
                     </label>
                     <input
@@ -691,7 +818,7 @@ const UserProfile = () => {
                     />
                   </div>
                   <div>
-                    <label className="block font-semibold mb-2">Balance:</label>
+                    <label className="block mb-2">Balance:</label>
                     <input
                       type="text"
                       value={balance}
@@ -700,7 +827,7 @@ const UserProfile = () => {
                     />
                   </div>
                   <div>
-                    <label className="block font-semibold mb-2">Type:</label>
+                    <label className="block mb-2">Type:</label>
                     <select
                       value={type}
                       onChange={(e) => setType(e.target.value)}
@@ -725,7 +852,9 @@ const UserProfile = () => {
               </div>
 
               <PaymentHistory userId={user.ID} />
+              </div>
             </div>
+           </div>
           ) : (
             <p className="text-xl font-semibold">Loading user data...</p>
           )}
