@@ -192,7 +192,7 @@ const Punchin = () => {
       <div className="relative z-10">
         <header
           className="py-12 px-8 flex items-center justify-between"
-          style={{ backgroundColor: "#03C03C" }}
+          style={{ background: "linear-gradient(90deg, #02D097 0%, #0EA6C1 100%)" }}
         >
           <div className="flex items-center justify-start flex-1">
             <span className="text-white text-2xl font-semibold">

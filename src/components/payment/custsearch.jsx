@@ -93,7 +93,7 @@ const CustSearch = () => {
       <h2 style={{ color: "#79BA0F", textAlign: "left" }}>Payment History</h2>
       <div className="flex-container">
         <div className="search-container">
-          <div className="search-section">
+          <div className="search-section flex items-start gap-2 flex-col">
             <label htmlFor="userId">Member ID:</label>
             <input
               type="text"
@@ -108,6 +108,7 @@ const CustSearch = () => {
                 boxShadow: "rgba(44, 187, 99, .2) 0 -25px 18px -14px inset, rgba(44, 187, 99, .15) 0 1px 2px, rgba(44, 187, 99, .15) 0 2px 4px, rgba(44, 187, 99, .15) 0 4px 8px, rgba(44, 187, 99, .15) 0 8px 16px, rgba(44, 187, 99, .15) 0 16px 32px",
                 color: "green",
                 cursor: "pointer",
+                marginTop:'10px',
                 padding: "7px 20px",
                 transition: "background-color 0.3s",
                 display: "flex",
@@ -129,12 +130,12 @@ const CustSearch = () => {
 
         <div className="stats-container">
           <div className="box paid-box">
-            <h2>{paidCount} Members</h2>
-            <p>Members already paid this month</p>
+            <h2 className="text-2xl text-black">{paidCount} Members</h2>
+            <p>already paid this month</p>
           </div>
           <div className="box unpaid-box">
-            <h2>{unpaidCount} Members</h2>
-            <p>Members didn't pay this month</p>
+            <h2 className="text-2xl text-black">{unpaidCount} Members</h2>
+            <p>didn't pay this month</p>
           </div>
         </div>
       </div>
@@ -144,30 +145,50 @@ const CustSearch = () => {
       {paymentData ? (
         <div className="payment-info">
           <h2 style={{ color: "#79BA0F" }}>Search Result</h2>
-          <div className="payment-details">
-            <div className="customer-info">
-              <p><strong>Name:</strong> {paymentData.USER.NAME}</p>
+          <div className="payment-details w-full flex flex-row items-start justify-around">
+            <div className="flex gap-2 items-start justify-between">
+              <div className="">
+                <img src={`https://titan-api-v2uu.onrender.com/${paymentData.USER.IMAGE_PATH}`} alt="" srcset="" />
+              </div>
+              <div className="customer-info w-[300px] border-r flex flex-col items-start gap-2 p-2">
+              <p className="text-2xl">{paymentData.USER.NAME.toUpperCase()}</p>
               <p><strong>ID:</strong> {paymentData.USER.ID}</p>
               <p><strong>Phone:</strong> {paymentData.USER.PHONE}</p>
+              <p><strong>Due:</strong> {paymentData.USER.PAYMENT_STATUS}</p>
+            </div>
             </div>
             <div className="separator" />
-            <div className="payment-info-details">
+            <div className="flex flex-col items-start">
               <h2 style={{ color: "#79BA0F" }}>Payment Details</h2>
               <div className="payment-history-scroll">
-                {paymentData.USER.PAYMENT_HISTORY.length > 0 ? (
-                  getUniquePayments(paymentData.USER.PAYMENT_HISTORY).map((payment, index) => (
-                    <div key={index} className="payment-history-entry">
-                      <p><strong>Payment Date:</strong> {new Date(payment.PAYMENT_DATE).toLocaleDateString()}</p>
-                      <p><strong>End Date:</strong> {new Date(payment.END_DATE).toLocaleDateString()}</p>
-                      <p><strong>Status:</strong> {paymentData.USER.PAYMENT_STATUS}</p>
-                      <p><strong>Amount:</strong> {payment.PAYMENT_AMOUNT}</p>
-                      <p><strong>Payment Type:</strong> {payment.PAYMENT_TYPE}</p>
-                      <div className="separator" />
-                    </div>
-                  ))
-                ) : (
-                  <p>No payment history available.</p>
-                )}
+              <table className="payment-table">
+                <thead>
+                  <tr>
+                    <th>Payment Date</th>
+                    <th>End Date</th>
+                    <th>Status</th>
+                    <th>Amount</th>
+                    <th>Payment Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {paymentData.USER.PAYMENT_HISTORY.length > 0 ? (
+                    getUniquePayments(paymentData.USER.PAYMENT_HISTORY).map((payment, index) => (
+                      <tr key={index} className="payment-history-entry">
+                        <td>{new Date(payment.PAYMENT_DATE).toLocaleDateString()}</td>
+                        <td>{new Date(payment.END_DATE).toLocaleDateString()}</td>
+                        <td>{paymentData.USER.PAYMENT_STATUS}</td>
+                        <td>{payment.PAYMENT_AMOUNT}</td>
+                        <td>{payment.PAYMENT_TYPE}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="5" className="no-payment-history">No payment history available.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
               </div>
             </div>
           </div>

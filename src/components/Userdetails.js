@@ -73,6 +73,7 @@ const UserProfile = () => {
     bodyfat: "",
     hip: ""
   })
+  const [attendenceHistory, setAttendenceHistory] = useState([])
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -441,6 +442,19 @@ const UserProfile = () => {
 
   useEffect(() => {
     getMeasurements()
+  }, [id])
+
+  useEffect(() => {
+    async function call() {
+      const res = await Axios.get(`${HOSTURL}/admin/attendance/${id}`,  {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
+      const data = await res.data;
+      setAttendenceHistory(data.attendence);
+    }
+    call()
   }, [id])
 
   return (
@@ -852,6 +866,33 @@ const UserProfile = () => {
               </div>
 
               <PaymentHistory userId={user.ID} />
+
+              </div>
+              <div className="mt-2 rounded bg-white drop-shadow p-2 w-full">
+                <p className="text-green-500 text-xl mb-2">Attendence History</p>
+                <table className="w-full table-auto bg-white shadow-md rounded-lg overflow-hidden ">
+                  <thead className="bg-blue-600 text-white">
+                    <tr>
+                      <th className="px-4 py-2 text-left">In Time</th>
+                      <th className="px-4 py-2 text-left">Out Time</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {attendenceHistory?.length > 0 ? (
+                      attendenceHistory?.map((att, index) => (
+                        <tr key={index} className="border-b last:border-none hover:bg-gray-100">
+                          <td className="px-4 py-2">{att.IN_TIME}</td>
+                          <td className="px-4 py-2">{att.OUT_TIME}</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="5" className="px-4 py-8 text-center text-gray-500">No Attendence history available.</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+
               </div>
             </div>
            </div>
