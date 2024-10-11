@@ -4,6 +4,7 @@
   align-items: flex-start; 
   padding: 20px;
   background-color: #f9f9f9;
+  width:100%;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
@@ -73,9 +74,6 @@
 .payment-history-scroll {
   max-height: 200px; /* Set to desired height */
   overflow-y: auto; /* Enable vertical scrolling */
-  border: 1px solid #ddd; /* Optional: add a border for better visibility */
-  padding: 10px; /* Optional: add some padding */
-  margin-top: 10px; /* Optional: add some margin above */
 }
 
 
@@ -117,4 +115,83 @@
 .history {
   display: flex;
   flex-direction: column; 
+}
+
+
+.payment-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+  margin: 20px 0;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.payment-table thead {
+  background-color: #007bff;
+  color: #ffffff;
+  text-align: left;
+  font-weight: bold;
+}
+
+.payment-table th, .payment-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #dddddd;
+}
+
+.payment-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.payment-history-entry td {
+  font-size: 14px;
+  color: #333333;
+}
+
+.payment-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.no-payment-history {
+  text-align: center;
+  padding: 20px;
+  color: #777;
+  font-style: italic;
+}
+
+.separator {
+  height: 1px;
+  background-color: #eee;
+  margin: 10px 0;
+}
+
+.payment-table tbody td {
+  vertical-align: middle;
+}
+
+@media screen and (max-width: 768px) {
+  .payment-table thead {
+    display: none;
+  }
+  
+  .payment-table tr {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .payment-table td {
+    display: block;
+    text-align: right;
+    padding-left: 50%;
+    position: relative;
+  }
+
+  .payment-table td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
 }

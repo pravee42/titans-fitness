@@ -35,10 +35,11 @@ const Attendancetable = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState("");
-  const [period, setPeriod] = useState("");
+  const [period, setPeriod] = useState("monthly");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(50);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [filterDate, setFilterDate] = useState(new Date());
   const navigate = useNavigate();
 
   const TABLE_HEAD = [
@@ -62,13 +63,33 @@ const Attendancetable = () => {
     },
   ];
 
-  useEffect(() => {
-    fetchData();
-  }, [page, rowsPerPage, selectedDate]);
+  // useEffect(() => {
+  //   fetchData();
+  // }, [page, rowsPerPage, selectedDate]);
 
   useEffect(() => {
     applyFilter();
   }, [tableData, filter, period]);
+
+  useEffect(() => {
+   async function call() {
+     try {
+      setIsLoading(true);
+      const token = sessionStorage.getItem("token");
+      const headers = { Authorization: `Bearer ${token}` };
+      const baseUrl = `https://titan-api-v2uu.onrender.com/admin/attendance/${period}?date=${new Date(filterDate).toISOString().slice(0,10)}`
+      const url = page === 0 ? baseUrl : `${baseUrl}&page=${page + 1}`;
+      const response = await Axios.get(url, { headers });
+      setTableData(response.data.user);
+      setIsLoading(false);
+    }
+    catch (error) {
+      console.error("Error fetching data:", error);
+      setIsLoading(false);
+    }
+   }
+   call()
+  }, [filterDate, page, period])
 
   const fetchData = async () => {
     try {
@@ -94,9 +115,9 @@ const Attendancetable = () => {
     setPage(0);
   };
   
-  useEffect(() => {
-    fetchData();
-  }, [page, rowsPerPage, selectedDate, period]);
+  // useEffect(() => {
+  //   fetchData();
+  // }, [page, rowsPerPage, selectedDate, period]);
   
 
   const handleDownloadExcel = (tableData) => {
@@ -189,9 +210,12 @@ const applyFilter = () => {
   return (
     <Box className="overflow-hidden w-full h-screen p-4 mb-10 mr-5 mt-0">
       <Box className="mb-4 flex justify-between items-center">
-      <CustomDatePicker 
-          
-        />
+          <div className="datepicker-container">
+          <label className="datepicker-label">Date</label>
+          <div className="datepicker-input-wrapper">
+            <input type="date" value={new Date(filterDate).toISOString().slice(0,10)} onChange={e=>{setFilterDate(e.target.value); setPage(0)}} />
+          </div>
+        </div>
         <Box className="flex gap-2">
           <Button
             onClick={() => handlePeriodClick("morning")}
@@ -226,7 +250,7 @@ const applyFilter = () => {
         </Box>
       </Box>
       <div className="flex justify-between items-center mb-4">
-        <p className="text-70AB0E-800">Active log</p>
+        <div className="w-[100px]"></div>
         <button
           onClick={() => handleDownloadExcel(tableData)}
           style={{

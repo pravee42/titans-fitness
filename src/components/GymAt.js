@@ -147,9 +147,9 @@ const GymAt = () => {
           {toggleButton}
           <img src={logo} alt="Logo" className="w-50 h-10 mr-2" />{" "}
           <div className="mx-5 flex items-center">
-  <img src={weight} className="text-70AB0E-800 mr-2" alt="Gym Attendance" />
-  <span className="text-70AB0E-800">Gym Attendance</span>
-</div>
+          <img src={weight} className="text-70AB0E-800 mr-2" alt="Gym Attendance" />
+          <span className="text-70AB0E-800">Gym Attendance</span>
+        </div>
         </div>
         <div className="md:flex items-center">
           {userInfo}
