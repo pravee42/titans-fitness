@@ -648,22 +648,22 @@ const UserProfile = () => {
                     />
                   </div>
                   <div>
-                    <label className="text-xl  mb-2">Waist:</label>
+                    <label className="text-xl  mb-2">Shoulder:</label>
                     <input
                       type="text"
-                      value={measurements.waist}
-                      placeholder="Waist"
-                      onChange={e => setMeasurements({...measurements, waist: e.target.value})}
+                      value={measurements.shoulder}
+                      placeholder="Shoulder"
+                      onChange={e => setMeasurements({...measurements, shoulder: e.target.value})}
                       className="w-full p-2 border rounded"
                     />
                   </div>
                   <div>
-                    <label className="text-xl  mb-2">Body Fat:</label>
+                    <label className="text-xl  mb-2">Biceps:</label>
                     <input
                       type="text"
-                      value={measurements.bodyfat}
-                      placeholder="Body Fat"
-                      onChange={e => setMeasurements({...measurements, bodyfat: e.target.value})}
+                      value={measurements.biceps}
+                      placeholder="biceps"
+                      onChange={e => setMeasurements({...measurements, biceps: e.target.value})}
                       className="w-full p-2 border rounded"
                     />
                   </div>
@@ -678,7 +678,7 @@ const UserProfile = () => {
                     />
                   </div>
                   <div>
-                    <label className="text-xl  mb-2">Hip:</label>
+                    <label className="text-xl  mb-2">Leg:</label>
                     <input
                       type="text"
                       value={measurements.leg}
