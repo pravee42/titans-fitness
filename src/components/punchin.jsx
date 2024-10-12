@@ -12,7 +12,7 @@ const Punchin = () => {
   const [searchId, setSearchId] = useState("");
   const [userDetails, setUserDetails] = useState(null);
   const [punchTimes, setPunchTimes] = useState([]);
-  const [paymentDetails, setPaymentDetails] = useState([]);
+  const [paymentDetails, setPaymentDetails] = useState({});
   const [imagePath, setImagePath] = useState("");
   const inputRef = useRef(null);
 
@@ -323,10 +323,10 @@ const Punchin = () => {
                 </table>
               </div>
             )}
-
+            {console.log(userDetails, paymentDetails)}
             {paymentDetails &&
-              paymentDetails.payment &&
-              paymentDetails.payment.length > 0 && (
+              paymentDetails?.USER?.PAYMENT_HISTORY &&
+              paymentDetails?.USER?.PAYMENT_HISTORY?.length > 0 && (
                 <div className="bg-white p-6 rounded-lg shadow-lg mb-5">
                   <h2 className="text-xl font-bold mb-3">Payment Status</h2>
                   <table className="min-w-full bg-white">
@@ -347,7 +347,7 @@ const Punchin = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {paymentDetails.payment.map((payment, index) => (
+                      {paymentDetails.USER?.PAYMENT_HISTORY.map((payment, index) => (
                         <tr key={index}>
                           <td className="py-3 px-6">
                             {payment.PAYMENT_AMOUNT}
@@ -372,12 +372,10 @@ const Punchin = () => {
           </div>
           {/* Render payment details and punch times */}
 
-          <div className="w-1/2">
+          <div className="w-1/2"> 
             {/* Render payment details */}
             {userDetails &&
-              userDetails.user &&
-              paymentDetails.payment &&
-              paymentDetails.payment.length > 0 && (
+              userDetails.user && (
                 <div className="bg-white p-4 rounded-lg shadow-lg mb-6 flex flex-col items-center border-2 w-11/12 md:w-2/3 mx-auto">
                   <div className="flex flex-col md:flex-row items-center md:items-start mb-4">
                     <div className="flex flex-col items-center md:items-start mr-4">
@@ -408,21 +406,21 @@ const Punchin = () => {
                 END DATE: {paymentDetails.payment[0].END_DATE.slice(0, 10)}
               </p> */}
               <p className="text-red-900 font-bold text-lg">
-              {paymentDetails.payment[0].END_DATE.slice(0, 10).split("-").reverse().join("-")} : NEXT DUE DATE
+              {paymentDetails.USER && paymentDetails.USER?.PAYMENT_HISTORY[0]?.END_DATE.slice(0, 10).split("-").reverse().join("-")} : NEXT DUE DATE
               </p>
             </div>
           </div>
 
                   <div
                     className={`px-10 py-2 rounded ${
-                      paymentDetails.payment[0].PAYMENT_BALANCE === 0 &&
-                      new Date(paymentDetails.payment[0].END_DATE) > new Date()
+                      paymentDetails.USER && paymentDetails.USER?.PAYMENT_HISTORY[0].PAYMENT_BALANCE === 0 &&
+                      new Date(paymentDetails.USER?.PAYMENT_HISTORY[0].END_DATE) > new Date()
                         ? "bg-green-500"
                         : "bg-red-500"
                     }`}
                   >
                     <p className="font-sans text-sm text-white">
-                      {paymentDetails.payment.every(
+                      {paymentDetails.USER && paymentDetails.USER?.PAYMENT_HISTORY.every(
                         (payment) =>
                           payment.PAYMENT_BALANCE === 0 &&
                           new Date(payment.END_DATE) > new Date()

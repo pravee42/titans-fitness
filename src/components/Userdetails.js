@@ -677,6 +677,16 @@ const UserProfile = () => {
                       className="w-full p-2 border rounded"
                     />
                   </div>
+                  <div>
+                    <label className="text-xl  mb-2">Hip:</label>
+                    <input
+                      type="text"
+                      value={measurements.leg}
+                      placeholder="Leg"
+                      onChange={e => setMeasurements({...measurements, leg: e.target.value})}
+                      className="w-full p-2 border rounded"
+                    />
+                  </div>
                 </>
               </div>
               <button className="text-white bg-[#2F2F2F] py-2 px-4 rounded mt-2 mr-2" onClick={saveMeasurements}>Save Measurements</button>
