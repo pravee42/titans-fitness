@@ -452,10 +452,11 @@ const UserProfile = () => {
         },
       })
       const data = await res.data;
-      setAttendenceHistory(data.attendence);
+      setAttendenceHistory(data.attendance);
     }
     call()
   }, [id])
+
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -648,22 +649,22 @@ const UserProfile = () => {
                     />
                   </div>
                   <div>
-                    <label className="text-xl  mb-2">Waist:</label>
+                    <label className="text-xl  mb-2">Shoulder:</label>
                     <input
                       type="text"
-                      value={measurements.waist}
-                      placeholder="Waist"
-                      onChange={e => setMeasurements({...measurements, waist: e.target.value})}
+                      value={measurements.shoulder}
+                      placeholder="Shoulder"
+                      onChange={e => setMeasurements({...measurements, shoulder: e.target.value})}
                       className="w-full p-2 border rounded"
                     />
                   </div>
                   <div>
-                    <label className="text-xl  mb-2">Body Fat:</label>
+                    <label className="text-xl  mb-2">Biceps:</label>
                     <input
                       type="text"
-                      value={measurements.bodyfat}
-                      placeholder="Body Fat"
-                      onChange={e => setMeasurements({...measurements, bodyfat: e.target.value})}
+                      value={measurements.biceps}
+                      placeholder="biceps"
+                      onChange={e => setMeasurements({...measurements, biceps: e.target.value})}
                       className="w-full p-2 border rounded"
                     />
                   </div>
@@ -674,6 +675,16 @@ const UserProfile = () => {
                       value={measurements.hip}
                       placeholder="Hip"
                       onChange={e => setMeasurements({...measurements, hip: e.target.value})}
+                      className="w-full p-2 border rounded"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xl  mb-2">Leg:</label>
+                    <input
+                      type="text"
+                      value={measurements.leg}
+                      placeholder="Leg"
+                      onChange={e => setMeasurements({...measurements, leg: e.target.value})}
                       className="w-full p-2 border rounded"
                     />
                   </div>
@@ -881,8 +892,8 @@ const UserProfile = () => {
                     {attendenceHistory?.length > 0 ? (
                       attendenceHistory?.map((att, index) => (
                         <tr key={index} className="border-b last:border-none hover:bg-gray-100">
-                          <td className="px-4 py-2">{att.IN_TIME}</td>
-                          <td className="px-4 py-2">{att.OUT_TIME}</td>
+                          <td className="px-4 py-2">{new Date(att?.IN_TIME).toISOString().slice(0,10)}</td>
+                          <td className="px-4 py-2">{new Date(att?.OUT_TIME)?.toISOString().slice(0,10)}</td>
                         </tr>
                       ))
                     ) : (

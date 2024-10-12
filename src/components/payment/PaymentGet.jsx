@@ -14,7 +14,7 @@ const PaymentHistory = ({ userId }) => {
     amount: '',
     effective: '',
     end: '',
-    balance: '',
+    balance: 0,
     type: '',
   });
 
@@ -290,6 +290,7 @@ const PaymentHistory = ({ userId }) => {
                       <label className="block font-semibold mb-2">Balance:</label>
                       <input
                         type="text"
+
                         value={newPayment.balance}
                         onChange={(e) => setNewPayment({ ...newPayment, balance: e.target.value })}
                         className="w-full p-2 border rounded"
@@ -376,8 +377,8 @@ const PaymentHistory = ({ userId }) => {
           )}
 
           {/* Existing payment details */}
-          {paymentDetails.payment &&
-            paymentDetails.payment.map((payment) => (
+          {paymentDetails.USER?.PAYMENT_HISTORY &&
+            paymentDetails.USER?.PAYMENT_HISTORY.map((payment) => (
               <tr key={payment._id}>
                 <td className="border px-4 py-2">{payment.PAYMENT_AMOUNT}</td>
                 <td className="border px-4 py-2">{new Date(payment.PAYMENT_DATE).toLocaleDateString()}</td>
