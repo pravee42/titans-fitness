@@ -377,8 +377,8 @@ const PaymentHistory = ({ userId }) => {
           )}
 
           {/* Existing payment details */}
-          {paymentDetails.USER?.PAYMENT_HISTORY &&
-            paymentDetails.USER?.PAYMENT_HISTORY.map((payment) => (
+          {paymentDetails?.USER?.PAYMENT_HISTORY &&
+            paymentDetails?.USER?.PAYMENT_HISTORY?.map((payment) => (
               <tr key={payment._id}>
                 <td className="border px-4 py-2">{payment.PAYMENT_AMOUNT}</td>
                 <td className="border px-4 py-2">{new Date(payment.PAYMENT_DATE).toLocaleDateString()}</td>
