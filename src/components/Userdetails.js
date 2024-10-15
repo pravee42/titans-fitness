@@ -893,7 +893,7 @@ const UserProfile = () => {
                       attendenceHistory?.map((att, index) => (
                         <tr key={index} className="border-b last:border-none hover:bg-gray-100">
                           <td className="px-4 py-2">{att?.IN_TIME && new Date(att?.IN_TIME)?.toISOString()?.slice(0,10)}</td>
-                          <td className="px-4 py-2">{att?.OUT_TIME && new Date(att?.OUT_TIME)?.toISOString()?.slice(0,10)}</td>
+                          <td className="px-4 py-2">{att?.OUT_TIME ? new Date(att?.OUT_TIME)?.toISOString()?.slice(0,10) : ""}</td>
                         </tr>
                       ))
                     ) : (
