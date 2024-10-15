@@ -889,19 +889,25 @@ const UserProfile = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {attendenceHistory?.length > 0 ? (
-                      attendenceHistory?.map((att, index) => (
-                        <tr key={index} className="border-b last:border-none hover:bg-gray-100">
-                          <td className="px-4 py-2">{new Date(att?.IN_TIME).toISOString().slice(0,10)}</td>
-                          <td className="px-4 py-2">{new Date(att?.OUT_TIME)?.toISOString().slice(0,10)}</td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="5" className="px-4 py-8 text-center text-gray-500">No Attendence history available.</td>
-                      </tr>
-                    )}
-                  </tbody>
+    {attendenceHistory?.length > 0 ? (
+        attendenceHistory?.map((att, index) => {
+            const inTime = new Date(att?.IN_TIME);
+            const outTime = new Date(att?.OUT_TIME);
+
+            return (
+                <tr key={index} className="border-b last:border-none hover:bg-gray-100">
+                    <td className="px-4 py-2">{inTime.toString() !== "Invalid Date" ? inTime.toISOString().slice(0, 10) : "N/A"}</td>
+                    <td className="px-4 py-2">{outTime.toString() !== "Invalid Date" ? outTime.toISOString().slice(0, 10) : "N/A"}</td>
+                </tr>
+            );
+        })
+    ) : (
+        <tr>
+            <td colSpan="2" className="px-4 py-2">No attendance records available.</td>
+        </tr>
+    )}
+</tbody>
+
                 </table>
 
               </div>
