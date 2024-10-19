@@ -41,13 +41,15 @@ const PaymentHistory = ({ userId }) => {
   }, [userId]);
 
   const handleEditPayment = (payment) => {
+    console.log(payment)
     setIsEditingPayment(true);
     setPaymentToEdit({
-      id:payment.CUSTOMER_PROFILE_ID ,
+      id: payment?._id ,
       amount: payment.PAYMENT_AMOUNT,
       end: payment.END_DATE,
       balance: payment.PAYMENT_BALANCE,
     });
+   
   };
 
   const handleDeletePayment = async (paymentId) => {
@@ -111,7 +113,7 @@ const PaymentHistory = ({ userId }) => {
       const response = await axios.patch(
         `https://titan-api-v2uu.onrender.com/admin/payment/edit`,
         {
-          id, 
+          id: userId, 
           amount, 
           end: formattedEnd, 
           balance
