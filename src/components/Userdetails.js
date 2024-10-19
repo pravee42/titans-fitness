@@ -29,7 +29,7 @@ const UserProfile = () => {
   const [newPayment, setNewPayment] = useState("");
   const [effectiveDate, setEffectiveDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [balance, setBalance] = useState("");
+  const [balance, setBalance] = useState("0");
   const [type, setType] = useState("");
   const [imagePath, setImagePath] = useState("");
   const [error, setError] = useState(null);
@@ -135,7 +135,7 @@ const UserProfile = () => {
       setNewPayment("");
       setEffectiveDate("");
       setEndDate("");
-      setBalance("");
+      setBalance("0");
       setType("");
       toast.success("ativated successfully!");
     } catch (error) {
@@ -892,8 +892,8 @@ const UserProfile = () => {
                     {attendenceHistory?.length > 0 ? (
                       attendenceHistory?.map((att, index) => (
                         <tr key={index} className="border-b last:border-none hover:bg-gray-100">
-                          <td className="px-4 py-2">{new Date(att?.IN_TIME).toISOString().slice(0,10)}</td>
-                          <td className="px-4 py-2">{new Date(att?.OUT_TIME)?.toISOString().slice(0,10)}</td>
+                          <td className="px-4 py-2">{att?.IN_TIME && new Date(att?.IN_TIME)?.toISOString()?.slice(0,10)}</td>
+                          <td className="px-4 py-2">{att?.OUT_TIME ? new Date(att?.OUT_TIME)?.toISOString()?.slice(0,10) : ""}</td>
                         </tr>
                       ))
                     ) : (
