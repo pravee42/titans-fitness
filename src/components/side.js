@@ -59,6 +59,12 @@ const Sidebar = ({ toggleSidebar }) => {
             <span className="text-sm"> Customer Punch Time</span>
           </a>
         </li>
+        <li className="hover:text-white py-3 px-1 hover:bg-70AB0E-800 hover:rounded-lg mt-3">
+          <a href="#" className="block flex items-center" onClick={() => {window.location.href = "/sendMessage"} }>
+            <FontAwesomeIcon icon={faClock} className="mr-2 text-lg px-1" />
+            <span className="text-sm"> Send Message</span>
+          </a>
+        </li>
       </ul>
       <div className="relative min-h-screen">
   {/* <ul className="absolute bottom-10 mb-11 w-full">

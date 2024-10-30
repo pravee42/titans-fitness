@@ -19,6 +19,7 @@ import Punchin from './components/punchin';
 import paymenthistry from './components/payment/PaymentGet';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import SendMessage from './components/sendMessage';
 
 library.add(fas);
 
@@ -38,6 +39,7 @@ function App() {
           <Route path="/Gym-Attendance" element={<ProtectedRoute element={GymAt} adminOnly />} />
           <Route path="/user/:id" element={<ProtectedRoute element={UserDetails} adminOnly />} />
           <Route path="/tablegym" element={<ProtectedRoute element={Tablegym} adminOnly />} />
+          <Route path="/sendMessage" element={<ProtectedRoute element={SendMessage} adminOnly />} />
           <Route path="*" element={<Navigate to="/" />} />        
         </Routes>
       </Router>

@@ -406,7 +406,7 @@ const Punchin = () => {
                 END DATE: {paymentDetails.payment[0].END_DATE.slice(0, 10)}
               </p> */}
               <p className="text-red-900 font-bold text-lg">
-              {paymentDetails.USER && paymentDetails.USER?.PAYMENT_HISTORY[paymentDetails.USER?.PAYMENT_HISTORY?.length-1]?.END_DATE.slice(0, 10).split("-").reverse().join("-")} : NEXT DUE DATE
+              {paymentDetails.USER && paymentDetails.USER?.PAYMENT_HISTORY[0]?.END_DATE.slice(0, 10).split("-").reverse().join("-")} : NEXT DUE DATE
               </p>
             </div>
           </div>
