@@ -45,12 +45,13 @@ const SendMessage = () => {
   };
 
   const handleSendMessage = async () => {
+    const token = sessionStorage.getItem("token");
+    const headers = { Authorization: `Bearer ${token}` };
     await axios
-      .post("http://54.226.31.192:8080/sendImage", {
+      .post("https://titan-api-v2uu.onrender.com/send-images", {
         ...message,
-        phone: "8870652361",
         image: imageUrl
-      })
+      }, {headers})
       .then((res) => toast.success("Message Sent"));
   };
 
