@@ -47,12 +47,21 @@ const SendMessage = () => {
   const handleSendMessage = async () => {
     const token = sessionStorage.getItem("token");
     const headers = { Authorization: `Bearer ${token}` };
+   if(imageUrl) {
     await axios
-      .post("https://titan-api-v2uu.onrender.com/send-images", {
-        ...message,
-        image: imageUrl
-      }, {headers})
-      .then((res) => toast.success("Message Sent"));
+    .post("https://titan-api-v2uu.onrender.com/send-images", {
+      ...message,
+      image: imageUrl
+    }, {headers})
+    .then((res) => toast.success("Message Sent"));
+   }
+   else {
+    await axios
+    .post("https://titan-api-v2uu.onrender.com/send-sms", {
+      ...message,
+    }, {headers})
+    .then((res) => toast.success("Message Sent"));
+   }
   };
 
   const handleSignOut = () => {
