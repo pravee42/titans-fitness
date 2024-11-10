@@ -41,13 +41,15 @@ const PaymentHistory = ({ userId }) => {
   }, [userId]);
 
   const handleEditPayment = (payment) => {
+    console.log(payment)
     setIsEditingPayment(true);
     setPaymentToEdit({
-      id:payment.CUSTOMER_PROFILE_ID ,
+      paymentId: payment?.PAYMENT_ID ,
       amount: payment.PAYMENT_AMOUNT,
       end: payment.END_DATE,
       balance: payment.PAYMENT_BALANCE,
     });
+   
   };
 
   const handleDeletePayment = async (paymentId) => {
@@ -102,16 +104,16 @@ const PaymentHistory = ({ userId }) => {
   const handleSavePaymentEdit = async () => {
     try {
       const token = sessionStorage.getItem("token");
-      const { id, amount, end, balance } = paymentToEdit;
+      const { paymentId, amount, end, balance } = paymentToEdit;
 
       // Ensure the end date is in the correct format
       const formattedEnd = new Date(end).toISOString().split("T")[0];
-      const requestData = { id, amount, end: formattedEnd, balance };
+      const requestData = { paymentId, amount, end: formattedEnd, balance };
 
       const response = await axios.patch(
-        `https://titan-api-v2uu.onrender.com/admin/payment/edit`,
+        `https://titan-api-v2uu.onrender.com/admin/payment/${userId}`,
         {
-          id, 
+          paymentId, 
           amount, 
           end: formattedEnd, 
           balance
@@ -394,7 +396,7 @@ const PaymentHistory = ({ userId }) => {
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDeletePayment(payment._id)}
+                    onClick={() => handleDeletePayment(payment.PAYMENT_ID)}
                     className="bg-custom-green -500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded"
                   >
                     Delete

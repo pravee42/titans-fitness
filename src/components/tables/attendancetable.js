@@ -61,6 +61,14 @@ const Attendancetable = () => {
       label: "Duration",
       img: <img src={timer} alt="User" />,
     },
+    {
+      field: "END_DATE",
+      label: "END DATE"
+    },
+    {
+      field: "PAYMENT_STATUS",
+      label: "PAYMENT STATUS"
+    },
   ];
 
   // useEffect(() => {
@@ -322,7 +330,7 @@ const applyFilter = () => {
                     alignItems="center"
                     justifyContent="center"
                   >
-                    <img src={img.props.src} className="mr-1" alt={label} />
+                   {img && <img src={img?.props?.src} className="mr-1" alt={label} />}
                     {label}
                   </Box>
                 </TableCell>

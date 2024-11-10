@@ -12,6 +12,7 @@ import Login from './components/Login';
 import GymAt from './components/GymAt';
 import HomePage from './components/Home/Home';
 import UserDashboard from './components/Client/UserDashboard';
+import CustomerLogin from './components/customer-login';
 import ProtectedRoute from './components/ProtectedRoute'; 
 import Tablegym from './components/tables/Table'; 
 import UserDetails from './components/Userdetails';
@@ -19,6 +20,7 @@ import Punchin from './components/punchin';
 import paymenthistry from './components/payment/PaymentGet';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import SendMessage from './components/sendMessage';
 
 library.add(fas);
 
@@ -27,7 +29,8 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/Login" element={<Login />} />
+          <Route path="/admin-Login" element={<Login />} />
+          <Route path="/Login" element={<CustomerLogin />} />
           <Route path="/payment" element={<ProtectedRoute element={paymenthistry} adminOnly />} />
           <Route path="/attendance" element={<ProtectedRoute element={Punchin} adminOnly />} />
           <Route path="/" element={<HomePage />} />
@@ -38,6 +41,7 @@ function App() {
           <Route path="/Gym-Attendance" element={<ProtectedRoute element={GymAt} adminOnly />} />
           <Route path="/user/:id" element={<ProtectedRoute element={UserDetails} adminOnly />} />
           <Route path="/tablegym" element={<ProtectedRoute element={Tablegym} adminOnly />} />
+          <Route path="/sendMessage" element={<ProtectedRoute element={SendMessage} adminOnly />} />
           <Route path="*" element={<Navigate to="/" />} />        
         </Routes>
       </Router>

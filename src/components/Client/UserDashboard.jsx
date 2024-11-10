@@ -10,8 +10,7 @@ const UserDashboard = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [imagePath, setImagePath] = useState("");
   const [paymentDetails, setPaymentDetails] = useState([]);
-  const [inTime, setInTime] = useState(null);
-  const [outTime, setOutTime] = useState(null);
+  const [punchData, setPunchData] = useState([]);
   const token = sessionStorage.getItem("token");
   const gridStyle = {
     display: "grid",
@@ -29,7 +28,6 @@ const UserDashboard = () => {
         `https://titan-api-v2uu.onrender.com/admin/user/${userInfo.ID}`
       );
       const data = await response.json();
-      // Assuming the image path is in data.IMAGE_PATH
       setImagePath(data.IMAGE_PATH || defaultImg);
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -57,7 +55,7 @@ const UserDashboard = () => {
   }, [token]);
 
   useEffect(() => {
-    const fetchInOutTime = async () => {
+    const fetchPunchData = async () => {
       try {
         const response = await axios.get(
           `https://titan-api-v2uu.onrender.com/customer/punch`,
@@ -65,39 +63,52 @@ const UserDashboard = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        const punchData = response.data.punch[0];
-        setInTime(punchData.IN_TIME);
-        setOutTime(punchData.OUT_TIME);
+        setPunchData(response.data.punch);
       } catch (error) {
-        console.error("Error fetching in-time and out-time data:", error);
+        console.error("Error fetching punch data:", error);
       }
     };
 
-    fetchInOutTime();
-  }, [token]);
-
-  useEffect(() => {
-    const fetchPaymentDetails = async () => {
-      try {
-        const response = await axios.get(
-          `https://titan-api-v2uu.onrender.com/customer/payment`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        const paymentData = response.data.payment;
-        setPaymentDetails(paymentData);
-      } catch (error) {
-        console.error("Error fetching payment details:", error);
-      }
-    };
-
-    fetchPaymentDetails();
+    fetchPunchData();
   }, [token]);
 
   const handleSignOut = () => {
     sessionStorage.removeItem("token");
     window.location.href = "/";
+  };
+
+  // Helper function to format time in 12-hour format (e.g., "8:30 AM")
+  const formatTime = (timeString) => {
+    if (!timeString) return "N/A";
+    const date = new Date(timeString);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+  };
+
+  // Helper function to format date in d/m/y format
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-GB');
+  };
+
+  // Helper function to calculate duration in minutes
+  const calculateDuration = (inTime, outTime) => {
+    if (!inTime || !outTime) return "N/A";
+    const duration = (new Date(outTime) - new Date(inTime)) / 60000; // duration in minutes
+    return `${Math.floor(duration)} minutes`;
+  };
+
+  // Function to determine the payment status based on the latest payment
+  const getPaymentStatus = () => {
+    if (paymentDetails.length === 0) return "No payments";
+
+    // Sort the payments by PAYMENT_DATE in descending order (latest first)
+    const sortedPayments = [...paymentDetails].sort(
+      (a, b) => new Date(b.PAYMENT_DATE) - new Date(a.PAYMENT_DATE)
+    );
+
+    const lastPayment = sortedPayments[0]; // The most recent payment
+    return lastPayment.PAYMENT_BALANCE === 0 ? "Paid" : "Unpaid";
   };
 
   return (
@@ -152,22 +163,13 @@ const UserDashboard = () => {
             </div>
             <div
               className={`px-4 py-1 rounded mt-4 ${
-                paymentDetails.every((payment) => payment.PAYMENT_BALANCE === 0)
-                  ? "bg-green-500"
-                  : "bg-red-500"
+                getPaymentStatus() === "Paid" ? "bg-green-500" : "bg-red-500"
               }`}
             >
-              <p className="font-sans text-sm text-white">
-                {paymentDetails.every(
-                  (payment) => payment.PAYMENT_BALANCE === 0
-                )
-                  ? "Paid"
-                  : "Unpaid"}
-              </p>
+              <p className="font-sans text-sm text-white">{getPaymentStatus()}</p>
             </div>
           </div>
         )}
-
         {paymentDetails.length > 0 && (
           <div className="bg-white p-6 rounded-lg shadow-lg mb-6 overflow-x-auto">
             <h2 className="text-xl font-bold mb-3">Payment Status</h2>
@@ -208,33 +210,31 @@ const UserDashboard = () => {
           </div>
         )}
 
-        {inTime && (
-          <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl font-bold mb-3">Today's Activities</h2>
+        {punchData.length > 0 && (
+          <div className="bg-white p-6 rounded-lg shadow-lg mb-6 overflow-x-auto">
+            <h2 className="text-xl font-bold mb-3">Activity Log</h2>
             <table className="min-w-full bg-white">
               <thead>
                 <tr>
-                  <th className="py-3 px-6 text-left bg-gray-200">In Time</th>
-                  <th className="py-3 px-6 text-left bg-gray-200">Out Time</th>
+                  <th className="py-3 px-6 text-left bg-gray-200">Date</th>
+                  <th className="py-3 px-6 text-left bg-gray-200">Punch In</th>
+                  <th className="py-3 px-6 text-left bg-gray-200">Punch Out</th>
                   <th className="py-3 px-6 text-left bg-gray-200">Duration</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td className="py-3 px-6">
-                    {new Date(inTime).toLocaleTimeString()}
-                  </td>
-                  <td className="py-3 px-6">
-                    {outTime ? new Date(outTime).toLocaleTimeString() : "N/A"}
-                  </td>
-                  <td className="py-3 px-6">
-                    {outTime
-                      ? `${Math.floor(
-                          (new Date(outTime) - new Date(inTime)) / (1000 * 60)
-                        )} minutes`
-                      : "N/A"}
-                  </td>
-                </tr>
+                {punchData.map((punch, index) => (
+                  <tr key={index}>
+                    <td className="py-3 px-6">{formatDate(punch.IN_TIME)}</td>
+                    <td className="py-3 px-6">{formatTime(punch.IN_TIME)}</td>
+                    <td className="py-3 px-6">
+                      {formatTime(punch.OUT_TIME)}
+                    </td>
+                    <td className="py-3 px-6">
+                      {calculateDuration(punch.IN_TIME, punch.OUT_TIME)}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
