@@ -12,6 +12,7 @@ import Login from './components/Login';
 import GymAt from './components/GymAt';
 import HomePage from './components/Home/Home';
 import UserDashboard from './components/Client/UserDashboard';
+import CustomerLogin from './components/customer-login';
 import ProtectedRoute from './components/ProtectedRoute'; 
 import Tablegym from './components/tables/Table'; 
 import UserDetails from './components/Userdetails';
@@ -28,7 +29,8 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/Login" element={<Login />} />
+          <Route path="/admin-Login" element={<Login />} />
+          <Route path="/Login" element={<CustomerLogin />} />
           <Route path="/payment" element={<ProtectedRoute element={paymenthistry} adminOnly />} />
           <Route path="/attendance" element={<ProtectedRoute element={Punchin} adminOnly />} />
           <Route path="/" element={<HomePage />} />
